@@ -5,7 +5,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:social_app/model/message_model.dart';
-import 'package:social_app/shared/components/constants.dart';
+import 'package:social_app/shared/constants.dart';
 
 class ChatDetailsController extends GetxController {
   // NOTE on type in text field to check if empty or not

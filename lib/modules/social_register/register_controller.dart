@@ -3,7 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:social_app/model/social_usermodel.dart';
 import 'package:social_app/shared/components/componets.dart';
-import 'package:social_app/shared/components/constants.dart';
+import 'package:social_app/shared/constants.dart';
 
 class RegisterController extends GetxController {
   //NOTE : ---------------------Show Hide password--------------------

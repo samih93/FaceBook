@@ -5,7 +5,7 @@ import 'package:social_app/layout/layout_controller.dart';
 import 'package:social_app/modules/edit_profile/edit_profile.dart';
 import 'package:social_app/modules/notifications/notification_screen.dart';
 import 'package:social_app/shared/components/componets.dart';
-import 'package:social_app/shared/components/constants.dart';
+import 'package:social_app/shared/constants.dart';
 
 class SettingScreen extends StatelessWidget {
   final double coverheight = 250;

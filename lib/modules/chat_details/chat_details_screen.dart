@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 import 'package:social_app/model/message_model.dart';
 import 'package:social_app/model/social_usermodel.dart';
 import 'package:social_app/modules/chat_details/chatdetailsController.dart';
-import 'package:social_app/shared/components/constants.dart';
+import 'package:social_app/shared/constants.dart';
 import 'package:social_app/shared/styles/colors.dart';
 
 class ChatDetailsScreen extends StatelessWidget {
@@ -12,6 +12,7 @@ class ChatDetailsScreen extends StatelessWidget {
 
   ChatDetailsScreen({required this.socialUserModel});
   var textController = TextEditingController();
+  var scrollController = ScrollController();
 
   @override
   Widget build(BuildContext context) {
@@ -24,6 +25,11 @@ class ChatDetailsScreen extends StatelessWidget {
           });
           return Scaffold(
             appBar: AppBar(
+              actions: [
+                IconButton(
+                    onPressed: () {}, icon: Icon(Icons.video_call_rounded)),
+                IconButton(onPressed: () {}, icon: Icon(Icons.phone))
+              ],
               titleSpacing: 0,
               title: Row(
                 children: [
@@ -63,6 +69,7 @@ class ChatDetailsScreen extends StatelessWidget {
                             ),
                           ),
                           child: ListView.separated(
+                              controller: scrollController,
                               physics: BouncingScrollPhysics(),
                               itemBuilder: (context, index) {
                                 var message =
@@ -165,6 +172,11 @@ class ChatDetailsScreen extends StatelessWidget {
                                           textController.text = "";
                                           chatDetailsController
                                               .ontypingmessage("");
+                                          scrollController.animateTo(
+                                              scrollController
+                                                  .position.maxScrollExtent,
+                                              duration: Duration(seconds: 1),
+                                              curve: Curves.fastOutSlowIn);
                                         },
                                         minWidth: 1,
                                         child: Icon(

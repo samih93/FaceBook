@@ -13,13 +13,15 @@ import 'package:social_app/modules/feeds/feeds_screen.dart';
 import 'package:social_app/modules/new_post/new_post_screen.dart';
 import 'package:social_app/modules/settings/setting_screen.dart';
 import 'package:social_app/modules/users/users_screen.dart';
-import 'package:social_app/shared/components/constants.dart';
+import 'package:social_app/shared/constants.dart';
 import 'package:social_app/shared/network/remote/diohelper.dart';
 
 class SocialLayoutController extends GetxController {
   SocialLayoutController() {
-    if (uId != null) getLoggedInUserData();
-    getPosts();
+    if (uId != null)
+      getLoggedInUserData().then((value) {
+        getPosts();
+      });
 
     getUsers();
   }
@@ -51,8 +53,12 @@ class SocialLayoutController extends GetxController {
   UserModel? _socialUserModel;
   UserModel? get socialUserModel => _socialUserModel;
 
-  void getLoggedInUserData() {
-    FirebaseFirestore.instance.collection('users').doc(uId).get().then((value) {
+  Future<void> getLoggedInUserData() async {
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(uId)
+        .get()
+        .then((value) {
       //   print(value.data());
       _socialUserModel = UserModel.fromJson(value.data()!);
       // print("get user email :" + _socialUserModel!.email.toString());
@@ -292,7 +298,7 @@ class SocialLayoutController extends GetxController {
       _imagePostUrl = null;
       _isloadingcreatePost = false;
       // NOTE push notification to subscribed to channel FriendsPost
-      //pushNotification();
+      pushNotification();
       getPosts();
       update();
     }).catchError((error) {
@@ -501,7 +507,7 @@ class SocialLayoutController extends GetxController {
 
   void pushNotification() {
     DioHelper.postData(url: 'https://fcm.googleapis.com/fcm/send', data: {
-      "to": "/topics/friendpost",
+      "to": "/topics/FriendsPost",
       "notification": {
         "body": "see details",
         "title": _socialUserModel!.name.toString() + " Add new Post",

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:social_app/layout/layout_controller.dart';
 import 'package:social_app/model/post_model.dart';
-import 'package:social_app/shared/components/constants.dart';
+import 'package:social_app/shared/constants.dart';
 import 'package:social_app/shared/styles/colors.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -287,12 +287,17 @@ class FeedsScreen extends StatelessWidget {
                                   children: [
                                     CircleAvatar(
                                       radius: 15,
-                                      backgroundImage: model.image == null ||
-                                              model.image == ""
+                                      backgroundImage: socialLayoutController
+                                                      .socialUserModel!.image ==
+                                                  null ||
+                                              socialLayoutController
+                                                      .socialUserModel!.image ==
+                                                  ""
                                           ? AssetImage(
                                                   'assets/default profile.png')
                                               as ImageProvider
-                                          : NetworkImage('${model.image}'),
+                                          : NetworkImage(
+                                              '${socialLayoutController.socialUserModel!.image}'),
                                     ),
                                     SizedBox(
                                       width: 15,

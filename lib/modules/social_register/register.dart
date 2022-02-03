@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:social_app/layout/layout.dart';
 import 'package:social_app/modules/social_register/register_controller.dart';
 import 'package:social_app/shared/components/componets.dart';
-import 'package:social_app/shared/components/constants.dart';
+import 'package:social_app/shared/constants.dart';
 import 'package:social_app/shared/network/local/cashhelper.dart';
 
 class RegisterScreen extends StatelessWidget {

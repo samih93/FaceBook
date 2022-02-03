@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import 'package:social_app/shared/components/constants.dart';
+import 'package:social_app/shared/constants.dart';
 
 class DioHelper {
   static Dio? dio;
