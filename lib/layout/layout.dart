@@ -12,6 +12,7 @@ class SocialLayout extends StatelessWidget {
       init: SocialLayoutController(),
       builder: (socialLayoutController) => Scaffold(
         appBar: AppBar(
+          backgroundColor: Colors.white,
           title: Text(socialLayoutController
               .appbar_title[socialLayoutController.currentIndex]),
           actions: [

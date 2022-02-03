@@ -8,6 +8,7 @@ import 'package:social_app/shared/components/componets.dart';
 import 'package:social_app/shared/components/constants.dart';
 import 'package:social_app/shared/helper/binding.dart';
 import 'package:social_app/shared/network/local/cashhelper.dart';
+import 'package:social_app/shared/styles/thems.dart';
 
 import 'modules/social_login/login.dart';
 
@@ -74,7 +75,8 @@ class MyApp extends StatelessWidget {
       init: Get.find<SocialLayoutController>(),
       builder: (newsLayoutController) => GetMaterialApp(
         // bind the dependency
-
+        theme: lightTheme(),
+        themeMode: ThemeMode.light,
         initialBinding: Binding(),
         debugShowCheckedModeBanner: false,
         home: widget,
