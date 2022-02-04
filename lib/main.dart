@@ -8,6 +8,7 @@ import 'package:social_app/shared/components/componets.dart';
 import 'package:social_app/shared/constants.dart';
 import 'package:social_app/shared/helper/binding.dart';
 import 'package:social_app/shared/network/local/cashhelper.dart';
+import 'package:social_app/shared/network/remote/diohelper.dart';
 import 'package:social_app/shared/styles/thems.dart';
 
 import 'modules/social_login/login.dart';
@@ -25,6 +26,7 @@ void main() async {
   // NOTE: INITIALIZE FIREBASE
   await Firebase.initializeApp();
 
+  await DioHelper.init();
 // NOTE : Unique token for device
   var messagingToken = await FirebaseMessaging.instance.getToken();
   print("token messaging -- " + messagingToken.toString());

@@ -337,6 +337,7 @@ class FeedsScreen extends StatelessWidget {
                                   socialLayoutController.likePost(
                                       model.postId.toString(), index);
                                 }
+                                
                               },
                             ),
                           ],

@@ -1,4 +1,6 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:get/get.dart';
+import 'package:social_app/shared/components/componets.dart';
 import 'package:social_app/shared/network/local/cashhelper.dart';
 
 class NotificationSettingsController extends GetxController {
@@ -25,6 +27,13 @@ class NotificationSettingsController extends GetxController {
   onchangeLikesNotification(bool value) {
     isGetLikesNotification.value = value;
     CashHelper.saveData(key: "isGetLikesNotification", value: value);
+    if (value) {
+      FirebaseMessaging.instance.subscribeToTopic("LikesPost");
+      showToast(message: "Subscribed", status: ToastStatus.Success);
+    } else {
+      FirebaseMessaging.instance.unsubscribeFromTopic("LikesPost");
+      showToast(message: "Unsubscribed", status: ToastStatus.Success);
+    }
     update();
   }
 

@@ -23,7 +23,9 @@ class SocialLayoutController extends GetxController {
         getPosts();
       });
 
-    getUsers();
+    getUsers().then((value) {
+      print("get user Finished");
+    });
   }
 
 // NOTE: -------------------Bottom Navigation------------------------
@@ -385,9 +387,9 @@ class SocialLayoutController extends GetxController {
         print("after " + _isloadingGetPosts.toString());
         update();
       });
-      // NOTE if no posts yet
-      _isloadingGetPosts = false;
-      print("after " + _isloadingGetPosts.toString());
+      // // NOTE if no posts yet
+      // _isloadingGetPosts = false;
+      // print("after " + _isloadingGetPosts.toString());
     }).catchError((error) {
       print(error.toString());
     });
@@ -428,6 +430,7 @@ class SocialLayoutController extends GetxController {
           .doc(_socialUserModel!.uId)
           .set({'like': true}).then((value) {
         print("Added To Likes");
+        pushNotificationOnLike();
       }).catchError((error) {
         //NOTE : if an error happen return data to the last updated
         _listOfPost[index].isLiked = false;
@@ -445,72 +448,86 @@ class SocialLayoutController extends GetxController {
   bool? _isloadingGetUsers = false;
   bool? get isloadingGetUsers => _isloadingGetUsers;
 
+  // Future<void> getUsers() async {
+  //   _isloadingGetUsers = true;
+  //   update();
+  //   await FirebaseFirestore.instance.collection('users').get().then((value) {
+  //     value.docs.forEach((usermodel) {
+  //       if (usermodel.data()['uId'] != uId)
+  //         _users.add(UserModel.fromJson(usermodel.data()));
+  //       _isloadingGetUsers = false;
+  //       update();
+  //     });
+  //   });
+  // }
+
   Future<void> getUsers() async {
     _isloadingGetUsers = true;
+    print("inside getusers " + uId.toString());
     update();
-    await FirebaseFirestore.instance.collection('users').get().then((value) {
-      value.docs.forEach((usermodel) {
-        if (usermodel.data()['uId'] != uId)
-          _users.add(UserModel.fromJson(usermodel.data()));
-        _isloadingGetUsers = false;
-        update();
-      });
-    });
-  }
-
-  // NOTE :------------------ send Message ---------------------------------------
-
-  var isSendMessageSuccess = false.obs;
-
-  void sendMessage(
-      {required String receiverId,
-      required String messageDate,
-      required String text}) {
-    isSendMessageSuccess.value = false;
-    MessageModel model = MessageModel(
-        senderId: uId,
-        receiverId: receiverId,
-        text: text,
-        messageDate: messageDate);
-
-    // NOTE write message in user sender
-    FirebaseFirestore.instance
+    var chats = FirebaseFirestore.instance
         .collection('users')
         .doc(uId)
         .collection('chats')
-        .doc(receiverId)
-        .collection('messages')
-        .add(model.toJson())
+        .get()
         .then((value) {
-      isSendMessageSuccess.value = true;
-      update();
-    }).catchError((error) {
-      print(error.toString());
-    });
+      print("lenght of user " + value.docs.length.toString());
+      // value.docs.forEach((docId) {
+      //   // docId is the user id have been chatting with me
 
-    // NOTE write message in user received
-
-    FirebaseFirestore.instance
-        .collection('users')
-        .doc(receiverId)
-        .collection('chats')
-        .doc(uId)
-        .collection('messages')
-        .add(model.toJson())
-        .then((value) {
-      isSendMessageSuccess.value = true;
-      update();
-    }).catchError((error) {
-      print(error.toString());
+      //   // get data of users who already chatting with me
+      //   FirebaseFirestore.instance
+      //       .collection('users')
+      //       .doc(docId.toString())
+      //       .get()
+      //       .then((usermodel) {
+      //     if (usermodel.data()!['uId'] != uId)
+      //       _users.add(UserModel.fromJson(usermodel.data()!));
+      //     _isloadingGetUsers = false;
+      //     update();
+      //   });
+      // });
     });
   }
 
+// NOTE push notification when a friend add a new post
   void pushNotification() {
+    print("test fcm befor");
     DioHelper.postData(url: 'https://fcm.googleapis.com/fcm/send', data: {
       "to": "/topics/FriendsPost",
       "notification": {
         "body": "see details",
         "title": _socialUserModel!.name.toString() + " Add new Post",
+        "sound": "default"
+      },
+      "android": {
+        "priortiy": "HIGH",
+        "notification": {
+          "notification_priority": "PRIORITY_MAX",
+          "sound": "default",
+          "default_vibrate_timings": true,
+          "default_light_settings": true
+        }
+      },
+      "data": {
+        "click_action": "FLUTTER_NOTIFICATION_CLICK",
+        "id": "87",
+        "type": "order"
+      }
+    }).then((value) {
+      print("notification pushed");
+    }).catchError((error) {
+      print(error.toString());
+    });
+  }
+
+  // NOTE push notification when a friend like my post a new post
+  void pushNotificationOnLike() {
+    DioHelper.postData(url: 'https://fcm.googleapis.com/fcm/send', data: {
+      "to": "/topics/LikesPost",
+      "notification": {
+        "body": "see details",
+        "title": _socialUserModel!.name.toString() + " Like Your post",
         "sound": "default"
       },
       "android": {
