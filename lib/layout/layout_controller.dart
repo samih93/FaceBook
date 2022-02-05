@@ -463,15 +463,15 @@ class SocialLayoutController extends GetxController {
 
   Future<void> getUsers() async {
     _isloadingGetUsers = true;
-    print("inside getusers " + uId.toString());
+    print("UId : " + uId.toString());
     update();
-    var chats = FirebaseFirestore.instance
+    FirebaseFirestore.instance
         .collection('users')
         .doc(uId)
-        .collection('chats')
+        //.collection('chats')
         .get()
         .then((value) {
-      print("lenght of user " + value.docs.length.toString());
+      print(value.data()!.toString());
       // value.docs.forEach((docId) {
       //   // docId is the user id have been chatting with me
 
