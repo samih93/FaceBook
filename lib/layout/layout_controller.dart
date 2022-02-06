@@ -465,32 +465,17 @@ class SocialLayoutController extends GetxController {
     _isloadingGetUsers = true;
     print("UId : " + uId.toString());
     update();
+
     FirebaseFirestore.instance
         .collection('users')
-        .doc(uId)
-        //.collection('chats')
         .get()
-        .then((DocumentSnapshot documentSnapshot) {
-      if (documentSnapshot.exists) {
-        print(documentSnapshot.data()!.toString());
-      } else {
-        print('Document does not exist on the database');
-      }
-      // value.docs.forEach((docId) {
-      //   // docId is the user id have been chatting with me
-
-      //   // get data of users who already chatting with me
-      //   FirebaseFirestore.instance
-      //       .collection('users')
-      //       .doc(docId.toString())
-      //       .get()
-      //       .then((usermodel) {
-      //     if (usermodel.data()!['uId'] != uId)
-      //       _users.add(UserModel.fromJson(usermodel.data()!));
-      //     _isloadingGetUsers = false;
-      //     update();
-      //   });
-      // });
+        .then((querySnapshotOf_document) {
+      querySnapshotOf_document.docs.forEach((usermodel) {
+        if (usermodel.data()['uId'] != uId)
+          _users.add(UserModel.fromJson(usermodel.data()));
+        _isloadingGetUsers = false;
+        update();
+      });
     });
   }
 

@@ -25,9 +25,10 @@ class NotificationScreen extends StatelessWidget {
                         .onchangeLikesNotification(value);
                     //NOTE : Likes this is announcement for likes event
                     value == true
-                        ? FirebaseMessaging.instance.subscribeToTopic("Likes")
+                        ? FirebaseMessaging.instance
+                            .subscribeToTopic("LikesPost")
                         : FirebaseMessaging.instance
-                            .unsubscribeFromTopic("Likes");
+                            .unsubscribeFromTopic("LikesPost");
                   },
                   value: notificationSettingsController
                       .isGetLikesNotification.value,
@@ -92,9 +93,9 @@ class NotificationScreen extends StatelessWidget {
                         .onchangeFriendPostNotification(value);
                     value == true
                         ? FirebaseMessaging.instance
-                            .subscribeToTopic("friendpost")
+                            .subscribeToTopic("FriendsPost")
                         : FirebaseMessaging.instance
-                            .unsubscribeFromTopic("friendpost");
+                            .unsubscribeFromTopic("FriendsPost");
                   },
                   value: notificationSettingsController
                       .isGetFriendPostNotification.value,
