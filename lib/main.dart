@@ -63,7 +63,6 @@ void main() async {
 
   //NOTE : ADD dependencies
 
-  Get.put(SocialLayoutController());
   runApp(MyApp(widget));
 }
 
@@ -73,16 +72,12 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<SocialLayoutController>(
-      init: Get.find<SocialLayoutController>(),
-      builder: (newsLayoutController) => GetMaterialApp(
-        // bind the dependency
-        theme: lightTheme(),
-        themeMode: ThemeMode.light,
-        initialBinding: Binding(),
-        debugShowCheckedModeBanner: false,
-        home: widget,
-      ),
+    return GetMaterialApp(
+      theme: lightTheme(),
+      themeMode: ThemeMode.light,
+      // initialBinding: Binding(),
+      debugShowCheckedModeBanner: false,
+      home: widget,
     );
   }
 }

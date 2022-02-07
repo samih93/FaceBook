@@ -4,6 +4,7 @@ import 'package:social_app/layout/layout.dart';
 import 'package:social_app/modules/social_register/register_controller.dart';
 import 'package:social_app/shared/components/componets.dart';
 import 'package:social_app/shared/constants.dart';
+import 'package:social_app/shared/helper/binding.dart';
 import 'package:social_app/shared/network/local/cashhelper.dart';
 
 class RegisterScreen extends StatelessWidget {
@@ -142,7 +143,7 @@ class RegisterScreen extends StatelessWidget {
                                       ToastStatus.Success) {
                                 //NOTE: uId saved in login method
                                 CashHelper.saveData(key: "uId", value: uId);
-                                Get.off(SocialLayout());
+                                Get.off(SocialLayout(), binding: Binding());
                               }
                               showToast(
                                   message:

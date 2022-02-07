@@ -237,6 +237,7 @@ class FeedsScreen extends StatelessWidget {
           init: Get.find<SocialLayoutController>(),
           builder: (socialLayoutController) {
             return Card(
+                margin: EdgeInsets.zero,
                 elevation: 5,
                 clipBehavior: Clip.antiAliasWithSaveLayer,
                 child: Padding(

@@ -19,7 +19,7 @@ import 'package:social_app/shared/network/remote/diohelper.dart';
 class SocialLayoutController extends GetxController {
   SocialLayoutController() {
     if (uId != null) getLoggedInUserData().then((value) {});
-    getPosts();
+    getPosts().then((value) {});
     getUsers().then((value) {
       print("get user Finished");
     });
@@ -329,12 +329,12 @@ class SocialLayoutController extends GetxController {
   List<PostModel> _listOfPost = [];
   List<PostModel> get listOfPost => _listOfPost;
 
-  void getPosts() {
+  Future<void> getPosts() async {
     _listOfPost = [];
     _isloadingGetPosts = true;
     print("befor " + _isloadingGetPosts.toString());
     update();
-    FirebaseFirestore.instance.collection('posts').get().then((value) {
+    await FirebaseFirestore.instance.collection('posts').get().then((value) {
       // NOTE : reference on posts
       int index = 0;
       value.docs.forEach((docOfpost) async {
