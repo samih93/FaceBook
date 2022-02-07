@@ -8,6 +8,19 @@ import 'package:social_app/shared/styles/colors.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class FeedsScreen extends StatelessWidget {
+  List<String> storiesImage = [
+    "https://www.educationquizzes.com/library/KS1-English/Whos-Writing/Writing-Main-web.jpg",
+    "https://www.celebritysizes.com/wp-content/uploads/2017/07/Shawn-Hatosy-200x300.jpg",
+    "https://th.bing.com/th/id/OIP.Mq0NXcuI6YXZeuBJ8umg6AHaJY?pid=ImgDet&w=606&h=768&rs=1",
+    "https://image.brigitte.de/13150502/t/LD/v2/w960/r1.5/-/29---west-side-story--star-kyle-allen-spielt-he-man---1-1---spoton-article-1015109.jpg"
+  ];
+  List<String> storiesNames = [
+    "sony saad",
+    "Elie makhoul",
+    "serg said",
+    "Roy hanna"
+  ];
+
   @override
   Widget build(BuildContext context) {
     return GetBuilder<SocialLayoutController>(
@@ -33,130 +46,185 @@ class FeedsScreen extends StatelessWidget {
                           ],
                         )
                       : SingleChildScrollView(
-                          child: Column(
-                            children: [
-                              buildStoryItem(context),
-                              // Card(
-                              //   elevation: 20,
-                              //   clipBehavior: Clip.antiAliasWithSaveLayer,
-                              //   margin: EdgeInsets.all(8),
-                              //   child: Stack(
-                              //     alignment: AlignmentDirectional.bottomEnd,
-                              //     children: [
-                              //       Image(
-                              //         width: double.infinity,
-                              //         image: NetworkImage(
-                              //             'https://th.bing.com/th/id/R.53afc35fea65364b957bda77adee36c6?rik=5vbij2dxjsHRPQ&pid=ImgRaw&r=0'),
-                              //         fit: BoxFit.cover,
-                              //         height: 200,
-                              //       ),
-                              //       Padding(
-                              //         padding: const EdgeInsets.all(8.0),
-                              //         child: Text(
-                              //           "Communicate with friends",
-                              //           style: Theme.of(context)
-                              //               .textTheme
-                              //               .subtitle1!
-                              //               .copyWith(color: Colors.white),
-                              //         ),
-                              //       ),
-                              //     ],
-                              //   ),
-                              // ),
-                              ListView.separated(
-                                itemBuilder: (context, index) {
-                                  return buildPostItem(
-                                      socialLayoutController.listOfPost[index],
-                                      context,
-                                      index);
-                                },
-                                itemCount:
-                                    socialLayoutController.listOfPost.length,
-                                physics: NeverScrollableScrollPhysics(),
-                                shrinkWrap: true,
-                                separatorBuilder: (context, int index) =>
-                                    SizedBox(
-                                  height: 10,
+                          child: Container(
+                            margin: EdgeInsets.symmetric(horizontal: 8),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Container(
+                                  height: 220,
+                                  child: ListView.separated(
+                                      scrollDirection: Axis.horizontal,
+                                      itemBuilder: (context, index) {
+                                        if (index == 0)
+                                          return buildStoryItem(
+                                              context, true, index);
+                                        else
+                                          return buildStoryItem(
+                                              context, false, index - 1);
+                                      },
+                                      itemCount: storiesImage.length + 1,
+                                      separatorBuilder: (context, index) =>
+                                          SizedBox(
+                                            width: 10,
+                                          )),
                                 ),
-                              ),
-                              SizedBox(
-                                height: 10,
-                              )
-                            ],
+                                SizedBox(
+                                  height: 20,
+                                ),
+                                ListView.separated(
+                                  itemBuilder: (context, index) {
+                                    return buildPostItem(
+                                        socialLayoutController
+                                            .listOfPost[index],
+                                        context,
+                                        index);
+                                  },
+                                  itemCount:
+                                      socialLayoutController.listOfPost.length,
+                                  physics: NeverScrollableScrollPhysics(),
+                                  shrinkWrap: true,
+                                  separatorBuilder: (context, int index) =>
+                                      SizedBox(
+                                    height: 10,
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 10,
+                                )
+                              ],
+                            ),
                           ),
                         ),
                 );
         });
   }
 
-  Widget buildStoryItem(BuildContext context) {
+  Widget buildStoryItem(BuildContext context, bool isForMe, int index) {
     return GetBuilder<SocialLayoutController>(
       init: Get.find<SocialLayoutController>(),
-      builder: (socialLayoutController) => Container(
-        clipBehavior: Clip.antiAliasWithSaveLayer,
-        decoration: BoxDecoration(
-          border: Border.all(color: Colors.grey),
-          borderRadius: BorderRadius.circular(10),
-        ),
-        height: 220,
-        child: Column(
-          children: [
-            Container(
-              height: 175,
-              width: MediaQuery.of(context).size.width * 0.3,
-              child: Stack(
-                alignment: AlignmentDirectional.bottomCenter,
+      builder: (socialLayoutController) => isForMe
+          ? Container(
+              clipBehavior: Clip.antiAliasWithSaveLayer,
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.grey),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              height: 220,
+              child: Column(
                 children: [
-                  //NOTE : Cover Image
-                  Align(
-                    alignment: AlignmentDirectional.topCenter,
-                    child: Container(
-                        height: 160,
-                        decoration: BoxDecoration(
-                          image: DecorationImage(
-                            image: socialLayoutController
-                                            .socialUserModel!.image ==
-                                        null ||
-                                    socialLayoutController
-                                            .socialUserModel!.image ==
-                                        ""
-                                ? AssetImage('assets/default profile.png')
-                                    as ImageProvider
-                                : NetworkImage(
-                                    '${socialLayoutController.socialUserModel!.image}'),
-                            // : NetworkImage(socialUserModel.coverimage!),
-                            fit: BoxFit.cover,
+                  Container(
+                    height: 175,
+                    width: MediaQuery.of(context).size.width * 0.3,
+                    child: Stack(
+                      alignment: AlignmentDirectional.bottomCenter,
+                      children: [
+                        //NOTE : Cover Image
+                        Align(
+                          alignment: AlignmentDirectional.topCenter,
+                          child: Container(
+                              height: 160,
+                              decoration: BoxDecoration(
+                                image: DecorationImage(
+                                  image: socialLayoutController
+                                                  .socialUserModel!.image ==
+                                              null ||
+                                          socialLayoutController
+                                                  .socialUserModel!.image ==
+                                              ""
+                                      ? AssetImage('assets/default profile.png')
+                                          as ImageProvider
+                                      : NetworkImage(
+                                          '${socialLayoutController.socialUserModel!.image}'),
+                                  // : NetworkImage(socialUserModel.coverimage!),
+                                  fit: BoxFit.cover,
+                                ),
+                              )),
+                        ),
+
+                        //NOTE profileImage
+
+                        CircleAvatar(
+                          radius: 17,
+                          backgroundColor:
+                              Theme.of(context).scaffoldBackgroundColor,
+                          child: CircleAvatar(
+                            radius: 15,
+                            child: InkWell(
+                              onTap: () {
+                                print('pressed');
+                              },
+                              child: Icon(
+                                Icons.add,
+                                color: Colors.white,
+                              ),
+                            ),
                           ),
-                        )),
-                  ),
-
-                  //NOTE profileImage
-
-                  CircleAvatar(
-                    radius: 17,
-                    backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-                    child: CircleAvatar(
-                      radius: 15,
-                      child: Icon(
-                        Icons.add,
-                        color: Colors.white,
-                      ),
+                        ),
+                      ],
                     ),
+                  ),
+                  Spacer(),
+                  Text(
+                    'Create story',
+                    style: TextStyle(color: Colors.grey.shade900),
+                  ),
+                  SizedBox(
+                    height: 10,
                   ),
                 ],
               ),
+            )
+          : Container(
+              clipBehavior: Clip.antiAliasWithSaveLayer,
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.grey),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              height: 220,
+              child: Container(
+                height: 175,
+                width: MediaQuery.of(context).size.width * 0.3,
+                child: Stack(
+                  alignment: AlignmentDirectional.bottomCenter,
+                  children: [
+                    //NOTE : Cover Image
+                    Align(
+                      alignment: AlignmentDirectional.topCenter,
+                      child: Container(
+                          decoration: BoxDecoration(
+                        image: DecorationImage(
+                          image:
+                              socialLayoutController.socialUserModel!.image ==
+                                          null ||
+                                      socialLayoutController
+                                              .socialUserModel!.image ==
+                                          ""
+                                  ? AssetImage('assets/default profile.png')
+                                      as ImageProvider
+                                  : NetworkImage(storiesImage[index]),
+                          // : NetworkImage(socialUserModel.coverimage!),
+                          fit: BoxFit.cover,
+                        ),
+                      )),
+                    ),
+
+                    //NOTE profileImage
+
+                    Padding(
+                      padding:
+                          const EdgeInsetsDirectional.only(bottom: 10, end: 15),
+                      child: Text(
+                        storiesNames[index],
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ),
-            Spacer(),
-            Text(
-              'Create story',
-              style: TextStyle(color: Colors.grey.shade800),
-            ),
-            SizedBox(
-              height: 10,
-            ),
-          ],
-        ),
-      ),
     );
   }
 
@@ -168,19 +236,9 @@ class FeedsScreen extends StatelessWidget {
       GetBuilder<SocialLayoutController>(
           init: Get.find<SocialLayoutController>(),
           builder: (socialLayoutController) {
-            // SocialUserModel? userOfPost;
-
-            // socialLayoutController
-            //     .getUserDataById(
-            //         socialLayoutController.listOfPost[index].uId.toString())
-            //     .then((value) {
-            //   userOfPost = value;
-            //   // print(userOfPost!.isemailverified);
-            // });
             return Card(
                 elevation: 5,
                 clipBehavior: Clip.antiAliasWithSaveLayer,
-                margin: EdgeInsets.symmetric(horizontal: 8),
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Column(
@@ -231,7 +289,7 @@ class FeedsScreen extends StatelessWidget {
                             ],
                           )),
                           IconButton(
-                              onPressed: () {},
+                              onPressed: () async {},
                               icon: Icon(
                                 Icons.more_horiz,
                               )),
@@ -426,4 +484,5 @@ class FeedsScreen extends StatelessWidget {
   //   Get.put(SocialLayoutController());
   //   SocialLayoutController.onload();
   // }
+
 }
