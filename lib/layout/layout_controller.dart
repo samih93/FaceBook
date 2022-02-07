@@ -18,11 +18,8 @@ import 'package:social_app/shared/network/remote/diohelper.dart';
 
 class SocialLayoutController extends GetxController {
   SocialLayoutController() {
-    if (uId != null)
-      getLoggedInUserData().then((value) {
-        getPosts();
-      });
-
+    if (uId != null) getLoggedInUserData().then((value) {});
+    getPosts();
     getUsers().then((value) {
       print("get user Finished");
     });

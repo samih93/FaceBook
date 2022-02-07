@@ -41,6 +41,13 @@ class NotificationSettingsController extends GetxController {
   onchangeCommentNotification(bool value) {
     isGetCommentsNotification.value = value;
     CashHelper.saveData(key: "isGetCommentsNotification", value: value);
+    if (value) {
+      FirebaseMessaging.instance.subscribeToTopic("comments");
+      showToast(message: "Subscribed", status: ToastStatus.Success);
+    } else {
+      FirebaseMessaging.instance.unsubscribeFromTopic("comments");
+      showToast(message: "Unsubscribed", status: ToastStatus.Success);
+    }
     update();
   }
 
@@ -48,6 +55,13 @@ class NotificationSettingsController extends GetxController {
   onchangeFriendRequestNotification(bool value) {
     isGetFriendRequestNotification.value = value;
     CashHelper.saveData(key: "isGetFriendRequestNotification", value: value);
+    if (value) {
+      FirebaseMessaging.instance.subscribeToTopic("friendsrequest");
+      showToast(message: "Subscribed", status: ToastStatus.Success);
+    } else {
+      FirebaseMessaging.instance.unsubscribeFromTopic("friendsrequest");
+      showToast(message: "Unsubscribed", status: ToastStatus.Success);
+    }
     update();
   }
 
@@ -55,12 +69,26 @@ class NotificationSettingsController extends GetxController {
   onchangeSMSNotification(bool value) {
     isGetSMSNotification.value = value;
     CashHelper.saveData(key: "isGetSMSNotification", value: value);
+    if (value) {
+      FirebaseMessaging.instance.subscribeToTopic("sms");
+      showToast(message: "Subscribed", status: ToastStatus.Success);
+    } else {
+      FirebaseMessaging.instance.unsubscribeFromTopic("sms");
+      showToast(message: "Unsubscribed", status: ToastStatus.Success);
+    }
     update();
   }
 
   onchangeFriendPostNotification(bool value) {
     isGetFriendPostNotification.value = value;
     CashHelper.saveData(key: "isGetFriendPostNotification", value: value);
+    if (value) {
+      FirebaseMessaging.instance.subscribeToTopic("FriendsPost");
+      showToast(message: "Subscribed", status: ToastStatus.Success);
+    } else {
+      FirebaseMessaging.instance.unsubscribeFromTopic("FriendsPost");
+      showToast(message: "Unsubscribed", status: ToastStatus.Success);
+    }
     update();
   }
 }

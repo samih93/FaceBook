@@ -6,9 +6,11 @@ import 'package:social_app/modules/edit_profile/edit_profile.dart';
 import 'package:social_app/modules/notifications/notification_screen.dart';
 import 'package:social_app/shared/components/componets.dart';
 import 'package:social_app/shared/constants.dart';
+import 'package:social_app/shared/styles/colors.dart';
 
 class SettingScreen extends StatelessWidget {
-  final double coverheight = 250;
+  final double coverAndProfileheight = 220;
+  final double coverimageheight = 180;
   double profileheight = 60;
   @override
   Widget build(BuildContext context) {
@@ -26,7 +28,7 @@ class SettingScreen extends StatelessWidget {
                   children: [
                     //NOTE Cover And Profile ---------------------
                     Container(
-                      height: 220,
+                      height: coverAndProfileheight,
                       child: Stack(
                         alignment: AlignmentDirectional.bottomCenter,
                         children: [
@@ -34,7 +36,7 @@ class SettingScreen extends StatelessWidget {
                           Align(
                             alignment: AlignmentDirectional.topCenter,
                             child: Container(
-                                height: 180,
+                                height: coverimageheight,
                                 width: double.infinity,
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.only(
@@ -53,6 +55,7 @@ class SettingScreen extends StatelessWidget {
                                   ),
                                 )),
                           ),
+
                           //NOTE profileImage
                           CircleAvatar(
                             radius: profileheight + 3,
@@ -184,6 +187,9 @@ class SettingScreen extends StatelessWidget {
                             child: Text("Edit Profile"),
                           ),
                         ),
+                        SizedBox(
+                          width: 5,
+                        ),
                         OutlinedButton(
                             onPressed: () {
                               Get.to(EditProfile());
@@ -204,37 +210,6 @@ class SettingScreen extends StatelessWidget {
                       ],
                     ),
 
-                    Row(
-                      children: [
-                        Expanded(
-                          child: OutlinedButton(
-                              onPressed: () {
-                                //NOTE : FriendsRequest this is announcement title for notification can be anything
-                                FirebaseMessaging.instance
-                                    .subscribeToTopic("FriendsPost");
-                                showToast(
-                                    message: "Subscribed",
-                                    status: ToastStatus.Success);
-                              },
-                              child: Text("Subscribe")),
-                        ),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        Expanded(
-                          child: OutlinedButton(
-                              onPressed: () {
-                                // NOTE
-                                FirebaseMessaging.instance
-                                    .unsubscribeFromTopic("FriendsPost");
-                                showToast(
-                                    message: "Unsubscribed",
-                                    status: ToastStatus.Success);
-                              },
-                              child: Text("Unsubscribe")),
-                        ),
-                      ],
-                    ),
                     defaultButton(
                         text: "Sign Out",
                         onpress: () {

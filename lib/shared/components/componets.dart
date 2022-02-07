@@ -120,7 +120,7 @@ Color chooseToastColor(ToastStatus status) {
   Color color;
   switch (status) {
     case ToastStatus.Success:
-      color = Colors.green;
+      color = defaultColor;
       break;
     case ToastStatus.Error:
       color = Colors.red;

@@ -60,9 +60,9 @@ class NotificationScreen extends StatelessWidget {
                         .onchangeFriendRequestNotification(value);
                     value == true
                         ? FirebaseMessaging.instance
-                            .subscribeToTopic("friendrequest")
+                            .subscribeToTopic("friendsrequest")
                         : FirebaseMessaging.instance
-                            .unsubscribeFromTopic("friendrequest");
+                            .unsubscribeFromTopic("friendsrequest");
                   },
                   value: notificationSettingsController
                       .isGetFriendRequestNotification.value,
