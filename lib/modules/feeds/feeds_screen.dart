@@ -19,6 +19,7 @@ class FeedsScreen extends StatelessWidget {
                   body: socialLayoutController.listOfPost.length == 0
                       ? Column(
                           mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Container(
                                 height: 200,
@@ -34,33 +35,34 @@ class FeedsScreen extends StatelessWidget {
                       : SingleChildScrollView(
                           child: Column(
                             children: [
-                              Card(
-                                elevation: 20,
-                                clipBehavior: Clip.antiAliasWithSaveLayer,
-                                margin: EdgeInsets.all(8),
-                                child: Stack(
-                                  alignment: AlignmentDirectional.bottomEnd,
-                                  children: [
-                                    Image(
-                                      width: double.infinity,
-                                      image: NetworkImage(
-                                          'https://th.bing.com/th/id/R.53afc35fea65364b957bda77adee36c6?rik=5vbij2dxjsHRPQ&pid=ImgRaw&r=0'),
-                                      fit: BoxFit.cover,
-                                      height: 200,
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Text(
-                                        "Communicate with friends",
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .subtitle1!
-                                            .copyWith(color: Colors.white),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
+                              buildStoryItem(context),
+                              // Card(
+                              //   elevation: 20,
+                              //   clipBehavior: Clip.antiAliasWithSaveLayer,
+                              //   margin: EdgeInsets.all(8),
+                              //   child: Stack(
+                              //     alignment: AlignmentDirectional.bottomEnd,
+                              //     children: [
+                              //       Image(
+                              //         width: double.infinity,
+                              //         image: NetworkImage(
+                              //             'https://th.bing.com/th/id/R.53afc35fea65364b957bda77adee36c6?rik=5vbij2dxjsHRPQ&pid=ImgRaw&r=0'),
+                              //         fit: BoxFit.cover,
+                              //         height: 200,
+                              //       ),
+                              //       Padding(
+                              //         padding: const EdgeInsets.all(8.0),
+                              //         child: Text(
+                              //           "Communicate with friends",
+                              //           style: Theme.of(context)
+                              //               .textTheme
+                              //               .subtitle1!
+                              //               .copyWith(color: Colors.white),
+                              //         ),
+                              //       ),
+                              //     ],
+                              //   ),
+                              // ),
                               ListView.separated(
                                 itemBuilder: (context, index) {
                                   return buildPostItem(
@@ -85,6 +87,77 @@ class FeedsScreen extends StatelessWidget {
                         ),
                 );
         });
+  }
+
+  Widget buildStoryItem(BuildContext context) {
+    return GetBuilder<SocialLayoutController>(
+      init: Get.find<SocialLayoutController>(),
+      builder: (socialLayoutController) => Container(
+        clipBehavior: Clip.antiAliasWithSaveLayer,
+        decoration: BoxDecoration(
+          border: Border.all(color: Colors.grey),
+          borderRadius: BorderRadius.circular(10),
+        ),
+        height: 220,
+        child: Column(
+          children: [
+            Container(
+              height: 175,
+              width: MediaQuery.of(context).size.width * 0.3,
+              child: Stack(
+                alignment: AlignmentDirectional.bottomCenter,
+                children: [
+                  //NOTE : Cover Image
+                  Align(
+                    alignment: AlignmentDirectional.topCenter,
+                    child: Container(
+                        height: 160,
+                        decoration: BoxDecoration(
+                          image: DecorationImage(
+                            image: socialLayoutController
+                                            .socialUserModel!.image ==
+                                        null ||
+                                    socialLayoutController
+                                            .socialUserModel!.image ==
+                                        ""
+                                ? AssetImage('assets/default profile.png')
+                                    as ImageProvider
+                                : NetworkImage(
+                                    '${socialLayoutController.socialUserModel!.image}'),
+                            // : NetworkImage(socialUserModel.coverimage!),
+                            fit: BoxFit.cover,
+                          ),
+                        )),
+                  ),
+
+                  //NOTE profileImage
+
+                  CircleAvatar(
+                    radius: 17,
+                    backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+                    child: CircleAvatar(
+                      radius: 15,
+                      child: Icon(
+                        Icons.add,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Spacer(),
+            Text(
+              'Create story',
+              style: TextStyle(color: Colors.grey.shade800),
+            ),
+            SizedBox(
+              height: 10,
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   Widget buildPostItem(
@@ -337,7 +410,6 @@ class FeedsScreen extends StatelessWidget {
                                   socialLayoutController.likePost(
                                       model.postId.toString(), index);
                                 }
-                                
                               },
                             ),
                           ],
