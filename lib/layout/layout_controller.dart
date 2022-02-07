@@ -46,7 +46,7 @@ class SocialLayoutController extends GetxController {
     SettingScreen()
   ];
 
-  final appbar_title = ['Home', 'Chat', 'Post', 'Users', 'Settings'];
+  final appbar_title = ['Face Book', 'Chat', 'Post', 'Users', 'Settings'];
 
   //NOTE:  -------------------- Get User Data-------------------------
   UserModel? _socialUserModel;
