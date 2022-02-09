@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:social_app/layout/layout_controller.dart';
 import 'package:social_app/model/post_model.dart';
+import 'package:social_app/modules/stories_view/stories_view.dart';
 import 'package:social_app/shared/constants.dart';
 import 'package:social_app/shared/styles/colors.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -175,45 +176,50 @@ class FeedsScreen extends StatelessWidget {
                 ],
               ),
             )
-          : Container(
-              clipBehavior: Clip.antiAliasWithSaveLayer,
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.grey),
-                borderRadius: BorderRadius.circular(10),
-              ),
-              height: 220,
+          : InkWell(
+              onTap: () {
+                Get.to(() => StoryViewScreen());
+              },
               child: Container(
-                height: 175,
-                width: MediaQuery.of(context).size.width * 0.3,
-                child: Stack(
-                  alignment: AlignmentDirectional.bottomCenter,
-                  children: [
-                    //NOTE : Cover Image
-                    Align(
-                      alignment: AlignmentDirectional.topCenter,
-                      child: Container(
-                          decoration: BoxDecoration(
-                        image: DecorationImage(
-                          image: NetworkImage(storiesImage[index]),
-                          // : NetworkImage(socialUserModel.coverimage!),
-                          fit: BoxFit.cover,
-                        ),
-                      )),
-                    ),
+                clipBehavior: Clip.antiAliasWithSaveLayer,
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.grey),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                height: 220,
+                child: Container(
+                  height: 175,
+                  width: MediaQuery.of(context).size.width * 0.3,
+                  child: Stack(
+                    alignment: AlignmentDirectional.bottomCenter,
+                    children: [
+                      //NOTE : Cover Image
+                      Align(
+                        alignment: AlignmentDirectional.topCenter,
+                        child: Container(
+                            decoration: BoxDecoration(
+                          image: DecorationImage(
+                            image: NetworkImage(storiesImage[index]),
+                            // : NetworkImage(socialUserModel.coverimage!),
+                            fit: BoxFit.cover,
+                          ),
+                        )),
+                      ),
 
-                    //NOTE profileImage
+                      //NOTE profileImage
 
-                    Padding(
-                      padding:
-                          const EdgeInsetsDirectional.only(bottom: 10, end: 15),
-                      child: Text(
-                        storiesNames[index],
-                        style: TextStyle(
-                          color: Colors.white,
+                      Padding(
+                        padding: const EdgeInsetsDirectional.only(
+                            bottom: 10, end: 15),
+                        child: Text(
+                          storiesNames[index],
+                          style: TextStyle(
+                            color: Colors.white,
+                          ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),
