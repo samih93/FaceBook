@@ -194,15 +194,7 @@ class FeedsScreen extends StatelessWidget {
                       child: Container(
                           decoration: BoxDecoration(
                         image: DecorationImage(
-                          image:
-                              socialLayoutController.socialUserModel!.image ==
-                                          null ||
-                                      socialLayoutController
-                                              .socialUserModel!.image ==
-                                          ""
-                                  ? AssetImage('assets/default profile.png')
-                                      as ImageProvider
-                                  : NetworkImage(storiesImage[index]),
+                          image: NetworkImage(storiesImage[index]),
                           // : NetworkImage(socialUserModel.coverimage!),
                           fit: BoxFit.cover,
                         ),
