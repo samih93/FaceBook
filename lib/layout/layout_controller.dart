@@ -1,4 +1,5 @@
 import 'dart:io';
+import "package:collection/collection.dart";
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -569,18 +570,47 @@ class SocialLayoutController extends GetxController {
 
   //NOTE ------------ Get Stories -----------------------------------
 
-  //Map<String, List<StoryModel?>>  stories  ;
-  List<StoryModel?> stories = [];
+  List<Map<String, dynamic>> storiestemp = [];
+  late Map<dynamic, List<Map<String, dynamic>>> storiesMaptemp;
+  List<StoriesModel?>? storiesModel = [];
   Future<void> getStories() async {
     await FirebaseFirestore.instance
         .collection('stories')
         .get()
         .then((querySnap_of_stories) {
       querySnap_of_stories.docs.forEach((doc_of_stories) {
-        if(stories.contains(doc_of_stories.data()['storyUserId']))
-        print(doc_of_stories.data());
-        //stories.add(StoryModel.formJson(doc_of_stories.data()));
+        //if(stories.contains(doc_of_stories.data()['storyUserId']))
+        //  print("after-----------------")
+        //  print(doc_of_stories.data());
+        //  print("befor---------------");
+        storiestemp.add(doc_of_stories.data());
+
+        // stories.add(StoryModel.formJson(doc_of_stories.data()));
       });
     });
+    storiesMaptemp = groupBy(storiestemp, (Map obj) => obj['storyUserId']);
+    // NOTE fiiled +1 cz i have in addition  my story
+    storiesModel = List<StoriesModel?>.filled(
+        storiesMaptemp.length, StoriesModel(storyuId: '', stories: []));
+    int index = 0;
+
+    storiesMaptemp.forEach((key, value) {
+      print(key);
+      storiesModel![index]!.storyuId = key;
+
+      value.forEach((element) {
+        storiesModel![index]!.stories!.add(StoryModel.formJson(element));
+      });
+      index++;
+    });
+
+    print(storiesModel!.length);
+    for (int i = 0; i < storiesModel!.length; i++) {
+      print(storiesModel![i]!.storyuId.toString());
+    }
+    // storiesModel!.forEach((element) {
+    //   print(element!.storyuId.toString());
+    // });
+    update();
   }
 }

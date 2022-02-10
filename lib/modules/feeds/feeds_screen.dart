@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:social_app/layout/layout_controller.dart';
 import 'package:social_app/model/post_model.dart';
+import 'package:social_app/model/storymodel.dart';
 import 'package:social_app/modules/stories_view/stories_view.dart';
 import 'package:social_app/shared/constants.dart';
 import 'package:social_app/shared/styles/colors.dart';
@@ -46,14 +47,18 @@ class FeedsScreen extends StatelessWidget {
                                       itemBuilder: (context, index) {
                                         if (index == 0)
                                           return buildStoryItem(
-                                              context, true, index);
+                                              context: context, isForMe: true);
                                         else
                                           return buildStoryItem(
-                                              context, false, index - 1);
+                                              context: context,
+                                              isForMe: false,
+                                              storiesModel:
+                                                  socialLayoutController
+                                                      .storiesModel,
+                                              index: index);
                                       },
                                       itemCount: socialLayoutController
-                                              .stories.length +
-                                          1,
+                                          .storiesModel!.length,
                                       separatorBuilder: (context, index) =>
                                           SizedBox(
                                             width: 10,
@@ -90,7 +95,11 @@ class FeedsScreen extends StatelessWidget {
         });
   }
 
-  Widget buildStoryItem(BuildContext context, bool isForMe, int index) {
+  Widget buildStoryItem(
+      {required BuildContext context,
+      required bool isForMe,
+      List<StoriesModel?>? storiesModel,
+      int? index}) {
     return GetBuilder<SocialLayoutController>(
       init: Get.find<SocialLayoutController>(),
       builder: (socialLayoutController) => isForMe
@@ -190,8 +199,10 @@ class FeedsScreen extends StatelessWidget {
                         child: Container(
                             decoration: BoxDecoration(
                           image: DecorationImage(
-                            image: NetworkImage(socialLayoutController
-                                .stories[index]!.image
+                            image: NetworkImage(storiesModel![index!]!
+                                .stories!
+                                .last
+                                .image
                                 .toString()),
                             // : NetworkImage(socialUserModel.coverimage!),
                             fit: BoxFit.cover,
@@ -205,7 +216,10 @@ class FeedsScreen extends StatelessWidget {
                         padding: const EdgeInsetsDirectional.only(
                             bottom: 10, end: 15),
                         child: Text(
-                          socialLayoutController.stories[index]!.storyName
+                          storiesModel[index]!
+                              .stories!
+                              .first
+                              .storyName
                               .toString(),
                           style: TextStyle(
                             color: Colors.white,

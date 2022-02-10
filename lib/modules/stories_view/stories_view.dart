@@ -13,22 +13,23 @@ class StoryViewScreen extends StatelessWidget {
     return GetBuilder<SocialLayoutController>(
       init: Get.find<SocialLayoutController>(),
       builder: (socialLayoutController) => Scaffold(
-        body: _DisplayStories(socialLayoutController.stories),
-      ),
+          // body: _DisplayStories(socialLayoutController.stories),
+          ),
     );
   }
 
-  _DisplayStories(List<StoryModel?> stories) => StoryView(
+  _DisplayStories(Map<dynamic, List<Map<String, dynamic>>> stories) =>
+      StoryView(
         controller: storyController,
         storyItems: <StoryItem>[
           ...List.generate(
               stories.length,
               (index) => StoryItem.inlineImage(
                     imageFit: BoxFit.contain,
-                    url: stories[index]!.image.toString(),
+                    url: stories[index]!.last['image'].toString(),
                     controller: storyController,
                     caption: Text(
-                      stories[index]!.caption.toString(),
+                      stories[index]!.last['caption'].toString(),
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         color: Colors.white,

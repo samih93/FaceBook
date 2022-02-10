@@ -1,3 +1,19 @@
+class StoriesModel {
+  String? storyuId;
+  List<StoryModel>? stories = [];
+
+  StoriesModel({required this.storyuId, required this.stories});
+
+  StoriesModel.fromJson(Map<dynamic, List<Map<String, dynamic>>> map) {
+    map.forEach((key, value) {
+      storyuId = key;
+      value.forEach((element) {
+        stories!.add(StoryModel.formJson(element));
+      });
+    });
+  }
+}
+
 class StoryModel {
   String? storyId;
   String? storyUserId;
