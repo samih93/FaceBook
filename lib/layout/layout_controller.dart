@@ -8,6 +8,8 @@ import 'package:image_picker/image_picker.dart';
 import 'package:social_app/model/message_model.dart';
 import 'package:social_app/model/post_model.dart';
 import 'package:social_app/model/social_usermodel.dart';
+import 'package:social_app/model/storymodel.dart';
+import 'package:social_app/modules/addstory/add_story.dart';
 import 'package:social_app/modules/chats/chat_screen.dart';
 import 'package:social_app/modules/feeds/feeds_screen.dart';
 import 'package:social_app/modules/new_post/new_post_screen.dart';
@@ -19,6 +21,7 @@ import 'package:social_app/shared/network/remote/diohelper.dart';
 class SocialLayoutController extends GetxController {
   SocialLayoutController() {
     if (uId != null) getLoggedInUserData().then((value) {});
+    getStories().then((value) {});
     getPosts().then((value) {});
     getUsers().then((value) {
       print("get user Finished");
@@ -463,17 +466,17 @@ class SocialLayoutController extends GetxController {
     print("UId : " + uId.toString());
     update();
 
-    FirebaseFirestore.instance
-        .collection('users')
-        .get()
-        .then((querySnapshotOf_document) {
-      querySnapshotOf_document.docs.forEach((usermodel) {
+    await FirebaseFirestore.instance.collection('users').get().then((value) {
+      value.docs.forEach((usermodel) {
         if (usermodel.data()['uId'] != uId)
           _users.add(UserModel.fromJson(usermodel.data()));
         _isloadingGetUsers = false;
         update();
       });
     });
+
+    _isloadingGetUsers = false;
+    update();
   }
 
 // NOTE push notification when a friend add a new post
@@ -534,6 +537,50 @@ class SocialLayoutController extends GetxController {
       print("notification pushed");
     }).catchError((error) {
       print(error.toString());
+    });
+  }
+
+  // NOTE ------------------- Add Story ------------------------
+
+  Future<void> AddStory(String uId) async {
+    StoryModel storyModel = StoryModel(
+        storyId: '',
+        storyUserId: uId,
+        storyName: "samih damaj",
+        image:
+            'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQJiDUsiX6YaPIQ1cWEEehfjPYQjHyjJkMU3Q&usqp=CAU',
+        caption: "instagram",
+        storyDate: '2022-02-10 15:30');
+
+    await FirebaseFirestore.instance
+        .collection('stories')
+        .add(storyModel.toJson())
+        .then((value) async {
+      print("story inserted in stories collection");
+      storyModel.storyId = value.id;
+      await FirebaseFirestore.instance
+          .collection('stories')
+          .doc(value.id)
+          .update({'storyId': value.id}).then((value) {
+        print("story updated in stories collection");
+      });
+    });
+  }
+
+  //NOTE ------------ Get Stories -----------------------------------
+
+  //Map<String, List<StoryModel?>>  stories  ;
+  List<StoryModel?> stories = [];
+  Future<void> getStories() async {
+    await FirebaseFirestore.instance
+        .collection('stories')
+        .get()
+        .then((querySnap_of_stories) {
+      querySnap_of_stories.docs.forEach((doc_of_stories) {
+        if(stories.contains(doc_of_stories.data()['storyUserId']))
+        print(doc_of_stories.data());
+        //stories.add(StoryModel.formJson(doc_of_stories.data()));
+      });
     });
   }
 }

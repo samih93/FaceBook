@@ -9,19 +9,6 @@ import 'package:social_app/shared/styles/colors.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class FeedsScreen extends StatelessWidget {
-  List<String> storiesImage = [
-    "https://www.educationquizzes.com/library/KS1-English/Whos-Writing/Writing-Main-web.jpg",
-    "https://www.celebritysizes.com/wp-content/uploads/2017/07/Shawn-Hatosy-200x300.jpg",
-    "https://th.bing.com/th/id/OIP.Mq0NXcuI6YXZeuBJ8umg6AHaJY?pid=ImgDet&w=606&h=768&rs=1",
-    "https://image.brigitte.de/13150502/t/LD/v2/w960/r1.5/-/29---west-side-story--star-kyle-allen-spielt-he-man---1-1---spoton-article-1015109.jpg"
-  ];
-  List<String> storiesNames = [
-    "sony saad",
-    "Elie makhoul",
-    "serg said",
-    "Roy hanna"
-  ];
-
   @override
   Widget build(BuildContext context) {
     return GetBuilder<SocialLayoutController>(
@@ -64,7 +51,9 @@ class FeedsScreen extends StatelessWidget {
                                           return buildStoryItem(
                                               context, false, index - 1);
                                       },
-                                      itemCount: storiesImage.length + 1,
+                                      itemCount: socialLayoutController
+                                              .stories.length +
+                                          1,
                                       separatorBuilder: (context, index) =>
                                           SizedBox(
                                             width: 10,
@@ -153,7 +142,9 @@ class FeedsScreen extends StatelessWidget {
                             radius: 15,
                             child: InkWell(
                               onTap: () {
-                                print('pressed');
+                                socialLayoutController.AddStory(
+                                    socialLayoutController.socialUserModel!.uId
+                                        .toString());
                               },
                               child: Icon(
                                 Icons.add,
@@ -199,7 +190,9 @@ class FeedsScreen extends StatelessWidget {
                         child: Container(
                             decoration: BoxDecoration(
                           image: DecorationImage(
-                            image: NetworkImage(storiesImage[index]),
+                            image: NetworkImage(socialLayoutController
+                                .stories[index]!.image
+                                .toString()),
                             // : NetworkImage(socialUserModel.coverimage!),
                             fit: BoxFit.cover,
                           ),
@@ -212,7 +205,8 @@ class FeedsScreen extends StatelessWidget {
                         padding: const EdgeInsetsDirectional.only(
                             bottom: 10, end: 15),
                         child: Text(
-                          storiesNames[index],
+                          socialLayoutController.stories[index]!.storyName
+                              .toString(),
                           style: TextStyle(
                             color: Colors.white,
                           ),
@@ -306,37 +300,37 @@ class FeedsScreen extends StatelessWidget {
                       //NOTE: post body()
                       Text('${model.text}'),
                       //NOTE : Tags
-                      Padding(
-                        padding: const EdgeInsets.only(top: 10),
-                        child: Container(
-                          width: double.infinity,
-                          child: Wrap(
-                            alignment: WrapAlignment.start,
-                            children: [
-                              Padding(
-                                padding:
-                                    const EdgeInsetsDirectional.only(end: 7.0),
-                                child: Container(
-                                  height: 25,
-                                  child: MaterialButton(
-                                      padding: EdgeInsets.zero,
-                                      minWidth: 1,
-                                      onPressed: () {},
-                                      child: Text(
-                                        "#software_Engineer",
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .caption!
-                                            .copyWith(
-                                              color: defaultColor,
-                                            ),
-                                      )),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
+                      // Padding(
+                      //   padding: const EdgeInsets.only(top: 10),
+                      //   child: Container(
+                      //     width: double.infinity,
+                      //     child: Wrap(
+                      //       alignment: WrapAlignment.start,
+                      //       children: [
+                      //         Padding(
+                      //           padding:
+                      //               const EdgeInsetsDirectional.only(end: 7.0),
+                      //           child: Container(
+                      //             height: 25,
+                      //             child: MaterialButton(
+                      //                 padding: EdgeInsets.zero,
+                      //                 minWidth: 1,
+                      //                 onPressed: () {},
+                      //                 child: Text(
+                      //                   "#software_Engineer",
+                      //                   style: Theme.of(context)
+                      //                       .textTheme
+                      //                       .caption!
+                      //                       .copyWith(
+                      //                         color: defaultColor,
+                      //                       ),
+                      //                 )),
+                      //           ),
+                      //         ),
+                      //       ],
+                      //     ),
+                      //   ),
+                      // ),
 
                       //NOTE : Image Of post
                       if (model.postImage != "")
