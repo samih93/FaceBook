@@ -24,9 +24,7 @@ class SocialLayoutController extends GetxController {
     if (uId != null) getLoggedInUserData().then((value) {});
     getStories().then((value) {});
     getPosts().then((value) {});
-    getUsers().then((value) {
-      print("get user Finished");
-    });
+    getUsers().then((value) {});
   }
 
 // NOTE: -------------------Bottom Navigation------------------------
@@ -336,7 +334,7 @@ class SocialLayoutController extends GetxController {
   Future<void> getPosts() async {
     _listOfPost = [];
     _isloadingGetPosts = true;
-    print("befor " + _isloadingGetPosts.toString());
+
     update();
     await FirebaseFirestore.instance.collection('posts').get().then((value) {
       // NOTE : reference on posts
@@ -385,7 +383,6 @@ class SocialLayoutController extends GetxController {
             : [];
 
         _isloadingGetPosts = false;
-        print("after " + _isloadingGetPosts.toString());
         update();
       });
       // // NOTE if no posts yet
