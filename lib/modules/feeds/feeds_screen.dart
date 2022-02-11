@@ -41,29 +41,27 @@ class FeedsScreen extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Container(
-                                  height: 220,
-                                  child: ListView.separated(
+                                    height: 220,
+                                    child: ListView(
                                       scrollDirection: Axis.horizontal,
-                                      itemBuilder: (context, index) {
-                                        if (index == 0)
-                                          return buildStoryItem(
-                                              context: context, isForMe: true);
-                                        else
-                                          return buildStoryItem(
-                                              context: context,
-                                              isForMe: false,
-                                              storiesModel:
-                                                  socialLayoutController
-                                                      .storiesModel,
-                                              index: index);
-                                      },
-                                      itemCount: socialLayoutController
-                                          .storiesModel!.length,
-                                      separatorBuilder: (context, index) =>
-                                          SizedBox(
-                                            width: 10,
-                                          )),
-                                ),
+                                      children: [
+                                        buildStoryItem(
+                                            context: context, isForMe: true),
+                                        SizedBox(
+                                          width: 10,
+                                        ),
+                                        if (socialLayoutController
+                                                .storiesMap!.length >
+                                            0)
+                                          for (var e in socialLayoutController
+                                              .storiesMap!.entries)
+                                            buildStoryItem(
+                                                context: context,
+                                                isForMe: false,
+                                                story: StoryModel.formJson(
+                                                    e.value.last)),
+                                      ],
+                                    )),
                                 SizedBox(
                                   height: 20,
                                 ),
@@ -98,7 +96,7 @@ class FeedsScreen extends StatelessWidget {
   Widget buildStoryItem(
       {required BuildContext context,
       required bool isForMe,
-      List<StoriesModel?>? storiesModel,
+      StoryModel? story,
       int? index}) {
     return GetBuilder<SocialLayoutController>(
       init: Get.find<SocialLayoutController>(),
@@ -178,9 +176,10 @@ class FeedsScreen extends StatelessWidget {
             )
           : InkWell(
               onTap: () {
-                Get.to(() => StoryViewScreen());
+                Get.to(() => StoryViewScreen(story!.storyUserId.toString()));
               },
               child: Container(
+                margin: EdgeInsets.only(right: 10),
                 clipBehavior: Clip.antiAliasWithSaveLayer,
                 decoration: BoxDecoration(
                   border: Border.all(color: Colors.grey),
@@ -199,11 +198,7 @@ class FeedsScreen extends StatelessWidget {
                         child: Container(
                             decoration: BoxDecoration(
                           image: DecorationImage(
-                            image: NetworkImage(storiesModel![index!]!
-                                .stories!
-                                .last
-                                .image
-                                .toString()),
+                            image: NetworkImage(story!.image.toString()),
                             // : NetworkImage(socialUserModel.coverimage!),
                             fit: BoxFit.cover,
                           ),
@@ -216,11 +211,7 @@ class FeedsScreen extends StatelessWidget {
                         padding: const EdgeInsetsDirectional.only(
                             bottom: 10, end: 15),
                         child: Text(
-                          storiesModel[index]!
-                              .stories!
-                              .first
-                              .storyName
-                              .toString(),
+                          story.storyName.toString(),
                           style: TextStyle(
                             color: Colors.white,
                           ),

@@ -571,8 +571,7 @@ class SocialLayoutController extends GetxController {
   //NOTE ------------ Get Stories -----------------------------------
 
   List<Map<String, dynamic>> storiestemp = [];
-  late Map<dynamic, List<Map<String, dynamic>>> storiesMaptemp;
-  List<StoriesModel?>? storiesModel = [];
+  Map<dynamic, List<Map<String, dynamic>>>? storiesMap;
   Future<void> getStories() async {
     await FirebaseFirestore.instance
         .collection('stories')
@@ -588,29 +587,8 @@ class SocialLayoutController extends GetxController {
         // stories.add(StoryModel.formJson(doc_of_stories.data()));
       });
     });
-    storiesMaptemp = groupBy(storiestemp, (Map obj) => obj['storyUserId']);
-    // NOTE fiiled +1 cz i have in addition  my story
-    storiesModel = List<StoriesModel?>.filled(
-        storiesMaptemp.length, StoriesModel(storyuId: '', stories: []));
-    int index = 0;
+    storiesMap = groupBy(storiestemp, (Map obj) => obj['storyUserId']);
 
-    storiesMaptemp.forEach((key, value) {
-      print(key);
-      storiesModel![index]!.storyuId = key;
-
-      value.forEach((element) {
-        storiesModel![index]!.stories!.add(StoryModel.formJson(element));
-      });
-      index++;
-    });
-
-    print(storiesModel!.length);
-    for (int i = 0; i < storiesModel!.length; i++) {
-      print(storiesModel![i]!.storyuId.toString());
-    }
-    // storiesModel!.forEach((element) {
-    //   print(element!.storyuId.toString());
-    // });
     update();
   }
 }
