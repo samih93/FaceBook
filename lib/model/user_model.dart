@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class UserModel {
   String? name;
   String? email;
@@ -7,6 +9,7 @@ class UserModel {
   String? bio;
   String? uId;
   bool? isemailverified;
+  Timestamp? latestTimeMessage;
 
   UserModel(
       {this.name,
