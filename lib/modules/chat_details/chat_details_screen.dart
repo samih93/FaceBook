@@ -20,9 +20,9 @@ class ChatDetailsScreen extends StatelessWidget {
         init: ChatDetailsController(),
         builder: (chatDetailsController) {
           chatDetailsController.getMessages(receiverId: socialUserModel.uId!);
-          chatDetailsController.listOfMessages.forEach((element) {
-            print(element.text);
-          });
+          // chatDetailsController.listOfMessages.forEach((element) {
+          //   print(element.text);
+          // });
           return Scaffold(
             appBar: AppBar(
               actions: [
@@ -175,7 +175,8 @@ class ChatDetailsScreen extends StatelessWidget {
                                           scrollController.animateTo(
                                               scrollController
                                                   .position.maxScrollExtent,
-                                              duration: Duration(seconds: 1),
+                                              duration:
+                                                  Duration(microseconds: 500),
                                               curve: Curves.fastOutSlowIn);
                                         },
                                         minWidth: 1,

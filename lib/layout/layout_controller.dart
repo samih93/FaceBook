@@ -544,11 +544,11 @@ class SocialLayoutController extends GetxController {
     StoryModel storyModel = StoryModel(
         storyId: '',
         storyUserId: uId,
-        storyName: "samih damaj",
+        storyName: socialUserModel!.name,
         image:
             'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQJiDUsiX6YaPIQ1cWEEehfjPYQjHyjJkMU3Q&usqp=CAU',
         caption: "instagram",
-        storyDate: '2022-02-10 15:30');
+        storyDate: DateTime.now().toString());
 
     await FirebaseFirestore.instance
         .collection('stories')
@@ -586,6 +586,17 @@ class SocialLayoutController extends GetxController {
     });
     storiesMap = groupBy(storiestemp, (Map obj) => obj['storyUserId']);
 
+    update();
+  }
+
+  List<UserModel> userfiltered = [];
+  searchForUser(String query) {
+    userfiltered = _users
+        .where((element) => element.name.toString().contains(query))
+        .toList();
+    userfiltered.forEach((element) {
+      print(element.email);
+    });
     update();
   }
 }
