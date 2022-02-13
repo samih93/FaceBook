@@ -5,10 +5,13 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:social_app/layout/layout_controller.dart';
 import 'package:social_app/model/message_model.dart';
 import 'package:social_app/shared/constants.dart';
 
 class ChatDetailsController extends GetxController {
+  var socialLayoutController = Get.find<SocialLayoutController>();
+
   // NOTE on type in text field to check if empty or not
   var messageText = "".obs;
 
@@ -70,6 +73,13 @@ class ChatDetailsController extends GetxController {
       }).catchError((error) {
         print(error.toString());
       });
+      if (socialLayoutController.myFriends
+          .where((element) => element.uId == receiverId)
+          .isEmpty) {
+        socialLayoutController.getMyFriend();
+      } else {
+        socialLayoutController.getMyFriend();
+      }
 
       update();
     }).catchError((error) {
