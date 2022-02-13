@@ -11,12 +11,24 @@ class ChatScreen extends StatelessWidget {
     return GetBuilder<SocialLayoutController>(
       init: Get.find<SocialLayoutController>(),
       builder: (socialLayoutController) => Scaffold(
-        body: ListView.separated(
-            physics: BouncingScrollPhysics(),
-            itemBuilder: (context, index) =>
-                buildChatItem(socialLayoutController.myFriends[index]),
-            separatorBuilder: (context, index) => myDivider(),
-            itemCount: socialLayoutController.myFriends.length),
+        body: socialLayoutController.myFriends.length > 0
+            ? ListView.separated(
+                physics: BouncingScrollPhysics(),
+                itemBuilder: (context, index) =>
+                    buildChatItem(socialLayoutController.myFriends[index]),
+                separatorBuilder: (context, index) => myDivider(),
+                itemCount: socialLayoutController.myFriends.length)
+            : Center(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Text(
+                    'To Start messaging contact who have social app, tap the bottom to start chat',
+                    style: TextStyle(color: Colors.grey, fontSize: 25),
+                    textAlign: TextAlign
+                        .center, // NOTE to center all paragraph in center
+                  ),
+                ),
+              ),
         floatingActionButton: FloatingActionButton(
             onPressed: () {
               Get.to(() => SearchFriendScreen());

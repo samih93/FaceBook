@@ -34,7 +34,14 @@ class SearchFriendScreen extends StatelessWidget {
                   return Divider();
                 },
                 itemCount: socialLayoutController.userfiltered.length)
-            : Container(),
+            : ListView.separated(
+                itemBuilder: (context, index) {
+                  return buildChatItem(socialLayoutController.users[index]);
+                },
+                separatorBuilder: (context, index) {
+                  return Divider();
+                },
+                itemCount: socialLayoutController.users.length),
       ),
     );
   }

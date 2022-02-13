@@ -78,7 +78,7 @@ class ChatDetailsController extends GetxController {
           .isEmpty) {
         socialLayoutController.getMyFriend();
       } else {
-        socialLayoutController.getMyFriend();
+        socialLayoutController.getMyFriend(isAlreadyFriend: true,receiverId:receiverId);
       }
 
       update();
