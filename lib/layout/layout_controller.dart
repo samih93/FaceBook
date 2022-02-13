@@ -468,7 +468,11 @@ class SocialLayoutController extends GetxController {
 // NOTE get My Chat Ids and Get My Users
   List<String> listOfMyChatIds = [];
   List<UserModel> myFriends = [];
+  List<Timestamp> myfriendMesageTime = [];
   Future<void> getMyFriend() async {
+    myFriends = [];
+
+    // NOTE get Ids of my friends
     await FirebaseFirestore.instance
         .collection('users')
         .doc(uId)
@@ -476,20 +480,40 @@ class SocialLayoutController extends GetxController {
         .orderBy('latestTimeMessage', descending: true)
         .get()
         .then((value) {
-      value.docs.forEach((element) {
-        listOfMyChatIds.add(element.id);
+      value.docs.forEach((doc_of_chat) {
+        print(doc_of_chat.id);
+        listOfMyChatIds.add(doc_of_chat.id);
+        myfriendMesageTime.add(doc_of_chat.data()['latestTimeMessage']);
       });
-    });
 
-    var userRef = FirebaseFirestore.instance.collection('users');
-    userRef
-        .where(FieldPath.documentId, whereIn: listOfMyChatIds)
-        .get()
-        .then((value) {
-      value.docs.forEach((element) {
-        myFriends.add(UserModel.fromJson(element.data()));
+
+      var userRef = FirebaseFirestore.instance.collection('users');
+
+      userRef
+          .where(FieldPath.documentId, whereIn: listOfMyChatIds) // NOTE Get user where in Friend Ids
+          .get()
+          .then((value) {
+        int indexforMessage = 0;
+        value.docs.forEach((doc_of_user) {
+          UserModel userModel = UserModel.fromJson(doc_of_user.data());
+          // NOTE set time stamp of latest message for receiver friend 
+          userModel.latestTimeMessage = myfriendMesageTime[indexforMessage];
+          myFriends.add(userModel);
+          indexforMessage++;
+          //print(element.data());
+        });
+        // NOTE : Sort List desc order by date
+        myFriends.length != 0
+            ? myFriends.sort((a, b) {
+                //NOTE : compareTo : ==> 0 if a==b
+                return a.latestTimeMessage!.compareTo(a.latestTimeMessage!);
+              })
+            : [];
+
+        myFriends.forEach((element) {
+          print("after :" + element.uId.toString());
+        });
         update();
-        print(element.data());
       });
     });
   }
