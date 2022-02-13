@@ -18,7 +18,7 @@ class SearchFriendScreen extends StatelessWidget {
               controller: queryController,
               onchange: (query) {
                 print(query);
-                  socialLayoutController.searchForUser(query!);
+                socialLayoutController.searchForUser(query!);
               },
               inputtype: TextInputType.name,
               border: InputBorder.none,

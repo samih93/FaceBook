@@ -3,9 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:social_app/layout/layout.dart';
 import 'package:social_app/model/message_model.dart';
 import 'package:social_app/model/user_model.dart';
 import 'package:social_app/modules/chat_details/chatdetailsController.dart';
+import 'package:social_app/modules/chats/chat_screen.dart';
 import 'package:social_app/shared/constants.dart';
 import 'package:social_app/shared/styles/colors.dart';
 
@@ -27,6 +29,12 @@ class ChatDetailsScreen extends StatelessWidget {
           // });
           return Scaffold(
             appBar: AppBar(
+              leading: IconButton(
+                icon: Icon(Icons.arrow_back),
+                onPressed: () {
+                  Get.off(() => SocialLayout());
+                },
+              ),
               actions: [
                 IconButton(
                     onPressed: () {}, icon: Icon(Icons.video_call_rounded)),
