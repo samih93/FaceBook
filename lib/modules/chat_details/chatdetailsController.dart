@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
@@ -10,6 +11,12 @@ import 'package:social_app/shared/constants.dart';
 class ChatDetailsController extends GetxController {
   // NOTE on type in text field to check if empty or not
   var messageText = "".obs;
+
+  @override
+  void onInit() {
+    // TODO: implement onInit
+    super.onInit();
+  }
 
   void ontypingmessage(value) {
     messageText.value = value;
@@ -41,23 +48,29 @@ class ChatDetailsController extends GetxController {
         .collection('messages')
         .add(model.toJson())
         .then((value) {
-      isSendMessageSuccess.value = true;
-      update();
-    }).catchError((error) {
-      print(error.toString());
-    });
+      FirebaseFirestore.instance
+          .collection('users')
+          .doc(uId)
+          .collection('chats')
+          .doc(receiverId)
+          .set({'latestTimeMessage': DateTime.now()}).then((value) {});
 
-    // NOTE write message in user received
+      // NOTE write message in user received
+      FirebaseFirestore.instance
+          .collection('users')
+          .doc(receiverId)
+          .collection('chats')
+          .doc(uId)
+          .collection('messages')
+          .add(model.toJson())
+          .then((value) {
+        // NOTE add lastest time message in receiver message
+        isSendMessageSuccess.value = true;
+        update();
+      }).catchError((error) {
+        print(error.toString());
+      });
 
-    FirebaseFirestore.instance
-        .collection('users')
-        .doc(receiverId)
-        .collection('chats')
-        .doc(uId)
-        .collection('messages')
-        .add(model.toJson())
-        .then((value) {
-      isSendMessageSuccess.value = true;
       update();
     }).catchError((error) {
       print(error.toString());

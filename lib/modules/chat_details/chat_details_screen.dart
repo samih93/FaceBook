@@ -1,8 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:social_app/model/message_model.dart';
-import 'package:social_app/model/social_usermodel.dart';
+import 'package:social_app/model/user_model.dart';
 import 'package:social_app/modules/chat_details/chatdetailsController.dart';
 import 'package:social_app/shared/constants.dart';
 import 'package:social_app/shared/styles/colors.dart';
@@ -163,13 +165,17 @@ class ChatDetailsScreen extends StatelessWidget {
                                       width: 50,
                                       child: MaterialButton(
                                         onPressed: () {
+                                          //NOTE to close keyboard
+                                          // SystemChannels.textInput
+                                          //     .invokeMethod('TextInput.hide');
+
                                           chatDetailsController.sendMessage(
                                               receiverId: socialUserModel.uId
                                                   .toString(),
                                               messageDate:
                                                   DateTime.now().toString(),
                                               text: textController.text);
-                                          textController.text = "";
+                                          textController.clear();
                                           chatDetailsController
                                               .ontypingmessage("");
                                           scrollController.animateTo(
@@ -251,7 +257,7 @@ class ChatDetailsScreen extends StatelessWidget {
                       width: 10,
                     ),
                     Text(
-                      getMessageTimeFromDate(model.messageDate.toString()),
+                      "${DateFormat("h:mm a").format(DateTime.parse(model.messageDate.toString()))}",
                       style: TextStyle(color: Colors.grey.shade700),
                     ),
                   ],
@@ -329,7 +335,7 @@ class ChatDetailsScreen extends StatelessWidget {
                       width: 10,
                     ),
                     Text(
-                      getMessageTimeFromDate(model.messageDate.toString()),
+                      "${DateFormat("h:mm a").format(DateTime.parse(model.messageDate.toString()))}",
                       style: TextStyle(color: Colors.grey.shade700),
                     ),
                   ],

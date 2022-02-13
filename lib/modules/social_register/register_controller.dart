@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
-import 'package:social_app/model/social_usermodel.dart';
+import 'package:social_app/model/user_model.dart';
 import 'package:social_app/shared/components/componets.dart';
 import 'package:social_app/shared/constants.dart';
 
@@ -88,13 +88,14 @@ class RegisterController extends GetxController {
       required String phone,
       required String uid}) async {
     UserModel model = UserModel(
-        name: name,
-        email: email,
-        phone: phone,
-        image: '',
-        coverimage: '',
-        bio: 'write your bio ...',
-        uId: uid);
+      name: name,
+      email: email,
+      phone: phone,
+      image: '',
+      coverimage: '',
+      bio: 'write your bio ...',
+      uId: uid,
+    );
     await FirebaseFirestore.instance
         .collection('users')
         .doc(uid)

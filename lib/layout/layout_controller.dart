@@ -8,8 +8,8 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:social_app/model/message_model.dart';
 import 'package:social_app/model/post_model.dart';
-import 'package:social_app/model/social_usermodel.dart';
 import 'package:social_app/model/storymodel.dart';
+import 'package:social_app/model/user_model.dart';
 import 'package:social_app/modules/addstory/add_story.dart';
 import 'package:social_app/modules/chats/chat_screen.dart';
 import 'package:social_app/modules/feeds/feeds_screen.dart';
@@ -24,7 +24,8 @@ class SocialLayoutController extends GetxController {
     if (uId != null) getLoggedInUserData().then((value) {});
     getStories().then((value) {});
     getPosts().then((value) {});
-    getUsers().then((value) {});
+    getAllUsers().then((value) {});
+    getMyFriend().then((value) {});
   }
 
 // NOTE: -------------------Bottom Navigation------------------------
@@ -446,20 +447,7 @@ class SocialLayoutController extends GetxController {
   bool? _isloadingGetUsers = false;
   bool? get isloadingGetUsers => _isloadingGetUsers;
 
-  // Future<void> getUsers() async {
-  //   _isloadingGetUsers = true;
-  //   update();
-  //   await FirebaseFirestore.instance.collection('users').get().then((value) {
-  //     value.docs.forEach((usermodel) {
-  //       if (usermodel.data()['uId'] != uId)
-  //         _users.add(UserModel.fromJson(usermodel.data()));
-  //       _isloadingGetUsers = false;
-  //       update();
-  //     });
-  //   });
-  // }
-
-  Future<void> getUsers() async {
+  Future<void> getAllUsers() async {
     _isloadingGetUsers = true;
     print("UId : " + uId.toString());
     update();
@@ -475,6 +463,35 @@ class SocialLayoutController extends GetxController {
 
     _isloadingGetUsers = false;
     update();
+  }
+
+// NOTE get My Chat Ids and Get My Users
+  List<String> listOfMyChatIds = [];
+  List<UserModel> myFriends = [];
+  Future<void> getMyFriend() async {
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(uId)
+        .collection('chats')
+        .orderBy('latestTimeMessage', descending: true)
+        .get()
+        .then((value) {
+      value.docs.forEach((element) {
+        listOfMyChatIds.add(element.id);
+      });
+    });
+
+    var userRef = FirebaseFirestore.instance.collection('users');
+    userRef
+        .where(FieldPath.documentId, whereIn: listOfMyChatIds)
+        .get()
+        .then((value) {
+      value.docs.forEach((element) {
+        myFriends.add(UserModel.fromJson(element.data()));
+        update();
+        print(element.data());
+      });
+    });
   }
 
 // NOTE push notification when a friend add a new post
