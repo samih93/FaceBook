@@ -467,25 +467,41 @@ class SocialLayoutController extends GetxController {
   }
 
 // NOTE get My Chat Ids and Get My Users and get latest message of each one
-  List<String> listOfMyChatIds = [];
+//TODO: fix message for user
   List<UserModel> myFriends = [];
-  List<UserModel> myFriendstemp = [];
-  List<Timestamp> myfriendMesageTime = [];
+
   Future<void> getMyFriend(
       {bool isAlreadyFriend = false, String receiverId = ''}) async {
-    MessageModel? messageModel;
+    List<UserModel> myFriendstemp = [];
+    List<Timestamp> myfriendMesageTime = [];
+    List<String> listOfMyChatIds = [];
+    List<MessageModel> myfriendsMesage = [];
+
+    UserModel? userModel;
+
+// NOTE if already friend i need to move him to the first and get latest message and set it
     if (isAlreadyFriend) {
       if (receiverId != '') {
         UserModel model =
             myFriends.singleWhere((element) => element.uId == receiverId);
         myFriends.remove(model);
-        myFriends.insert(0, model);
-        update();
+        await FirebaseFirestore.instance
+            .collection('users')
+            .doc(uId)
+            .collection('chats')
+            .doc(receiverId)
+            .collection('messages')
+            .orderBy('messageDate', descending: true)
+            .get()
+            .then((value) {
+          print(value.docs.first.data()['text']);
+          // NOTE Set latest message to user model .message model
+          model.messageModel = MessageModel.fromJson(value.docs.first.data());
+          myFriends.insert(0, model);
+          update();
+        });
       }
     } else {
-      myFriends = [];
-      myFriendstemp = [];
-      listOfMyChatIds = [];
       // NOTE get Ids of my friends
       await FirebaseFirestore.instance
           .collection('users')
@@ -493,42 +509,86 @@ class SocialLayoutController extends GetxController {
           .collection('chats')
           .orderBy('latestTimeMessage', descending: true)
           .get()
-          .then((value) {
+          .then((value) async {
         if (value.docs.length > 0) {
-          value.docs.forEach((doc_of_chat) {
-            //NOTE  Get latest message received
-            doc_of_chat.reference
-                .collection('messages')
-                .orderBy('messageDate', descending: true)
-                .get()
-                .then((value) {
-              if (value.docs.length > 0) {
-                messageModel = MessageModel.fromJson(value.docs[0]
-                    .data()); // doc[0] its first MessageModel that i need
-              }
-            });
-
+          value.docs.forEach((doc_of_chat) async {
+            //   print(doc_of_chat.data());
             print("befor: " + doc_of_chat.id);
             listOfMyChatIds.add(doc_of_chat.id);
+            // NOTE get latest time for each friend chat
             myfriendMesageTime.add(doc_of_chat.data()['latestTimeMessage']);
           });
-        }
 
-        var userRef = FirebaseFirestore.instance.collection('users');
-        if (listOfMyChatIds.length > 0) {
-          userRef
-              .where(FieldPath.documentId,
-                  whereIn: listOfMyChatIds) // NOTE Get user where in Friend Ids
+          // print(myfriendsMesage.length);
+
+          // NOTE get latest Message for each friend
+          await FirebaseFirestore.instance
+              .collection('users')
+              .doc(uId)
+              .collection('chats')
+              .orderBy('latestTimeMessage', descending: true)
               .get()
               .then((value) {
-            int indexforMessage = 0;
-            value.docs.forEach((doc_of_user) {
-              UserModel? userModel = UserModel.fromJson(doc_of_user.data());
-              // NOTE set time stamp of latest message for receiver friend
-              userModel.latestTimeMessage = myfriendMesageTime[indexforMessage];
-              myFriendstemp.add(userModel);
-              indexforMessage++;
+            value.docs.forEach((element) async {
+              element.reference
+                  .collection('messages')
+                  .orderBy('messageDate', descending: true)
+                  .get()
+                  .then((value) {
+                if (value.docs.length > 0) {
+                  // print("order 1 - " +
+                  //     value.docs.first.data()['receiverId'].toString());
+                  myfriendsMesage
+                      .add(MessageModel.fromJson(value.docs.first.data()));
+                }
+              });
             });
+          });
+
+          await Future.delayed(const Duration(seconds: 1), () {});
+
+          var userRef = await FirebaseFirestore.instance.collection('users');
+          if (listOfMyChatIds.length > 0) {
+            userRef
+                .where(FieldPath.documentId,
+                    whereIn:
+                        listOfMyChatIds) // NOTE Get user where in Friend Ids
+                .get()
+                .then((value) {
+              int indexforMessage = 0;
+              if (value.docs.length > 0) {
+                value.docs.forEach((doc_of_user) {
+                  userModel = UserModel.fromJson(doc_of_user.data());
+
+                  // NOTE set time stamp of latest message for each friend
+                  userModel!.latestTimeMessage =
+                      myfriendMesageTime[indexforMessage];
+                  myFriendstemp.add(userModel!);
+
+                  indexforMessage++;
+                });
+              }
+              int indexforOrdering = 0;
+              listOfMyChatIds.forEach((element) {
+                UserModel model = myFriendstemp.singleWhere((element) =>
+                    element.uId == listOfMyChatIds[indexforOrdering]);
+                // NOTE set latest message received to each user
+                if (myfriendsMesage.length > 0)
+                  model.messageModel = myfriendsMesage.singleWhere((element) =>
+                      element.receiverId == listOfMyChatIds[indexforOrdering]);
+
+                myFriends.add(model);
+                indexforOrdering++;
+              });
+              myFriends.forEach((element) {
+                print("after :" + element.uId.toString());
+                // print(element.messageModel!.toJson().toString());
+              });
+              update();
+            });
+
+            // NOTE Get Users where list of Ids and stor it in temp list
+
             // NOTE : Sort Friend List desc order by date bu not working
             // myFriendstemp.length != 0
             //     ? myFriendstemp.sort((a, b) {
@@ -538,21 +598,9 @@ class SocialLayoutController extends GetxController {
             //         return b.latestTimeMessage!.compareTo(a.latestTimeMessage!);
             //       })
             //     : [];
-            int indexforOrdering = 0;
-            listOfMyChatIds.forEach((element) {
-              UserModel model = myFriendstemp.singleWhere((element) =>
-                  element.uId == listOfMyChatIds[indexforOrdering]);
-              model.messageModel =
-                  messageModel; // NOTE set latest message received to each user
-              myFriends.add(model);
-              indexforOrdering++;
-            });
-            myFriends.forEach((element) {
-              print("after :" + element.uId.toString());
-              print(element.messageModel!.toJson().toString());
-            });
-            update();
-          });
+            //NOTE ordering list of friend order by desc
+
+          }
         }
       });
     }

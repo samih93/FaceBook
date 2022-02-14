@@ -138,9 +138,9 @@ Color chooseToastColor(ToastStatus status) {
 
 // NOTE buildChatItem
 Widget buildChatItem(
-  BuildContext context,
-  UserModel userModel, bool isForChatScreen=false
-) =>
+        {required BuildContext context,
+        required UserModel userModel,
+        bool isForChatScreen = false}) =>
     InkWell(
       onTap: () {
         // TODO: get Messages
@@ -151,7 +151,7 @@ Widget buildChatItem(
         ));
       },
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 4),
+        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 9),
         child: Row(
           children: [
             CircleAvatar(
@@ -182,24 +182,32 @@ Widget buildChatItem(
                     SizedBox(
                       width: 5,
                     ),
-                    Text(
-                      "${DateFormat("h:mm a").format(DateTime.parse(userModel.messageModel!.messageDate.toString()))}",
-                      style: TextStyle(color: Colors.grey),
-                    )
+                    isForChatScreen && userModel.messageModel != null
+                        ? Text(
+                            "${DateFormat("h:mm a").format(DateTime.parse(userModel.messageModel!.messageDate.toString()))}",
+                            style: TextStyle(color: Colors.grey),
+                          )
+                        : SizedBox(
+                            width: 0,
+                          ),
                   ],
                 ),
                 SizedBox(
                   height: 6,
                 ),
-                Container(
-                  width: MediaQuery.of(context).size.width * 0.7,
-                  child: Text(
-                    userModel.messageModel!.text.toString(),
-                    style: TextStyle(color: Colors.grey, fontSize: 16),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
+                isForChatScreen && userModel.messageModel != null
+                    ? Container(
+                        width: MediaQuery.of(context).size.width * 0.7,
+                        child: Text(
+                          userModel.messageModel!.text.toString(),
+                          style: TextStyle(color: Colors.grey, fontSize: 16),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      )
+                    : SizedBox(
+                        height: 0,
+                      ),
               ],
             )),
           ],

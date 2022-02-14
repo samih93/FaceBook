@@ -18,7 +18,9 @@ class ChatScreen extends StatelessWidget {
               ? ListView.separated(
                   physics: BouncingScrollPhysics(),
                   itemBuilder: (context, index) => buildChatItem(
-                      context, socialLayoutController.myFriends[index]),
+                      context: context,
+                      userModel: socialLayoutController.myFriends[index],
+                      isForChatScreen: true),
                   separatorBuilder: (context, index) => myDivider(),
                   itemCount: socialLayoutController.myFriends.length)
               : Center(

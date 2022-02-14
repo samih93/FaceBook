@@ -30,7 +30,8 @@ class SearchFriendScreen extends StatelessWidget {
               ? ListView.separated(
                   itemBuilder: (context, index) {
                     return buildChatItem(
-                        context, socialLayoutController.userfiltered[index]);
+                        context: context,
+                        userModel: socialLayoutController.userfiltered[index]);
                   },
                   separatorBuilder: (context, index) {
                     return Divider();
@@ -39,7 +40,8 @@ class SearchFriendScreen extends StatelessWidget {
               : ListView.separated(
                   itemBuilder: (context, index) {
                     return buildChatItem(
-                        context, socialLayoutController.users[index]);
+                        context: context,
+                        userModel: socialLayoutController.users[index]);
                   },
                   separatorBuilder: (context, index) {
                     return Divider();
