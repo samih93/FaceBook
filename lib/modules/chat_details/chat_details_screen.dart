@@ -29,12 +29,12 @@ class ChatDetailsScreen extends StatelessWidget {
           // });
           return Scaffold(
             appBar: AppBar(
-              leading: IconButton(
-                icon: Icon(Icons.arrow_back),
-                onPressed: () {
-                  Get.off(() => SocialLayout());
-                },
-              ),
+              // leading: IconButton(
+              //   icon: Icon(Icons.arrow_back),
+              //   onPressed: () {
+              //     Get.off(SocialLayout());
+              //   },
+              // ),
               actions: [
                 IconButton(
                     onPressed: () {}, icon: Icon(Icons.video_call_rounded)),

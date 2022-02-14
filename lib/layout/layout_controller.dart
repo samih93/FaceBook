@@ -502,6 +502,8 @@ class SocialLayoutController extends GetxController {
         });
       }
     } else {
+      myFriends = [];
+
       // NOTE get Ids of my friends
       await FirebaseFirestore.instance
           .collection('users')
