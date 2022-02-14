@@ -466,13 +466,14 @@ class SocialLayoutController extends GetxController {
     update();
   }
 
-// NOTE get My Chat Ids and Get My Users
+// NOTE get My Chat Ids and Get My Users and get latest message of each one
   List<String> listOfMyChatIds = [];
   List<UserModel> myFriends = [];
   List<UserModel> myFriendstemp = [];
   List<Timestamp> myfriendMesageTime = [];
   Future<void> getMyFriend(
       {bool isAlreadyFriend = false, String receiverId = ''}) async {
+    MessageModel? messageModel;
     if (isAlreadyFriend) {
       if (receiverId != '') {
         UserModel model =
@@ -495,6 +496,18 @@ class SocialLayoutController extends GetxController {
           .then((value) {
         if (value.docs.length > 0) {
           value.docs.forEach((doc_of_chat) {
+            //NOTE  Get latest message received
+            doc_of_chat.reference
+                .collection('messages')
+                .orderBy('messageDate', descending: true)
+                .get()
+                .then((value) {
+              if (value.docs.length > 0) {
+                messageModel = MessageModel.fromJson(value.docs[0]
+                    .data()); // doc[0] its first MessageModel that i need
+              }
+            });
+
             print("befor: " + doc_of_chat.id);
             listOfMyChatIds.add(doc_of_chat.id);
             myfriendMesageTime.add(doc_of_chat.data()['latestTimeMessage']);
@@ -510,7 +523,7 @@ class SocialLayoutController extends GetxController {
               .then((value) {
             int indexforMessage = 0;
             value.docs.forEach((doc_of_user) {
-              UserModel userModel = UserModel.fromJson(doc_of_user.data());
+              UserModel? userModel = UserModel.fromJson(doc_of_user.data());
               // NOTE set time stamp of latest message for receiver friend
               userModel.latestTimeMessage = myfriendMesageTime[indexforMessage];
               myFriendstemp.add(userModel);
@@ -529,11 +542,14 @@ class SocialLayoutController extends GetxController {
             listOfMyChatIds.forEach((element) {
               UserModel model = myFriendstemp.singleWhere((element) =>
                   element.uId == listOfMyChatIds[indexforOrdering]);
+              model.messageModel =
+                  messageModel; // NOTE set latest message received to each user
               myFriends.add(model);
               indexforOrdering++;
             });
             myFriends.forEach((element) {
               print("after :" + element.uId.toString());
+              print(element.messageModel!.toJson().toString());
             });
             update();
           });

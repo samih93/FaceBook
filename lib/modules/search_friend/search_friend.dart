@@ -24,24 +24,28 @@ class SearchFriendScreen extends StatelessWidget {
               border: InputBorder.none,
               hinttext: "Search for a friend ... "),
         ),
-        body: socialLayoutController.userfiltered.length > 0
-            ? ListView.separated(
-                itemBuilder: (context, index) {
-                  return buildChatItem(
-                      socialLayoutController.userfiltered[index]);
-                },
-                separatorBuilder: (context, index) {
-                  return Divider();
-                },
-                itemCount: socialLayoutController.userfiltered.length)
-            : ListView.separated(
-                itemBuilder: (context, index) {
-                  return buildChatItem(socialLayoutController.users[index]);
-                },
-                separatorBuilder: (context, index) {
-                  return Divider();
-                },
-                itemCount: socialLayoutController.users.length),
+        body: Container(
+          margin: EdgeInsets.only(top: 30),
+          child: socialLayoutController.userfiltered.length > 0
+              ? ListView.separated(
+                  itemBuilder: (context, index) {
+                    return buildChatItem(
+                        context, socialLayoutController.userfiltered[index]);
+                  },
+                  separatorBuilder: (context, index) {
+                    return Divider();
+                  },
+                  itemCount: socialLayoutController.userfiltered.length)
+              : ListView.separated(
+                  itemBuilder: (context, index) {
+                    return buildChatItem(
+                        context, socialLayoutController.users[index]);
+                  },
+                  separatorBuilder: (context, index) {
+                    return Divider();
+                  },
+                  itemCount: socialLayoutController.users.length),
+        ),
       ),
     );
   }

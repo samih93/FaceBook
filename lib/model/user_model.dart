@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:social_app/model/message_model.dart';
 
 class UserModel {
   String? name;
@@ -9,7 +10,8 @@ class UserModel {
   String? bio;
   String? uId;
   bool? isemailverified;
-  Timestamp? latestTimeMessage;
+  Timestamp? latestTimeMessage; // TO order chats descending by time
+  MessageModel? messageModel; // to diplay the last message in chat screen
 
   UserModel(
       {this.name,

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:social_app/model/user_model.dart';
 import 'package:social_app/modules/chat_details/chat_details_screen.dart';
 import 'package:social_app/shared/styles/colors.dart';
@@ -137,27 +138,27 @@ Color chooseToastColor(ToastStatus status) {
 
 // NOTE buildChatItem
 Widget buildChatItem(
-  UserModel socialUserModel,
+  BuildContext context,
+  UserModel userModel, bool isForChatScreen=false
 ) =>
     InkWell(
       onTap: () {
         // TODO: get Messages
         // socialLayoutController.getMessages(
-        //     receiverId: socialUserModel.uId.toString());
+        //     receiverId: userModel.uId.toString());
         Get.to(ChatDetailsScreen(
-          socialUserModel: socialUserModel,
+          socialUserModel: userModel,
         ));
       },
       child: Padding(
-        padding: const EdgeInsets.all(20.0),
+        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 4),
         child: Row(
           children: [
             CircleAvatar(
               radius: 20,
-              backgroundImage: socialUserModel.image == null ||
-                      socialUserModel.image == ""
+              backgroundImage: userModel.image == null || userModel.image == ""
                   ? AssetImage('assets/default profile.png') as ImageProvider
-                  : NetworkImage(socialUserModel.image!),
+                  : NetworkImage(userModel.image!),
             ),
             SizedBox(
               width: 10,
@@ -169,14 +170,35 @@ Widget buildChatItem(
               children: [
                 Row(
                   children: [
-                    Text(
-                      socialUserModel.name.toString(),
-                      style: TextStyle(height: 1.4),
+                    Expanded(
+                      child: Text(
+                        userModel.name.toString(),
+                        style: TextStyle(
+                            height: 1.4,
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold),
+                      ),
                     ),
                     SizedBox(
                       width: 5,
                     ),
+                    Text(
+                      "${DateFormat("h:mm a").format(DateTime.parse(userModel.messageModel!.messageDate.toString()))}",
+                      style: TextStyle(color: Colors.grey),
+                    )
                   ],
+                ),
+                SizedBox(
+                  height: 6,
+                ),
+                Container(
+                  width: MediaQuery.of(context).size.width * 0.7,
+                  child: Text(
+                    userModel.messageModel!.text.toString(),
+                    style: TextStyle(color: Colors.grey, fontSize: 16),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
                 ),
               ],
             )),
