@@ -53,6 +53,7 @@ class ChatDetailsController extends GetxController {
         .collection('messages')
         .add(messageModel.toJson())
         .then((value) {
+      // NOTE set latest time in doc of sender
       FirebaseFirestore.instance
           .collection('users')
           .doc(uId)
@@ -60,7 +61,6 @@ class ChatDetailsController extends GetxController {
           .doc(receiverId)
           .set({'latestTimeMessage': DateTime.now()}).then((value) {});
 
-      // NOTE write message in user received
       FirebaseFirestore.instance
           .collection('users')
           .doc(receiverId)
@@ -69,6 +69,13 @@ class ChatDetailsController extends GetxController {
           .collection('messages')
           .add(messageModel.toJson())
           .then((value) {
+        // NOTE set latest time in doc of receiver
+        FirebaseFirestore.instance
+            .collection('users')
+            .doc(receiverId)
+            .collection('chats')
+            .doc(uId)
+            .set({'latestTimeMessage': DateTime.now()}).then((value) {});
         // NOTE add lastest time message in receiver message
         isSendMessageSuccess.value = true;
         update();
@@ -79,6 +86,7 @@ class ChatDetailsController extends GetxController {
             .get()
             .then((value) {
           UserModel usermodel = UserModel.fromJson(value.data()!);
+          print(usermodel.toJson());
           pushNotificationOnsendMessage(messageModel, usermodel);
         });
       }).catchError((error) {
@@ -117,6 +125,7 @@ class ChatDetailsController extends GetxController {
         .doc(receiverId)
         .collection('messages')
         .orderBy('messageDate')
+        .limitToLast(10)
         .snapshots()
         // ! Stream => of type Stream<QureySnapshot>  get data and still open to receive new updates
         // ! get => of type Future<QuerySnapshot> get data one time
@@ -194,8 +203,9 @@ class ChatDetailsController extends GetxController {
   //NOTE push notification to my friend when i send a message
   void pushNotificationOnsendMessage(
       MessageModel messageModel, UserModel userModel) {
+    print("device token :" + userModel.deviceToken.toString());
     DioHelper.postData(url: 'https://fcm.googleapis.com/fcm/send', data: {
-      "to": token,
+      "to": userModel.deviceToken,
       "notification": {
         "body": messageModel.text,
         "title": userModel.name,
@@ -210,11 +220,7 @@ class ChatDetailsController extends GetxController {
           "default_light_settings": true
         }
       },
-      "data": {
-        "click_action": "FLUTTER_NOTIFICATION_CLICK",
-        "message": messageModel.text,
-        "messagetime": messageModel.messageDate
-      }
+      "data": {"messageModel": messageModel.toJson()}
     }).then((value) {
       print("notification pushed");
     }).catchError((error) {

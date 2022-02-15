@@ -10,8 +10,10 @@ class UserModel {
   String? bio;
   String? uId;
   bool? isemailverified;
+  String? deviceToken;
+  bool? isUnread;
   Timestamp? latestTimeMessage; // TO order chats descending by time
-  MessageModel? messageModel; // to diplay the last message in chat screen
+  MessageModel? messageModel;
 
   UserModel(
       {this.name,
@@ -31,6 +33,7 @@ class UserModel {
     coverimage = json['coverimage'];
     bio = json['bio'];
     uId = json['uId'];
+    deviceToken = json['deviceToken'] ?? '';
     isemailverified = json['isemailverified'];
   }
 
@@ -43,6 +46,7 @@ class UserModel {
       'coverimage': coverimage,
       'bio': bio,
       'uId': uId,
+      'deviceToken': deviceToken,
       'isemailverified': isemailverified,
     };
   }

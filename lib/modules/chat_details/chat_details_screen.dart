@@ -249,20 +249,27 @@ class ChatDetailsScreen extends StatelessWidget {
           ? Align(
               alignment: AlignmentDirectional.centerEnd,
               child: Container(
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
+                child: Stack(
+                  alignment: Alignment.bottomRight,
                   children: [
-                    Container(
-                      constraints: BoxConstraints(
-                          maxWidth: MediaQuery.of(context).size.width * 0.65),
-                      child: Text(
-                        model.text.toString(),
-                        style: TextStyle(fontSize: 23),
-                        maxLines: 100,
-                      ),
-                    ),
-                    SizedBox(
-                      width: 10,
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Container(
+                          constraints: BoxConstraints(
+                              maxWidth:
+                                  MediaQuery.of(context).size.width * 0.62),
+                          child: Text(
+                            model.text.toString(),
+                            style: TextStyle(fontSize: 23),
+                            maxLines: 100,
+                          ),
+                        ),
+                        SizedBox(
+                          width: 70,
+                        ),
+                      ],
                     ),
                     Text(
                       "${DateFormat("h:mm a").format(DateTime.parse(model.messageDate.toString()))}",
@@ -327,20 +334,27 @@ class ChatDetailsScreen extends StatelessWidget {
           ? Align(
               alignment: AlignmentDirectional.centerStart,
               child: Container(
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
+                child: Stack(
+                  alignment: Alignment.bottomRight,
                   children: [
-                    Container(
-                      constraints: BoxConstraints(
-                          maxWidth: MediaQuery.of(context).size.width * 0.65),
-                      child: Text(
-                        model.text.toString(),
-                        style: TextStyle(fontSize: 23),
-                        maxLines: 20,
-                      ),
-                    ),
-                    SizedBox(
-                      width: 10,
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Container(
+                          constraints: BoxConstraints(
+                              maxWidth:
+                                  MediaQuery.of(context).size.width * 0.62),
+                          child: Text(
+                            model.text.toString(),
+                            style: TextStyle(fontSize: 23),
+                            maxLines: 20,
+                          ),
+                        ),
+                        SizedBox(
+                          width: 70,
+                        ),
+                      ],
                     ),
                     Text(
                       "${DateFormat("h:mm a").format(DateTime.parse(model.messageDate.toString()))}",
@@ -359,6 +373,7 @@ class ChatDetailsScreen extends StatelessWidget {
                 ),
               ),
             )
+          // Image
           : Stack(
               alignment: Alignment.bottomRight,
               children: [

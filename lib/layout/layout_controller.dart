@@ -545,9 +545,11 @@ class SocialLayoutController extends GetxController {
                 }
               });
             });
+          }).catchError((error) {
+            print(error.toString());
           });
 
-          await Future.delayed(const Duration(seconds: 1), () {});
+          await Future.delayed(const Duration(milliseconds: 3000), () {});
 
           var userRef = await FirebaseFirestore.instance.collection('users');
           if (listOfMyChatIds.length > 0) {
@@ -572,12 +574,31 @@ class SocialLayoutController extends GetxController {
               }
               int indexforOrdering = 0;
               listOfMyChatIds.forEach((element) {
+                print("id :" + element);
+              });
+              myfriendsMesage.forEach((element) {
+                print("friendMessageId :" + element.receiverId.toString());
+              });
+              listOfMyChatIds.forEach((element) {
                 UserModel model = myFriendstemp.singleWhere((element) =>
                     element.uId == listOfMyChatIds[indexforOrdering]);
                 // NOTE set latest message received to each user
                 if (myfriendsMesage.length > 0)
-                  model.messageModel = myfriendsMesage.singleWhere((element) =>
-                      element.receiverId == listOfMyChatIds[indexforOrdering]);
+                  myfriendsMesage.forEach((element) {
+                    // NOTE if the current logged in is the sender
+                    if (element.senderId == uId) {
+                      model.messageModel = myfriendsMesage.singleWhere(
+                          (element) =>
+                              element.receiverId ==
+                              listOfMyChatIds[indexforOrdering]);
+                    } else {
+                      // NOTE the user  received message
+                      model.messageModel = myfriendsMesage.singleWhere(
+                          (element) =>
+                              element.senderId ==
+                              listOfMyChatIds[indexforOrdering]);
+                    }
+                  });
 
                 myFriends.add(model);
                 indexforOrdering++;
@@ -588,20 +609,6 @@ class SocialLayoutController extends GetxController {
               });
               update();
             });
-
-            // NOTE Get Users where list of Ids and stor it in temp list
-
-            // NOTE : Sort Friend List desc order by date bu not working
-            // myFriendstemp.length != 0
-            //     ? myFriendstemp.sort((a, b) {
-            //         //sorting in descending order
-            //         //NOTE : compareTo : ==> 0 if a==b
-
-            //         return b.latestTimeMessage!.compareTo(a.latestTimeMessage!);
-            //       })
-            //     : [];
-            //NOTE ordering list of friend order by desc
-
           }
         }
       });

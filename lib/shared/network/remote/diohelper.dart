@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:dio/adapter.dart';
 import 'package:dio/dio.dart';
 import 'package:social_app/shared/constants.dart';
 
@@ -8,6 +11,17 @@ class DioHelper {
     dio = Dio(BaseOptions(
         baseUrl: ' https://fcm.googleapis.com/fcm/send',
         receiveDataWhenStatusError: true));
+
+    // erooooorrrr befor added this
+    //DioError [DioErrorType.other]: HandshakeException: Handshake error in client (OS Error: I/flutter ( 9085):
+    // CERTIFICATE_VERIFY_FAILED: unable to get local issuer certificate(handshake.cc:359))
+
+    (dio!.httpClientAdapter as DefaultHttpClientAdapter).onHttpClientCreate =
+        (HttpClient client) {
+      client.badCertificateCallback =
+          (X509Certificate cert, String host, int port) => true;
+      return client;
+    };
   }
 
   static Future<Response> getData(
