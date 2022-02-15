@@ -33,19 +33,7 @@ class RegisterController extends GetxController {
       required String phone}) async {
     _statusLoginMessage = ToastStatus.Success;
     _statusMessage = "User Created Successfully";
-    // _isloadingRegister = true;
-    // update();
-    // FirebaseAuth.instance
-    //     .createUserWithEmailAndPassword(email: email, password: password)
-    //     .then((value) {
-    //   _isloadingRegister = false;
 
-    //   print(value.user!.email);
-    //   print(value.user!.uid);
-    //   update();
-    // }).catchError((error) {
-    //   print(error.toString());
-    // });
     _isloadingRegister = true;
     update();
     try {

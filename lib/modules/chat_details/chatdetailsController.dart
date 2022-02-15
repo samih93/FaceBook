@@ -7,7 +7,9 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:social_app/layout/layout_controller.dart';
 import 'package:social_app/model/message_model.dart';
+import 'package:social_app/model/user_model.dart';
 import 'package:social_app/shared/constants.dart';
+import 'package:social_app/shared/network/remote/diohelper.dart';
 
 class ChatDetailsController extends GetxController {
   var socialLayoutController = Get.find<SocialLayoutController>();
@@ -35,7 +37,7 @@ class ChatDetailsController extends GetxController {
       required String messageDate,
       required String text}) {
     isSendMessageSuccess.value = false;
-    MessageModel model = MessageModel(
+    MessageModel messageModel = MessageModel(
         senderId: uId,
         receiverId: receiverId,
         text: text,
@@ -49,7 +51,7 @@ class ChatDetailsController extends GetxController {
         .collection('chats')
         .doc(receiverId)
         .collection('messages')
-        .add(model.toJson())
+        .add(messageModel.toJson())
         .then((value) {
       FirebaseFirestore.instance
           .collection('users')
@@ -65,11 +67,20 @@ class ChatDetailsController extends GetxController {
           .collection('chats')
           .doc(uId)
           .collection('messages')
-          .add(model.toJson())
+          .add(messageModel.toJson())
           .then((value) {
         // NOTE add lastest time message in receiver message
         isSendMessageSuccess.value = true;
         update();
+
+        FirebaseFirestore.instance
+            .collection('users')
+            .doc(receiverId)
+            .get()
+            .then((value) {
+          UserModel usermodel = UserModel.fromJson(value.data()!);
+          pushNotificationOnsendMessage(messageModel, usermodel);
+        });
       }).catchError((error) {
         print(error.toString());
       });
@@ -78,7 +89,8 @@ class ChatDetailsController extends GetxController {
           .isEmpty) {
         socialLayoutController.getMyFriend();
       } else {
-        socialLayoutController.getMyFriend(isAlreadyFriend: true,receiverId:receiverId);
+        socialLayoutController.getMyFriend(
+            isAlreadyFriend: true, receiverId: receiverId);
       }
 
       update();
@@ -177,5 +189,36 @@ class ChatDetailsController extends GetxController {
     _messageImage = null;
     _imageMessageUrl = null;
     update();
+  }
+
+  //NOTE push notification to my friend when i send a message
+  void pushNotificationOnsendMessage(
+      MessageModel messageModel, UserModel userModel) {
+    DioHelper.postData(url: 'https://fcm.googleapis.com/fcm/send', data: {
+      "to": token,
+      "notification": {
+        "body": messageModel.text,
+        "title": userModel.name,
+        "sound": "default"
+      },
+      "android": {
+        "priortiy": "HIGH",
+        "notification": {
+          "notification_priority": "PRIORITY_MAX",
+          "sound": "default",
+          "default_vibrate_timings": true,
+          "default_light_settings": true
+        }
+      },
+      "data": {
+        "click_action": "FLUTTER_NOTIFICATION_CLICK",
+        "message": messageModel.text,
+        "messagetime": messageModel.messageDate
+      }
+    }).then((value) {
+      print("notification pushed");
+    }).catchError((error) {
+      print(error.toString());
+    });
   }
 }

@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -28,8 +29,8 @@ void main() async {
 
   await DioHelper.init();
 // NOTE : Unique token for device
-  var messagingToken = await FirebaseMessaging.instance.getToken();
-  print("token messaging -- " + messagingToken.toString());
+  token = await FirebaseMessaging.instance.getToken() ?? null;
+  print("token messaging -- " + token.toString());
 
 // NOTE : catch notification  with parameter while app is opened  : ForeGroundMessage
   FirebaseMessaging.onMessage.listen((message) {
@@ -53,8 +54,22 @@ void main() async {
   uId = CashHelper.getData(key: "uId") ?? null;
   print("UId :" + uId.toString());
 
+  var isHasTokenInFireStore = CashHelper.getData(key: "deviceToken") ?? null;
+
   if (uId != null) {
     widget = SocialLayout();
+    // NOTE check if token not set so i set it to used in fcm notification
+    if (token != null && isHasTokenInFireStore == null) {
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(uId)
+          .update({"deviceToken": token}).then((value) {
+        CashHelper.saveData(key: "deviceToken", value: token);
+        print("token Saved");
+      });
+    } else {
+      print("token already saved");
+    }
   } else {
     widget = LoginScreen();
   }

@@ -126,7 +126,6 @@ class RegisterScreen extends StatelessWidget {
                             isUppercase: true,
                             onpress: () async {
                               // NOTE : GET STATUS OF  register method
-                              String registerMessage = "";
                               if (_formkey.currentState!.validate()) {
                                 await socialRegisterController.registerUser(
                                     name: nameController.text,
