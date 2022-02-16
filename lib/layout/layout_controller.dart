@@ -537,8 +537,6 @@ class SocialLayoutController extends GetxController {
                   .get()
                   .then((value) {
                 if (value.docs.length > 0) {
-                  // print("order 1 - " +
-                  //     value.docs.first.data()['receiverId'].toString());
                   myfriendsMesage
                       .add(MessageModel.fromJson(value.docs.first.data()));
                 }
@@ -548,7 +546,7 @@ class SocialLayoutController extends GetxController {
             print(error.toString());
           });
 
-          await Future.delayed(const Duration(milliseconds: 3000), () {});
+          await Future.delayed(const Duration(milliseconds: 1000), () {});
 
           var userRef = await FirebaseFirestore.instance.collection('users');
           if (listOfMyChatIds.length > 0) {

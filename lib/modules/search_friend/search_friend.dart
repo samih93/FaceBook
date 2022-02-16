@@ -9,13 +9,15 @@ import 'package:social_app/modules/chats/chat_screen.dart';
 import 'package:social_app/modules/search_friend/search_controller.dart';
 import 'package:social_app/shared/components/componets.dart';
 
+import '../../shared/constants.dart';
+
 class SearchFriendScreen extends StatelessWidget {
   var queryController = TextEditingController();
   //final usersQuery = FirebaseFirestore.instance.collection('users').orderBy('name');
 
   final usersQuery = FirebaseFirestore.instance
       .collection('users')
-      .orderBy('name')
+      .where('uId', isNotEqualTo: uId)
       .withConverter<UserModel>(
         fromFirestore: (snapshot, _) => UserModel.fromJson(snapshot.data()!),
         toFirestore: (user, _) => user.toJson(),
