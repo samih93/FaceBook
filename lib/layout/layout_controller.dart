@@ -467,7 +467,6 @@ class SocialLayoutController extends GetxController {
   }
 
 // NOTE get My Chat Ids and Get My Users and get latest message of each one
-//TODO: fix message for user
   List<UserModel> myFriends = [];
 
   Future<void> getMyFriend(

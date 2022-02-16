@@ -50,12 +50,6 @@ void main() async {
   FirebaseMessaging.onMessageOpenedApp.listen((message) {
     print("message data opened " + message.data['messageModel'].toString());
     SocialLayoutController controller = Get.find<SocialLayoutController>();
-    //controller.getMyFriend();
-    // controller.myFriends.where(
-    //     (element) => element.uId == message.data['messageModel']['receiverId']);
-    // Get.off(ChatDetailsScreen(
-    //     socialUserModel: UserModel.fromJson(message.data['messageModel'])));
-    //showToast(message: "on message opened", status: ToastStatus.Success);
 
     MessageModel messageModel =
         MessageModel.fromJson(json.decode(message.data['messageModel']));
@@ -96,10 +90,6 @@ void main() async {
   } else {
     widget = LoginScreen();
   }
-
-  //NOTE ----------------------------------
-
-  //NOTE : ADD dependencies
 
   runApp(MyApp(widget));
 }
