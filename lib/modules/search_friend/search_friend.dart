@@ -1,13 +1,26 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutterfire_ui/firestore.dart';
 import 'package:get/get.dart';
 import 'package:social_app/layout/layout.dart';
 import 'package:social_app/layout/layout_controller.dart';
+import 'package:social_app/model/user_model.dart';
 import 'package:social_app/modules/chats/chat_screen.dart';
 import 'package:social_app/modules/search_friend/search_controller.dart';
 import 'package:social_app/shared/components/componets.dart';
 
 class SearchFriendScreen extends StatelessWidget {
   var queryController = TextEditingController();
+  //final usersQuery = FirebaseFirestore.instance.collection('users').orderBy('name');
+
+  final usersQuery = FirebaseFirestore.instance
+      .collection('users')
+      .orderBy('name')
+      .withConverter<UserModel>(
+        fromFirestore: (snapshot, _) => UserModel.fromJson(snapshot.data()!),
+        toFirestore: (user, _) => user.toJson(),
+      );
+
   @override
   Widget build(BuildContext context) {
     return GetBuilder<SocialLayoutController>(
@@ -37,16 +50,15 @@ class SearchFriendScreen extends StatelessWidget {
                     return Divider();
                   },
                   itemCount: socialLayoutController.userfiltered.length)
-              : ListView.separated(
-                  itemBuilder: (context, index) {
+              : FirestoreListView<UserModel>(
+                  query: usersQuery,
+                  itemBuilder: (context, snapshot) {
+                    UserModel userModel = snapshot.data();
+
                     return buildChatItem(
-                        context: context,
-                        userModel: socialLayoutController.users[index]);
+                        context: context, userModel: userModel);
                   },
-                  separatorBuilder: (context, index) {
-                    return Divider();
-                  },
-                  itemCount: socialLayoutController.users.length),
+                ),
         ),
       ),
     );
