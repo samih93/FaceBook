@@ -40,28 +40,37 @@ class SearchFriendScreen extends StatelessWidget {
               hinttext: "Search for a friend ... "),
         ),
         body: Container(
-          margin: EdgeInsets.only(top: 30),
-          child: socialLayoutController.userfiltered.length > 0
-              ? ListView.separated(
-                  itemBuilder: (context, index) {
-                    return buildChatItem(
-                        context: context,
-                        userModel: socialLayoutController.userfiltered[index]);
-                  },
-                  separatorBuilder: (context, index) {
-                    return Divider();
-                  },
-                  itemCount: socialLayoutController.userfiltered.length)
-              : FirestoreListView<UserModel>(
-                  query: usersQuery,
-                  itemBuilder: (context, snapshot) {
-                    UserModel userModel = snapshot.data();
+            margin: EdgeInsets.only(top: 30),
+            child: socialLayoutController.userfiltered == null
+                ? FirestoreListView<UserModel>(
+                    query: usersQuery,
+                    itemBuilder: (context, snapshot) {
+                      UserModel userModel = snapshot.data();
 
-                    return buildChatItem(
-                        context: context, userModel: userModel);
-                  },
-                ),
-        ),
+                      return buildChatItem(
+                          context: context, userModel: userModel);
+                    },
+                  )
+                : socialLayoutController.userfiltered!.length > 0
+                    ? ListView.separated(
+                        itemBuilder: (context, index) {
+                          return buildChatItem(
+                              context: context,
+                              userModel:
+                                  socialLayoutController.userfiltered![index]);
+                        },
+                        separatorBuilder: (context, index) {
+                          return Divider();
+                        },
+                        itemCount: socialLayoutController.userfiltered!.length)
+                    : Container(
+                        width: double.infinity,
+                        child: Text(
+                          'No result for "${queryController.text}"',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(color: Colors.grey, fontSize: 20),
+                        ),
+                      )),
       ),
     );
   }

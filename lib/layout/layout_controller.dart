@@ -338,7 +338,11 @@ class SocialLayoutController extends GetxController {
     _isloadingGetPosts = true;
 
     update();
-    await FirebaseFirestore.instance.collection('posts').get().then((value) {
+    await FirebaseFirestore.instance
+        .collection('posts')
+        .orderBy('postdate', descending: true)
+        .get()
+        .then((value) {
       // NOTE : reference on posts
       int index = 0;
       value.docs.forEach((docOfpost) async {
@@ -376,13 +380,13 @@ class SocialLayoutController extends GetxController {
           });
         });
 
-        // NOTE : Sort List desc order by date
-        _listOfPost.length != 0
-            ? _listOfPost.sort((a, b) {
-                //NOTE : compareTo : ==> 0 if a==b
-                return b.postdate!.compareTo(a.postdate!);
-              })
-            : [];
+        // // NOTE : Sort List desc order by date
+        // _listOfPost.length != 0
+        //     ? _listOfPost.sort((a, b) {
+        //         //NOTE : compareTo : ==> 0 if a==b
+        //         return b.postdate!.compareTo(a.postdate!);
+        //       })
+        //     : [];
 
         _isloadingGetPosts = false;
         update();
@@ -725,14 +729,12 @@ class SocialLayoutController extends GetxController {
     update();
   }
 
-  List<UserModel> userfiltered = [];
+  List<UserModel>? userfiltered;
   searchForUser(String query) {
     userfiltered = _users
         .where((element) => element.name.toString().contains(query))
         .toList();
-    userfiltered.forEach((element) {
-      print(element.email);
-    });
+
     update();
   }
 }
