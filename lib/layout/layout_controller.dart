@@ -340,7 +340,7 @@ class SocialLayoutController extends GetxController {
     update();
     await FirebaseFirestore.instance
         .collection('posts')
-        .orderBy('postdate', descending: true)
+        .orderBy('postdate')
         .get()
         .then((value) {
       // NOTE : reference on posts

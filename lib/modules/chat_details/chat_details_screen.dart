@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:social_app/layout/layout.dart';
+import 'package:social_app/layout/layout_controller.dart';
 import 'package:social_app/model/message_model.dart';
 import 'package:social_app/model/user_model.dart';
 import 'package:social_app/modules/chat_details/chatdetailsController.dart';
@@ -24,9 +25,12 @@ class ChatDetailsScreen extends StatelessWidget {
         init: ChatDetailsController(),
         builder: (chatDetailsController) {
           chatDetailsController.getMessages(receiverId: socialUserModel.uId!);
-          // chatDetailsController.listOfMessages.forEach((element) {
-          //   print(element.text);
-          // });
+
+          if (chatDetailsController.listOfMessages.length > 0 &&
+              chatDetailsController.listOfMessages.first.senderId != uId!)
+            chatDetailsController
+                .updatestatusMessage(chatDetailsController.listOfMessages);
+
           return Scaffold(
             appBar: AppBar(
               // leading: IconButton(
@@ -267,13 +271,25 @@ class ChatDetailsScreen extends StatelessWidget {
                           ),
                         ),
                         SizedBox(
-                          width: 70,
+                          width: 80,
                         ),
                       ],
                     ),
-                    Text(
-                      "${DateFormat("h:mm a").format(DateTime.parse(model.messageDate.toString()))}",
-                      style: TextStyle(color: Colors.grey.shade700),
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          "${DateFormat("h:mm a").format(DateTime.parse(model.messageDate.toString()))}",
+                          style: TextStyle(color: Colors.grey.shade700),
+                        ),
+                        SizedBox(
+                          width: 3,
+                        ),
+                        model.isReadByfriend == true
+                            ? Icon(Icons.check, size: 16, color: Colors.blue)
+                            : Icon(Icons.check,
+                                size: 16, color: Colors.grey.shade700),
+                      ],
                     ),
                   ],
                 ),

@@ -4,13 +4,16 @@ class MessageModel {
   String? messageDate;
   String? text;
   String? image;
+  bool? isReadByfriend;
 
-  MessageModel(
-      {this.senderId,
-      this.receiverId,
-      this.messageDate,
-      this.text,
-      this.image});
+  MessageModel({
+    this.senderId,
+    this.receiverId,
+    this.messageDate,
+    this.text,
+    this.image,
+    this.isReadByfriend,
+  });
 
   MessageModel.fromJson(Map<String, dynamic> json) {
     senderId = json['senderId'];
@@ -18,6 +21,7 @@ class MessageModel {
     messageDate = json['messageDate'];
     text = json['text'];
     image = json['image'];
+    isReadByfriend = json['isReadByfriend'];
   }
 
   Map<String, dynamic> toJson() {
@@ -27,6 +31,7 @@ class MessageModel {
       'messageDate': messageDate,
       'text': text,
       'image': image,
+      'isReadByfriend': isReadByfriend,
     };
   }
 }

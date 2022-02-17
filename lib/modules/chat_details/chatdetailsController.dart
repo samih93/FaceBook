@@ -23,6 +23,10 @@ class ChatDetailsController extends GetxController {
     super.onInit();
   }
 
+  @override
+  // TODO: implement onDelete
+  InternalFinalCallback<void> get onDelete => super.onDelete;
+
   void ontypingmessage(value) {
     messageText.value = value;
     update();
@@ -42,7 +46,8 @@ class ChatDetailsController extends GetxController {
         receiverId: receiverId,
         text: text,
         messageDate: messageDate,
-        image: _imageMessageUrl ?? '');
+        image: _imageMessageUrl ?? '',
+        isReadByfriend: false);
 
     // NOTE write message in user sender
     FirebaseFirestore.instance
@@ -225,6 +230,33 @@ class ChatDetailsController extends GetxController {
       print("notification pushed");
     }).catchError((error) {
       print(error.toString());
+    });
+  }
+
+  Future<void> updatestatusMessage(List<MessageModel> messagesModel) async {
+    var first = FirebaseFirestore.instance
+        .collection('users')
+        .doc(messagesModel.first.senderId)
+        .collection('chats')
+        .doc(messagesModel.first.receiverId)
+        .collection('messages')
+        .orderBy('messageDate')
+        .limit(messagesModel.length);
+
+    first.get().then((value) {
+      value.docs.forEach((element) {
+        if (element.data()['isReadByfriend'] == false)
+          FirebaseFirestore.instance
+              .collection('users')
+              .doc(messagesModel.first.senderId)
+              .collection('chats')
+              .doc(messagesModel.first.receiverId)
+              .collection('messages')
+              .doc(element.id)
+              .update({'isReadByfriend': true}).then((value) {
+            print('messages updates');
+          });
+      });
     });
   }
 }
