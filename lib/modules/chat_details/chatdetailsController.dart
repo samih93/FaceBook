@@ -17,11 +17,23 @@ class ChatDetailsController extends GetxController {
   // NOTE on type in text field to check if empty or not
   var messageText = "".obs;
 
-  @override
-  void onInit() {
-    // TODO: implement onInit
-    super.onInit();
-  }
+   @override 
+    void onInit() {
+       // Here you can fetch you product from server
+       super.onInit();
+    }
+
+    @override 
+    void onReady() {
+       super.onReady();
+    }
+
+    @override
+    void onClose() { 
+          // Here, you can dispose your StreamControllers
+          // you can cancel timers
+          super.onClose();
+    }
 
   @override
   // TODO: implement onDelete
@@ -241,7 +253,7 @@ class ChatDetailsController extends GetxController {
         .doc(messagesModel.first.receiverId)
         .collection('messages')
         .orderBy('messageDate')
-        .limit(messagesModel.length);
+        .limit(messagesModel.length); // Snapshot 
 
     first.get().then((value) {
       value.docs.forEach((element) {

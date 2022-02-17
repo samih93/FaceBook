@@ -2,6 +2,7 @@ import 'dart:io';
 import "package:collection/collection.dart";
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -18,10 +19,40 @@ import 'package:social_app/modules/new_post/new_post_screen.dart';
 import 'package:social_app/modules/settings/setting_screen.dart';
 import 'package:social_app/modules/users/users_screen.dart';
 import 'package:social_app/shared/constants.dart';
+import 'package:social_app/shared/network/local/cashhelper.dart';
 import 'package:social_app/shared/network/remote/diohelper.dart';
 
 class SocialLayoutController extends GetxController {
+  @override
+  void onInit() {
+    // TODO: implement onInit
+    super.onInit();
+    isHasTokenInFireStore = CashHelper.getData(key: "deviceToken") ?? null;
+  }
+
+  @override
+  Future<void> onReady() async {
+    super.onReady();
+    print("on ready");
+    token = await FirebaseMessaging.instance.getToken() ?? null;
+    print("token messaging -- " + token.toString());
+
+    //  NOTE check if token not set so i set it to used in fcm notification
+    if (token != null && isHasTokenInFireStore == null) {
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(uId)
+          .update({"deviceToken": token}).then((value) {
+        CashHelper.saveData(key: "deviceToken", value: true);
+        print("token Saved");
+      });
+    } else {
+      print("token already saved");
+    }
+  }
+
   SocialLayoutController() {
+    print("constructor");
     if (uId != null) getLoggedInUserData().then((value) {});
     getStories().then((value) {});
     getPosts().then((value) {});

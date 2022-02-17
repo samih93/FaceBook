@@ -33,6 +33,7 @@ String? token = "";
 
 String? uId = "";
 
+bool? isHasTokenInFireStore;
 
 String? API_FCM_KEY =
     "AAAAQO7px1s:APA91bEvzf6iYAr3c44NAc5pJ38kzZsyelOx75N2Q7zBqHtPGUE1uiQdG2_vt8weX_E2ONDisdK4nfMnc0ljyTklRgv9X5r_tShn48uL7mI9qTE98bPEohcVbc7qikieQ7Z0u62OHr6H";
