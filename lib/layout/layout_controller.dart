@@ -54,7 +54,7 @@ class SocialLayoutController extends GetxController {
   SocialLayoutController() {
     if (uId != null) getLoggedInUserData().then((value) {});
     getStories().then((value) {});
-    getPosts().then((value) {});
+    //getPosts().then((value) {});
     getAllUsers().then((value) {});
     getMyFriend().then((value) {});
   }
@@ -332,7 +332,7 @@ class SocialLayoutController extends GetxController {
       _isloadingcreatePost = false;
       // NOTE push notification to subscribed to channel FriendsPost
       pushNotification();
-      getPosts();
+      //getPosts();
       update();
     }).catchError((error) {
       print(error.toString());
@@ -357,94 +357,96 @@ class SocialLayoutController extends GetxController {
 
 // NOTE --------------------------Get All Posts------------------------
 
-  bool? _isloadingGetPosts = false;
-  bool? get isloadingGetPosts => _isloadingGetPosts;
+  // bool? _isloadingGetPosts = false;
+  // bool? get isloadingGetPosts => _isloadingGetPosts;
 
-  List<PostModel> _listOfPost = [];
-  List<PostModel> get listOfPost => _listOfPost;
+  var listofpost = RxList<PostModel>();
+  var postModel = Rxn<PostModel>();
+  // List<PostModel> _listOfPost = [];
+  // List<PostModel> get listOfPost => _listOfPost;
 
-  Future<void> getPosts() async {
-    _listOfPost = [];
-    _isloadingGetPosts = true;
+  // Future<void> getPosts() async {
+  //   _listOfPost = [];
+  //   _isloadingGetPosts = true;
 
-    update();
-    await FirebaseFirestore.instance
-        .collection('posts')
-        .orderBy('postdate', descending: true)
-        .get()
-        .then((value) {
-      // NOTE : reference on posts
-      int index = 0;
-      if (value.docs.length > 0) {
-        value.docs.forEach((docOfpost) async {
-          // print(docOfpost.data());
-          // NOTE : add posts in list befor access to its index
-          _listOfPost.add(PostModel.fromJson(docOfpost.data()));
+  //   update();
+  //   await FirebaseFirestore.instance
+  //       .collection('posts')
+  //       .orderBy('postdate', descending: true)
+  //       .get()
+  //       .then((value) {
+  //     // NOTE : reference on posts
+  //     int index = 0;
+  //     if (value.docs.length > 0) {
+  //       value.docs.forEach((docOfpost) async {
+  //         // print(docOfpost.data());
+  //         // NOTE : add posts in list befor access to its index
+  //         _listOfPost.add(PostModel.fromJson(docOfpost.data()));
 
-          // NOTE foreach document go to reference likes
-          await docOfpost.reference
-              .collection('likes')
-              .get()
-              .then((likescollection) async {
-            //NOTE check  if this user like a post
-            if (likescollection.docs.isNotEmpty) {
-              likescollection.docs.forEach((docOflikes) {
-                // NOTE  check of  the id of doc in likes equal to current user
-                if (docOflikes.id == uId) {
-                  _listOfPost[index].isLiked = true;
-                }
-              });
-            }
+  //         // NOTE foreach document go to reference likes
+  //         await docOfpost.reference
+  //             .collection('likes')
+  //             .get()
+  //             .then((likescollection) async {
+  //           //NOTE check  if this user like a post
+  //           if (likescollection.docs.isNotEmpty) {
+  //             likescollection.docs.forEach((docOflikes) {
+  //               // NOTE  check of  the id of doc in likes equal to current user
+  //               if (docOflikes.id == uId) {
+  //                 _listOfPost[index].isLiked = true;
+  //               }
+  //             });
+  //           }
 
-            // NOTE value is the collection likes
-            // NOTE Add lenght of doc for each likes in post doc
-            _listOfPost[index].nbOfLikes = likescollection.docs.length;
+  //           // NOTE value is the collection likes
+  //           // NOTE Add lenght of doc for each likes in post doc
+  //           _listOfPost[index].nbOfLikes = likescollection.docs.length;
 
-            index++;
-            update();
-          }).catchError((error) {
-            print(error.toString());
-          });
+  //           index++;
+  //           update();
+  //         }).catchError((error) {
+  //           print(error.toString());
+  //         });
 
-          _listOfPost.forEach((element) async {
-            isEmailVerifiedById(element.uId.toString()).then((value) {
-              element.isEmailVerified = value;
-              update();
-            });
-          });
+  //         _listOfPost.forEach((element) async {
+  //           isEmailVerifiedById(element.uId.toString()).then((value) {
+  //             element.isEmailVerified = value;
+  //             update();
+  //           });
+  //         });
 
-          // // NOTE : Sort List desc order by date
-          // _listOfPost.length != 0
-          //     ? _listOfPost.sort((a, b) {
-          //         //NOTE : compareTo : ==> 0 if a==b
-          //         return b.postdate!.compareTo(a.postdate!);
-          //       })
-          //     : [];
+  //         // // NOTE : Sort List desc order by date
+  //         // _listOfPost.length != 0
+  //         //     ? _listOfPost.sort((a, b) {
+  //         //         //NOTE : compareTo : ==> 0 if a==b
+  //         //         return b.postdate!.compareTo(a.postdate!);
+  //         //       })
+  //         //     : [];
 
-          _isloadingGetPosts = false;
-          update();
-        });
-      } else {
-        _isloadingGetPosts = false;
-        update();
-      }
+  //         _isloadingGetPosts = false;
+  //         update();
+  //       });
+  //     } else {
+  //       _isloadingGetPosts = false;
+  //       update();
+  //     }
 
-      // // NOTE if no posts yet
-      // _isloadingGetPosts = false;
-      // print("after " + _isloadingGetPosts.toString());
-    }).catchError((error) {
-      print(error.toString());
-    });
-  }
+  //     // // NOTE if no posts yet
+  //     // _isloadingGetPosts = false;
+  //     // print("after " + _isloadingGetPosts.toString());
+  //   }).catchError((error) {
+  //     print(error.toString());
+  //   });
+  // }
 
   //NOTE : -----------Like Post --------------------------
 
-  void likePost(String postId, int index, {bool isForremove = false}) {
+  void likePost(String postId, {bool isForremove = false}) {
     if (isForremove == true) {
       // NOTE Change  nb and color of likes quickly then update to firestore
 
-      _listOfPost[index].isLiked = false;
-      _listOfPost[index].nbOfLikes--;
+      // _listOfPost[index].isLiked = false;
+      // _listOfPost[index].nbOfLikes--;
       update();
       FirebaseFirestore.instance
           .collection('posts')
@@ -455,15 +457,15 @@ class SocialLayoutController extends GetxController {
           .then((value) {
         print('removed from Likes');
       }).catchError((error) {
-        _listOfPost[index].isLiked = true;
-        _listOfPost[index].nbOfLikes++;
+        // _listOfPost[index].isLiked = true;
+        // _listOfPost[index].nbOfLikes++;
         print(error.toString());
         update();
       });
     } else {
       // NOTE Change  nb and color of likes quickly then update to firestore
-      _listOfPost[index].isLiked = true;
-      _listOfPost[index].nbOfLikes++;
+      // _listOfPost[index].isLiked = true;
+      // _listOfPost[index].nbOfLikes++;
       update();
       FirebaseFirestore.instance
           .collection('posts')
@@ -475,8 +477,8 @@ class SocialLayoutController extends GetxController {
         pushNotificationOnLike();
       }).catchError((error) {
         //NOTE : if an error happen return data to the last updated
-        _listOfPost[index].isLiked = false;
-        _listOfPost[index].nbOfLikes--;
+        // _listOfPost[index].isLiked = false;
+        // _listOfPost[index].nbOfLikes--;
         update();
 
         print(error.toString());
@@ -747,7 +749,9 @@ class SocialLayoutController extends GetxController {
 
   List<Map<String, dynamic>> storiestemp = [];
   Map<dynamic, List<Map<String, dynamic>>>? storiesMap;
+  var isloadingGetStories = false.obs;
   Future<void> getStories() async {
+    isloadingGetStories.value = true;
     await FirebaseFirestore.instance
         .collection('stories')
         .get()
@@ -763,7 +767,7 @@ class SocialLayoutController extends GetxController {
       });
     });
     storiesMap = groupBy(storiestemp, (Map obj) => obj['storyUserId']);
-
+    isloadingGetStories.value = false;
     update();
   }
 

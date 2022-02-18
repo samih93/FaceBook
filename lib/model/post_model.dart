@@ -28,6 +28,7 @@ class PostModel {
     text = json['text'];
     postImage = json['postImage'];
     postId = json['postId'];
+    nbOfLikes = json['nbOfLikes'] as int;
   }
 
   Map<String, dynamic> toJson() {
@@ -39,6 +40,7 @@ class PostModel {
       'text': text,
       'postImage': postImage,
       'postId': postId,
+      'nbOfLikes': nbOfLikes,
     };
   }
 }

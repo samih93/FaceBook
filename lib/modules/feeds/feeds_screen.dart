@@ -1,5 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutterfire_ui/firestore.dart';
 import 'package:get/get.dart';
 import 'package:social_app/layout/layout_controller.dart';
 import 'package:social_app/model/post_model.dart';
@@ -10,86 +12,112 @@ import 'package:social_app/shared/styles/colors.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class FeedsScreen extends StatelessWidget {
+  final postsQuery = FirebaseFirestore.instance
+      .collection('posts')
+      .orderBy('postdate', descending: true)
+      .withConverter<PostModel>(
+        fromFirestore: (snapshot, _) => PostModel.fromJson(snapshot.data()!),
+        toFirestore: (post, _) => post.toJson(),
+      );
+
   @override
   Widget build(BuildContext context) {
     return GetBuilder<SocialLayoutController>(
         init: Get.find<SocialLayoutController>(),
         builder: (socialLayoutController) {
-          return socialLayoutController.isloadingGetPosts!
-              ? Center(child: CircularProgressIndicator())
-              : Scaffold(
-                  body: socialLayoutController.listOfPost.length == 0
-                      ? Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
+          // socialLayoutController.isloadingGetPosts!
+          //     ? Center(child: CircularProgressIndicator())
+          //     :
+          return Scaffold(
+            body: SingleChildScrollView(
+              child: Container(
+                margin: EdgeInsets.symmetric(horizontal: 8),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                        height: 220,
+                        child:  socialLayoutController
+                                    .isloadingGetStories.value ==
+                                true ? Center(child: SingleChildScrollView()):ListView(
+                          scrollDirection: Axis.horizontal,
                           children: [
-                            Container(
-                                height: 200,
-                                child: SvgPicture.asset(
-                                    'assets/no_posts_yet.svg')),
-                            Text(
-                              "No Posts Yes",
-                              style:
-                                  TextStyle(color: Colors.grey, fontSize: 30),
+                            buildStoryItem(context: context, isForMe: true),
+                            SizedBox(
+                              width: 10,
                             ),
+                            if (socialLayoutController.storiesMap!.length > 0)
+                              for (var e
+                                  in socialLayoutController.storiesMap!.entries)
+                                buildStoryItem(
+                                    context: context,
+                                    isForMe: false,
+                                    story: StoryModel.formJson(e.value.last)),
                           ],
-                        )
-                      : SingleChildScrollView(
-                          child: Container(
-                            margin: EdgeInsets.symmetric(horizontal: 8),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Container(
-                                    height: 220,
-                                    child: ListView(
-                                      scrollDirection: Axis.horizontal,
-                                      children: [
-                                        buildStoryItem(
-                                            context: context, isForMe: true),
-                                        SizedBox(
-                                          width: 10,
-                                        ),
-                                        if (socialLayoutController
-                                                .storiesMap!.length >
-                                            0)
-                                          for (var e in socialLayoutController
-                                              .storiesMap!.entries)
-                                            buildStoryItem(
-                                                context: context,
-                                                isForMe: false,
-                                                story: StoryModel.formJson(
-                                                    e.value.last)),
-                                      ],
-                                    )),
-                                SizedBox(
-                                  height: 20,
-                                ),
-                                ListView.separated(
-                                  itemBuilder: (context, index) {
-                                    return buildPostItem(
-                                        socialLayoutController
-                                            .listOfPost[index],
-                                        context,
-                                        index);
-                                  },
-                                  itemCount:
-                                      socialLayoutController.listOfPost.length,
-                                  physics: NeverScrollableScrollPhysics(),
-                                  shrinkWrap: true,
-                                  separatorBuilder: (context, int index) =>
-                                      SizedBox(
-                                    height: 10,
-                                  ),
-                                ),
-                                SizedBox(
-                                  height: 10,
-                                )
-                              ],
-                            ),
-                          ),
-                        ),
-                );
+                        )),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    //NOTE Old get posts from controller
+                    // ListView.separated(
+                    //   itemBuilder: (context, index) {
+                    //     return buildPostItem(
+                    //         socialLayoutController
+                    //             .listOfPost[index],
+                    //         context,
+                    //         index);
+                    //   },
+                    //   itemCount:
+                    //       socialLayoutController.listOfPost.length,
+                    //   physics: NeverScrollableScrollPhysics(),
+                    //   shrinkWrap: true,
+                    //   separatorBuilder: (context, int index) =>
+                    //       SizedBox(
+                    //     height: 10,
+                    //   ),
+                    // ),
+                    FirestoreListView<PostModel>(
+                      physics: NeverScrollableScrollPhysics(),
+                      shrinkWrap: true,
+                      pageSize: 8,
+                      query: postsQuery,
+                      loadingBuilder: (context) => Center(
+                        child: SingleChildScrollView(),
+                      ),
+                      errorBuilder: (context, error, stackTrace) => Text(
+                          'Something went wrong! ${error} - ${stackTrace}'),
+                      itemBuilder: (context, snapshot) {
+                        if (snapshot.isBlank!)
+                          return Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Container(
+                                  height: 200,
+                                  child: SvgPicture.asset(
+                                      'assets/no_posts_yet.svg')),
+                              Text(
+                                "No Posts Yes",
+                                style:
+                                    TextStyle(color: Colors.grey, fontSize: 30),
+                              ),
+                            ],
+                          );
+                        socialLayoutController.postModel.value =
+                            snapshot.data();
+
+                        return buildPostItem(
+                            socialLayoutController.postModel.value!, context);
+                      },
+                    ),
+                    SizedBox(
+                      height: 10,
+                    )
+                  ],
+                ),
+              ),
+            ),
+          );
         });
   }
 
@@ -228,7 +256,6 @@ class FeedsScreen extends StatelessWidget {
   Widget buildPostItem(
     PostModel model,
     BuildContext context,
-    int index,
   ) =>
       GetBuilder<SocialLayoutController>(
           init: Get.find<SocialLayoutController>(),
@@ -460,11 +487,11 @@ class FeedsScreen extends StatelessWidget {
                               onTap: () {
                                 if (model.isLiked == true) {
                                   socialLayoutController.likePost(
-                                      model.postId.toString(), index,
+                                      model.postId.toString(),
                                       isForremove: true);
                                 } else {
-                                  socialLayoutController.likePost(
-                                      model.postId.toString(), index);
+                                  socialLayoutController
+                                      .likePost(model.postId.toString());
                                 }
                               },
                             ),
