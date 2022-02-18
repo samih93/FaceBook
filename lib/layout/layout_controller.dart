@@ -52,7 +52,6 @@ class SocialLayoutController extends GetxController {
   }
 
   SocialLayoutController() {
-    print("constructor");
     if (uId != null) getLoggedInUserData().then((value) {});
     getStories().then((value) {});
     getPosts().then((value) {});
@@ -371,57 +370,65 @@ class SocialLayoutController extends GetxController {
     update();
     await FirebaseFirestore.instance
         .collection('posts')
-        .orderBy('postdate')
+        .orderBy('postdate', descending: true)
         .get()
         .then((value) {
       // NOTE : reference on posts
       int index = 0;
-      value.docs.forEach((docOfpost) async {
-        // NOTE foreach document go to reference likes
-        await docOfpost.reference
-            .collection('likes')
-            .get()
-            .then((likescollection) async {
+      if (value.docs.length > 0) {
+        value.docs.forEach((docOfpost) async {
+          print(docOfpost.data());
           // NOTE : add posts in list befor access to its index
           _listOfPost.add(PostModel.fromJson(docOfpost.data()));
-          //NOTE check  if this user like a post
-          if (likescollection.docs.isNotEmpty) {
-            likescollection.docs.forEach((docOflikes) {
-              // NOTE  check of  the id of doc in likes equal to current user
-              if (docOflikes.id == uId) {
-                _listOfPost[index].isLiked = true;
-              }
-            });
-          }
 
-          // NOTE value is the collection likes
-          // NOTE Add lenght of doc for each likes in post doc
-          _listOfPost[index].nbOfLikes = likescollection.docs.length;
+          // NOTE foreach document go to reference likes
+          await docOfpost.reference
+              .collection('likes')
+              .get()
+              .then((likescollection) async {
+            //NOTE check  if this user like a post
+            if (likescollection.docs.isNotEmpty) {
+              likescollection.docs.forEach((docOflikes) {
+                // NOTE  check of  the id of doc in likes equal to current user
+                if (docOflikes.id == uId) {
+                  _listOfPost[index].isLiked = true;
+                }
+              });
+            }
 
-          index++;
-          update();
-        }).catchError((error) {
-          print(error.toString());
-        });
+            // NOTE value is the collection likes
+            // NOTE Add lenght of doc for each likes in post doc
+            _listOfPost[index].nbOfLikes = likescollection.docs.length;
 
-        _listOfPost.forEach((element) async {
-          isEmailVerifiedById(element.uId.toString()).then((value) {
-            element.isEmailVerified = value;
+            index++;
             update();
+          }).catchError((error) {
+            print(error.toString());
           });
+
+          _listOfPost.forEach((element) async {
+            isEmailVerifiedById(element.uId.toString()).then((value) {
+              element.isEmailVerified = value;
+              update();
+            });
+          });
+
+          // // NOTE : Sort List desc order by date
+          // _listOfPost.length != 0
+          //     ? _listOfPost.sort((a, b) {
+          //         //NOTE : compareTo : ==> 0 if a==b
+          //         return b.postdate!.compareTo(a.postdate!);
+          //       })
+          //     : [];
+
+          _isloadingGetPosts = false;
+          update();
         });
-
-        // // NOTE : Sort List desc order by date
-        // _listOfPost.length != 0
-        //     ? _listOfPost.sort((a, b) {
-        //         //NOTE : compareTo : ==> 0 if a==b
-        //         return b.postdate!.compareTo(a.postdate!);
-        //       })
-        //     : [];
-
+      } else {
         _isloadingGetPosts = false;
         update();
-      });
+      }
+
       // // NOTE if no posts yet
       // _isloadingGetPosts = false;
       // print("after " + _isloadingGetPosts.toString());

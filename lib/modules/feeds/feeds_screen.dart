@@ -21,7 +21,7 @@ class FeedsScreen extends StatelessWidget {
                   body: socialLayoutController.listOfPost.length == 0
                       ? Column(
                           mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             Container(
                                 height: 200,
