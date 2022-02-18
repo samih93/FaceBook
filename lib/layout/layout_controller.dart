@@ -377,7 +377,7 @@ class SocialLayoutController extends GetxController {
       int index = 0;
       if (value.docs.length > 0) {
         value.docs.forEach((docOfpost) async {
-          print(docOfpost.data());
+          // print(docOfpost.data());
           // NOTE : add posts in list befor access to its index
           _listOfPost.add(PostModel.fromJson(docOfpost.data()));
 
@@ -616,7 +616,11 @@ class SocialLayoutController extends GetxController {
                 print("id :" + element);
               });
               myfriendsMesage.forEach((element) {
-                print("friendMessageId :" + element.receiverId.toString());
+                if (element.senderId == uId) {
+                  print('friendMessageId :' + element.receiverId.toString());
+                } else {
+                  print("friendMessageId :" + element.senderId.toString());
+                }
               });
               listOfMyChatIds.forEach((element) {
                 UserModel model = myFriendstemp.singleWhere((element) =>
@@ -629,13 +633,9 @@ class SocialLayoutController extends GetxController {
                       model.messageModel = myfriendsMesage.singleWhere(
                           (element) =>
                               element.receiverId ==
-                              listOfMyChatIds[indexforOrdering]);
-                    } else {
-                      // NOTE the user  received message
-                      model.messageModel = myfriendsMesage.singleWhere(
-                          (element) =>
+                                  listOfMyChatIds[indexforOrdering] ||
                               element.senderId ==
-                              listOfMyChatIds[indexforOrdering]);
+                                  listOfMyChatIds[indexforOrdering]);
                     }
                   });
 
