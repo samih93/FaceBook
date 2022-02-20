@@ -6,7 +6,7 @@ class PostModel {
   String? text;
   String? postImage;
   String? postId;
-  bool isLiked = false;
+  List<String>? likes = [];
   int nbOfLikes = 0;
   bool? isEmailVerified;
 
@@ -29,6 +29,10 @@ class PostModel {
     postImage = json['postImage'];
     postId = json['postId'];
     nbOfLikes = json['nbOfLikes'] as int;
+    if (json['likes'] != null)
+      json['likes'].forEach((element) {
+        likes!.add(element);
+      });
   }
 
   Map<String, dynamic> toJson() {
@@ -41,6 +45,7 @@ class PostModel {
       'postImage': postImage,
       'postId': postId,
       'nbOfLikes': nbOfLikes,
+      'likes': likes
     };
   }
 }

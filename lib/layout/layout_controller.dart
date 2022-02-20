@@ -57,6 +57,7 @@ class SocialLayoutController extends GetxController {
     //getPosts().then((value) {});
     getAllUsers().then((value) {});
     getMyFriend().then((value) {});
+    //Future.delayed(Duration(seconds: 1));
   }
 
 // NOTE: -------------------Bottom Navigation------------------------
@@ -326,7 +327,7 @@ class SocialLayoutController extends GetxController {
           .collection('posts')
           .doc(value.id)
           .update({'postId': value.id});
-      model.isLiked = false;
+      //   model.isLiked = false;
       _postimage = null;
       _imagePostUrl = null;
       _isloadingcreatePost = false;
@@ -355,13 +356,12 @@ class SocialLayoutController extends GetxController {
     update();
   }
 
-// NOTE --------------------------Get All Posts------------------------
+// NOTE -------------------------- Old Get All Posts------------------------
 
   // bool? _isloadingGetPosts = false;
   // bool? get isloadingGetPosts => _isloadingGetPosts;
 
-  var listofpost = RxList<PostModel>();
-  var postModel = Rxn<PostModel>();
+  //var postModel = Rxn<PostModel>();
   // List<PostModel> _listOfPost = [];
   // List<PostModel> get listOfPost => _listOfPost;
 
@@ -442,48 +442,26 @@ class SocialLayoutController extends GetxController {
   //NOTE : -----------Like Post --------------------------
 
   void likePost(String postId, {bool isForremove = false}) {
-    if (isForremove == true) {
-      // NOTE Change  nb and color of likes quickly then update to firestore
-
-      // _listOfPost[index].isLiked = false;
-      // _listOfPost[index].nbOfLikes--;
-      update();
-      FirebaseFirestore.instance
-          .collection('posts')
-          .doc(postId)
-          .collection('likes')
-          .doc(_socialUserModel!.uId)
-          .delete()
-          .then((value) {
-        print('removed from Likes');
-      }).catchError((error) {
-        // _listOfPost[index].isLiked = true;
-        // _listOfPost[index].nbOfLikes++;
-        print(error.toString());
-        update();
-      });
-    } else {
-      // NOTE Change  nb and color of likes quickly then update to firestore
-      // _listOfPost[index].isLiked = true;
-      // _listOfPost[index].nbOfLikes++;
-      update();
-      FirebaseFirestore.instance
-          .collection('posts')
-          .doc(postId)
-          .collection('likes')
-          .doc(_socialUserModel!.uId)
-          .set({'like': true}).then((value) {
-        print("Added To Likes");
-        pushNotificationOnLike();
-      }).catchError((error) {
-        //NOTE : if an error happen return data to the last updated
-        // _listOfPost[index].isLiked = false;
-        // _listOfPost[index].nbOfLikes--;
-        update();
-
-        print(error.toString());
-      });
-    }
+    print(postId);
+    FirebaseFirestore.instance
+        .collection('posts')
+        .where('postId', isEqualTo: postId)
+        .get()
+        .then((doc_of_post) {
+      if (doc_of_post.docs.length > 0) {
+        if (!isForremove) {
+          FirebaseFirestore.instance.collection('posts').doc(postId).update({
+            'nbOfLikes': doc_of_post.docs.first.data()['nbOfLikes'] + 1,
+            'likes': FieldValue.arrayUnion([uId])
+          }).then((value) {});
+        } else {
+          FirebaseFirestore.instance.collection('posts').doc(postId).update({
+            'nbOfLikes': doc_of_post.docs.first.data()['nbOfLikes'] - 1,
+            'likes': FieldValue.arrayRemove([uId])
+          }).then((value) {});
+        }
+      }
+    });
   }
 
   // NOTE: Get All Users
