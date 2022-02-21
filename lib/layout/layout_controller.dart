@@ -326,7 +326,12 @@ class SocialLayoutController extends GetxController {
       FirebaseFirestore.instance
           .collection('posts')
           .doc(value.id)
-          .update({'postId': value.id});
+          .update({'postId': value.id})
+          .then((value) {})
+          .catchError((error) {
+            print(error.toString());
+            // ! if an error in saving the post id i need to remove it
+          });
       //   model.isLiked = false;
       _postimage = null;
       _imagePostUrl = null;
@@ -696,32 +701,6 @@ class SocialLayoutController extends GetxController {
   }
 
 //
-  // NOTE ------------------- Add Story ------------------------
-
-  Future<void> AddStory(String uId) async {
-    StoryModel storyModel = StoryModel(
-        storyId: '',
-        storyUserId: uId,
-        storyName: socialUserModel!.name,
-        image:
-            'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQJiDUsiX6YaPIQ1cWEEehfjPYQjHyjJkMU3Q&usqp=CAU',
-        caption: "instagram",
-        storyDate: DateTime.now().toString());
-
-    await FirebaseFirestore.instance
-        .collection('stories')
-        .add(storyModel.toJson())
-        .then((value) async {
-      print("story inserted in stories collection");
-      storyModel.storyId = value.id;
-      await FirebaseFirestore.instance
-          .collection('stories')
-          .doc(value.id)
-          .update({'storyId': value.id}).then((value) {
-        print("story updated in stories collection");
-      });
-    });
-  }
 
   //NOTE ------------ Get Stories -----------------------------------
 
@@ -732,6 +711,8 @@ class SocialLayoutController extends GetxController {
     isloadingGetStories.value = true;
     await FirebaseFirestore.instance
         .collection('stories')
+        .orderBy('storyDate', descending: true)
+        .limit(20)
         .get()
         .then((querySnap_of_stories) {
       querySnap_of_stories.docs.forEach((doc_of_stories) {
@@ -745,6 +726,8 @@ class SocialLayoutController extends GetxController {
       });
     });
     storiesMap = groupBy(storiestemp, (Map obj) => obj['storyUserId']);
+    var elment = storiesMap![uId.toString()]!.length;
+    print(elment);
     isloadingGetStories.value = false;
     update();
   }

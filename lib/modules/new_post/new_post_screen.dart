@@ -16,7 +16,8 @@ class NewPostScreen extends StatelessWidget {
           return Scaffold(
             appBar:
                 defaultAppBar(context: context, title: "Add Post", actions: [
-              socialLayoutController.postBodyText != ""
+              socialLayoutController.postBodyText != "" ||
+                      socialLayoutController.postimage != null
                   ? defaultTextButton(
                       onpress: () {
                         socialLayoutController
@@ -97,11 +98,12 @@ class NewPostScreen extends StatelessWidget {
                   ),
                   if (socialLayoutController.postimage != null)
                     Expanded(
+                      flex: 2,
                       child: Stack(
                         alignment: AlignmentDirectional.topEnd,
                         children: [
                           Container(
-                              height: 180,
+                              height: 350,
                               width: double.infinity,
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.only(
@@ -128,36 +130,37 @@ class NewPostScreen extends StatelessWidget {
                         ],
                       ),
                     ),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: TextButton(
-                            onPressed: () {
-                              socialLayoutController.pickPostImage();
-                            },
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Icon(Icons.image),
-                                SizedBox(
-                                  width: 5,
-                                ),
-                                Text("Add Photo"),
-                              ],
-                            )),
-                      ),
-                      Expanded(
-                        child: TextButton(
-                            onPressed: () {},
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text("# tags"),
-                              ],
-                            )),
-                      ),
-                    ],
-                  ),
+                  if (socialLayoutController.postimage == null)
+                    Row(
+                      children: [
+                        Expanded(
+                          child: TextButton(
+                              onPressed: () {
+                                socialLayoutController.pickPostImage();
+                              },
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(Icons.image),
+                                  SizedBox(
+                                    width: 5,
+                                  ),
+                                  Text("Add Photo"),
+                                ],
+                              )),
+                        ),
+                        // Expanded(
+                        //   child: TextButton(
+                        //       onPressed: () {},
+                        //       child: Row(
+                        //         mainAxisAlignment: MainAxisAlignment.center,
+                        //         children: [
+                        //           Text("# tags"),
+                        //         ],
+                        //       )),
+                        // ),
+                      ],
+                    ),
                 ],
               ),
             ),
