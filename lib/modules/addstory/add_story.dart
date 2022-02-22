@@ -17,95 +17,104 @@ class AddStoryScreen extends StatelessWidget {
     return GetBuilder<StoryController>(
       init: StoryController(),
       builder: (storyController) => Scaffold(
+        backgroundColor: Colors.black,
         body: Stack(
-          alignment: AlignmentDirectional.bottomCenter,
+          alignment: AlignmentDirectional.center,
           children: [
-            if (storyController.storyimage != null)
-              Stack(
-                alignment: AlignmentDirectional.topEnd,
-                children: [
-                  Container(
-                      height: double.infinity,
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(5),
-                          topRight: Radius.circular(5),
-                        ),
-                        image: DecorationImage(
-                          image: FileImage(storyController.storyimage!),
-                          fit: BoxFit.cover,
-                        ),
-                      )),
-                  IconButton(
-                      onPressed: () {
-                        //NOTE : Remove post image
-                        storyController.removeStoryImage();
-                        storyController.pickStoryImage();
-                      },
-                      icon: CircleAvatar(
-                          radius: 20,
-                          child: Icon(
+            Stack(
+              alignment: AlignmentDirectional.bottomCenter,
+              children: [
+                if (storyController.storyimage != null)
+                  Stack(
+                    alignment: AlignmentDirectional.topStart,
+                    children: [
+                      Container(
+                          height: double.infinity,
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(5),
+                              topRight: Radius.circular(5),
+                            ),
+                            image: DecorationImage(
+                              image: FileImage(storyController.storyimage!),
+                              fit: BoxFit.contain,
+                            ),
+                          )),
+                      IconButton(
+                          onPressed: () {
+                            //NOTE : Remove post image
+                            storyController.removeStoryImage();
+                            storyController.pickStoryImage();
+                          },
+                          icon: Icon(
                             Icons.close,
-                            size: 17,
-                          ))),
-                ],
-              ),
+                            color: Colors.white,
+                            size: 30,
+                          )),
+                    ],
+                  ),
 
-            Padding(
-              padding: const EdgeInsets.only(bottom: 20, left: 3, right: 3),
-              child: Container(
-                  child: Row(
-                children: [
-                  Expanded(
-                    child: Container(
-                      clipBehavior: Clip.antiAliasWithSaveLayer,
-                      decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(50)),
-                      child: defaultTextFormField(
-                          controller: storyBodyController,
-                          inputtype: TextInputType.name,
-                          border: InputBorder.none,
-                          prefixIcon: Icon(Icons.image),
-                          hinttext: "Add a caption..."),
-                    ),
-                  ),
-                  SizedBox(
-                    width: 5,
-                  ),
-                  CircleAvatar(
-                    radius: 25,
-                    child: Icon(Icons.send),
-                  )
-                ],
-              )),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 20, left: 3, right: 3),
+                  child: Container(
+                      child: Row(
+                    children: [
+                      Expanded(
+                        child: Container(
+                          clipBehavior: Clip.antiAliasWithSaveLayer,
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(50)),
+                          child: defaultTextFormField(
+                              controller: storyBodyController,
+                              inputtype: TextInputType.name,
+                              border: InputBorder.none,
+                              prefixIcon: Icon(Icons.image),
+                              hinttext: "Add a caption..."),
+                        ),
+                      ),
+                      SizedBox(
+                        width: 5,
+                      ),
+                      GestureDetector(
+                        onTap: () {},
+                        child: CircleAvatar(
+                          radius: 25,
+                          child: Icon(Icons.send),
+                        ),
+                      )
+                    ],
+                  )),
+                ),
+
+                // Row(
+                //   children: [
+                //     IconButton(
+                //       icon: Icon(Icons.close),
+                //       onPressed: () {
+                //         Get.back();
+                //       },
+                //     ),
+                //     Spacer(),
+                //     defaultTextButton(onpress: () {}, text: "Share"),
+                //   ],
+                // ),
+                // Expanded(
+                //   child: defaultTextFormField(
+                //       maxligne: 5,
+                //       onchange: (value) {
+                //         socialLayoutController
+                //             .ontyping_postBody(value.toString());
+                //       },
+                //       controller: storyBodyController,
+                //       inputtype: TextInputType.multiline,
+                //       border: InputBorder.none,
+                //       hinttext: "What is on your mind ..."),
+                // ),
+              ],
             ),
-
-            // Row(
-            //   children: [
-            //     IconButton(
-            //       icon: Icon(Icons.close),
-            //       onPressed: () {
-            //         Get.back();
-            //       },
-            //     ),
-            //     Spacer(),
-            //     defaultTextButton(onpress: () {}, text: "Share"),
-            //   ],
-            // ),
-            // Expanded(
-            //   child: defaultTextFormField(
-            //       maxligne: 5,
-            //       onchange: (value) {
-            //         socialLayoutController
-            //             .ontyping_postBody(value.toString());
-            //       },
-            //       controller: storyBodyController,
-            //       inputtype: TextInputType.multiline,
-            //       border: InputBorder.none,
-            //       hinttext: "What is on your mind ..."),
-            // ),
+            CircularProgressIndicator()
           ],
         ),
       ),

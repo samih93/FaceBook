@@ -263,7 +263,7 @@ class SocialLayoutController extends GetxController {
     if (pickedFile != null) {
       _postimage = File(pickedFile.path);
       //NOTE :upload post image to firebase storage
-      uploadPostImage();
+      //uploadPostImage();
       update();
     } else {
       print('no image selected');
@@ -282,7 +282,7 @@ class SocialLayoutController extends GetxController {
     update();
     FirebaseStorage.instance
         .ref('')
-        .child('posts/${Uri.file(_postimage!.path).pathSegments.last}')
+        .child('posts/$uId/${Uri.file(_postimage!.path).pathSegments.last}')
         .putFile(_postimage!)
         .then((value) {
       value.ref.getDownloadURL().then((value) {
@@ -309,6 +309,9 @@ class SocialLayoutController extends GetxController {
   }) async {
     _isloadingcreatePost = true;
     update();
+
+    if (imagePostUrl != null) await uploadPostImage().then((value) {});
+    //TODO: fix post then story
     PostModel model = PostModel(
         name: _socialUserModel!.name,
         image: _socialUserModel!.image.toString(),
@@ -316,6 +319,7 @@ class SocialLayoutController extends GetxController {
         postdate: postdate,
         text: text,
         postImage: _imagePostUrl ?? '');
+
     await FirebaseFirestore.instance
         .collection('posts')
         // NOTE .doc('1').set() set data under document Id =1
