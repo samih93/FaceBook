@@ -37,12 +37,11 @@ class FeedsScreen extends StatelessWidget {
     return GetBuilder<SocialLayoutController>(
         init: Get.find<SocialLayoutController>(),
         builder: (socialLayoutController) {
-          // socialLayoutController.isloadingGetPosts!
-          //     ? Center(child: CircularProgressIndicator())
-          //     :
-          //  print(socialLayoutController.storiesMap![uId]);
           return Scaffold(
             backgroundColor: Colors.grey.shade400,
+            // socialLayoutController.isloadingGetStories
+            //     ? Center(child: CircularProgressIndicator())
+            //     :
             body: SingleChildScrollView(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -53,44 +52,50 @@ class FeedsScreen extends StatelessWidget {
                       color: Colors.white,
                       padding: EdgeInsets.all(15),
                       height: 250,
-                      child: socialLayoutController.isloadingGetStories.value ==
-                              true
-                          ? Center(child: SingleChildScrollView())
-                          : ListView(
-                              scrollDirection: Axis.horizontal,
-                              children: [
-                                buildStoryItem(context: context, isForMe: true),
-                                SizedBox(
-                                  width: 10,
+                      child: ListView(
+                        scrollDirection: Axis.horizontal,
+                        children: [
+                          buildStoryItem(context: context, isForMe: true),
+                          SizedBox(
+                            width: 10,
+                          ),
+                          socialLayoutController.storiesMap.length > 0
+                              ? Row(
+                                  children: [
+                                    socialLayoutController
+                                                .storiesMap[uId.toString()]!
+                                                .length >
+                                            0
+                                        ? buildStoryItem(
+                                            context: context,
+                                            isForMe: true,
+                                            isHasStories: true,
+                                            story: StoryModel.formJson(
+                                                socialLayoutController
+                                                    .storiesMap[uId.toString()]!
+                                                    .last))
+                                        : SizedBox(
+                                            width: 0,
+                                          ),
+                                    if (socialLayoutController
+                                            .storiesMap.length >
+                                        0)
+                                      for (var e in socialLayoutController
+                                          .storiesMap.entries)
+                                        if (e.value.last['storyUserId'] != uId)
+                                          buildStoryItem(
+                                              context: context,
+                                              isForMe: false,
+                                              isHasStories: true,
+                                              story: StoryModel.formJson(
+                                                  e.value.last)),
+                                  ],
+                                )
+                              : SizedBox(
+                                  width: 0,
                                 ),
-                                socialLayoutController
-                                            .storiesMap![uId.toString()]!
-                                            .length >
-                                        0
-                                    ? buildStoryItem(
-                                        context: context,
-                                        isForMe: true,
-                                        isHasStories: true,
-                                        story: StoryModel.formJson(
-                                            socialLayoutController
-                                                .storiesMap![uId.toString()]!
-                                                .last))
-                                    : SizedBox(
-                                        width: 0,
-                                      ),
-                                if (socialLayoutController.storiesMap!.length >
-                                    0)
-                                  for (var e in socialLayoutController
-                                      .storiesMap!.entries)
-                                    if (e.value.last['storyUserId'] != uId)
-                                      buildStoryItem(
-                                          context: context,
-                                          isForMe: false,
-                                          isHasStories: true,
-                                          story: StoryModel.formJson(
-                                              e.value.last)),
-                              ],
-                            )
+                        ],
+                      )
                       // : FirestoreListView<StoryModel>(
                       //     scrollDirection: Axis.horizontal,
                       //     pageSize: 8,
@@ -208,16 +213,24 @@ class FeedsScreen extends StatelessWidget {
                                 decoration: BoxDecoration(
                                   image: DecorationImage(
                                     image: controller_NeededInBuildPost
-                                                    .socialUserModel!.image ==
-                                                null ||
-                                            controller_NeededInBuildPost
-                                                    .socialUserModel!.image ==
-                                                ""
-                                        ? AssetImage(
+                                                .socialUserModel !=
+                                            null
+                                        ? controller_NeededInBuildPost
+                                                        .socialUserModel!
+                                                        .image ==
+                                                    null ||
+                                                controller_NeededInBuildPost
+                                                        .socialUserModel!
+                                                        .image ==
+                                                    ""
+                                            ? AssetImage(
+                                                    'assets/default profile.png')
+                                                as ImageProvider
+                                            : NetworkImage(
+                                                '${controller_NeededInBuildPost.socialUserModel!.image}')
+                                        : AssetImage(
                                                 'assets/default profile.png')
-                                            as ImageProvider
-                                        : NetworkImage(
-                                            '${controller_NeededInBuildPost.socialUserModel!.image}'),
+                                            as ImageProvider,
                                     // : NetworkImage(socialUserModel.coverimage!),
                                     fit: BoxFit.fill,
                                   ),

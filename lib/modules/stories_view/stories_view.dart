@@ -13,14 +13,13 @@ class StoryViewScreen extends StatelessWidget {
   final storyController = StoryController();
   var storiesController = Get.put(StoriesController());
 
-//! toDo
   @override
   Widget build(BuildContext context) {
     return GetBuilder<SocialLayoutController>(
         init: Get.find<SocialLayoutController>(),
         builder: (socialLayoutController) {
           List<StoryModel> stories = [];
-          socialLayoutController.storiesMap![storyUId]!.forEach((element) {
+          socialLayoutController.storiesMap[storyUId]!.forEach((element) {
             stories.add(StoryModel.formJson(element));
           });
           return Scaffold(

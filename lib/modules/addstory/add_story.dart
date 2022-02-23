@@ -121,6 +121,10 @@ class AddStoryScreen extends StatelessWidget {
                                           });
                                           print("OUTIDE THEN");
                                           Get.back();
+                                          SystemChrome.setEnabledSystemUIMode(
+                                            SystemUiMode.manual,
+                                            overlays: [SystemUiOverlay.top],
+                                          );
                                           print('after back');
                                         });
                                       },

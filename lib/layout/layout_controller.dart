@@ -28,6 +28,11 @@ class SocialLayoutController extends GetxController {
     // TODO: implement onInit
     super.onInit();
     isHasTokenInFireStore = CashHelper.getData(key: "deviceToken") ?? null;
+    if (uId != null) getLoggedInUserData().then((value) {});
+    getStories().then((value) {});
+    //getPosts().then((value) {});
+    getAllUsers().then((value) {});
+    getMyFriend().then((value) {});
   }
 
   @override
@@ -51,14 +56,9 @@ class SocialLayoutController extends GetxController {
     }
   }
 
-  SocialLayoutController() {
-    if (uId != null) getLoggedInUserData().then((value) {});
-    getStories().then((value) {});
-    //getPosts().then((value) {});
-    getAllUsers().then((value) {});
-    getMyFriend().then((value) {});
-    //Future.delayed(Duration(seconds: 1));
-  }
+  // SocialLayoutController() {
+  //   //Future.delayed(Duration(seconds: 1));
+  // }
 
 // NOTE: -------------------Bottom Navigation------------------------
   List<BottomNavigationBarItem> bottomItems = [
@@ -712,10 +712,11 @@ class SocialLayoutController extends GetxController {
   //NOTE ------------ Get Stories -----------------------------------
 
   List<Map<String, dynamic>> storiestemp = [];
-  Map<dynamic, List<Map<String, dynamic>>>? storiesMap;
-  var isloadingGetStories = false.obs;
+  Map<dynamic, List<Map<String, dynamic>>> storiesMap = {};
+  bool isloadingGetStories = false;
   Future<void> getStories() async {
-    isloadingGetStories.value = true;
+    isloadingGetStories = true;
+    update();
     storiestemp = [];
     await FirebaseFirestore.instance
         .collection('stories')
@@ -731,12 +732,13 @@ class SocialLayoutController extends GetxController {
         storiestemp.add(doc_of_stories.data());
 
         // stories.add(StoryModel.formJson(doc_of_stories.data()));
+        isloadingGetStories = false;
+        update();
       });
     });
     storiesMap = groupBy(storiestemp, (Map obj) => obj['storyUserId']);
     //var elment = storiesMap![uId.toString()]!.length;
-    print(storiesMap);
-    isloadingGetStories.value = false;
+    print(storiesMap.length.toString());
     update();
   }
 
