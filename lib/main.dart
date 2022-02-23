@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:social_app/layout/layout.dart';
 import 'package:social_app/layout/layout_controller.dart';
@@ -73,6 +74,12 @@ void main() async {
   } else {
     widget = LoginScreen();
   }
+
+  // show top status bar
+  SystemChrome.setEnabledSystemUIMode(
+    SystemUiMode.manual,
+    overlays: [SystemUiOverlay.top],
+  );
 
   runApp(MyApp(widget));
 }

@@ -94,8 +94,8 @@ class LoginScreen extends StatelessWidget {
                             onpress: () async {
                               if (_formkey.currentState!.validate()) {
                                 await socialLoginController.userlogin(
-                                    email: emailController.text,
-                                    password: passwordController.text);
+                                    email: emailController.text.trim(),
+                                    password: passwordController.text.trim());
                               }
 
                               if (socialLoginController.statusLoginMessage ==

@@ -280,12 +280,13 @@ class SocialLayoutController extends GetxController {
   Future<void> uploadPostImage() async {
     _isloadingurlPost = true;
     update();
-    FirebaseStorage.instance
+    await FirebaseStorage.instance
         .ref('')
         .child('posts/$uId/${Uri.file(_postimage!.path).pathSegments.last}')
         .putFile(_postimage!)
-        .then((value) {
-      value.ref.getDownloadURL().then((value) {
+        .then((value) async {
+      // without await if i call uploadpostimage.then(the value return null so i need await to finish get downlaod url)
+      await value.ref.getDownloadURL().then((value) {
         _imagePostUrl = value;
         _isloadingurlPost = false;
         update();
@@ -309,16 +310,18 @@ class SocialLayoutController extends GetxController {
   }) async {
     _isloadingcreatePost = true;
     update();
-
-    if (imagePostUrl != null) await uploadPostImage().then((value) {});
-    //TODO: fix post then story
+    if (_postimage != null)
+      await uploadPostImage().then((value) {
+        print("image" + _imagePostUrl.toString());
+        // Future.delayed(Duration(seconds: 2));
+      });
     PostModel model = PostModel(
         name: _socialUserModel!.name,
         image: _socialUserModel!.image.toString(),
         uId: _socialUserModel!.uId,
         postdate: postdate,
         text: text,
-        postImage: _imagePostUrl ?? '');
+        postImage: _imagePostUrl ?? null);
 
     await FirebaseFirestore.instance
         .collection('posts')

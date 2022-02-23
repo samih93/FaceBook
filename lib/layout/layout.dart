@@ -1,5 +1,6 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:social_app/layout/layout_controller.dart';
 import 'package:social_app/modules/new_post/new_post_screen.dart';
@@ -14,6 +15,7 @@ class SocialLayout extends StatelessWidget {
         builder: (socialLayoutController) {
           return Scaffold(
             appBar: AppBar(
+              toolbarHeight: 80,
               backgroundColor: Colors.white,
               title: Text(
                 socialLayoutController
@@ -24,9 +26,14 @@ class SocialLayout extends StatelessWidget {
               ),
               actions: [
                 IconButton(
-                    onPressed: () {
-                      //socialLayoutController.pushNotification();
-                    },
+                    color: Colors.grey.shade600,
+                    onPressed: () {},
+                    icon: Icon(
+                      Icons.search,
+                    )),
+                IconButton(
+                    color: Colors.grey.shade600,
+                    onPressed: () {},
                     icon: Icon(Icons.notifications))
               ],
             ),
