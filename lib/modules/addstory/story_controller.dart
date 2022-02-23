@@ -89,6 +89,7 @@ class StoriesController extends GetxController {
             storyName: socialLayoutController.socialUserModel!.name,
             image: _imageStoryUrl,
             caption: caption,
+            storyUserImage: socialLayoutController.socialUserModel!.image,
             storyDate: DateTime.now().toString());
 
         await FirebaseFirestore.instance

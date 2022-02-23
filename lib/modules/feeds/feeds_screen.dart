@@ -229,8 +229,7 @@ class FeedsScreen extends StatelessWidget {
                                             : NetworkImage(
                                                 '${controller_NeededInBuildPost.socialUserModel!.image}')
                                         : AssetImage(
-                                                'assets/default profile.png')
-                                            as ImageProvider,
+                                            'assets/default profile.png'),
                                     // : NetworkImage(socialUserModel.coverimage!),
                                     fit: BoxFit.fill,
                                   ),
@@ -291,31 +290,60 @@ class FeedsScreen extends StatelessWidget {
                     height: 175,
                     width: MediaQuery.of(context).size.width * 0.3,
                     child: Stack(
-                      alignment: AlignmentDirectional.bottomCenter,
+                      alignment: AlignmentDirectional.topStart,
                       children: [
-                        //NOTE : Cover Image
-                        Align(
-                          alignment: AlignmentDirectional.topCenter,
-                          child: Container(
-                              decoration: BoxDecoration(
-                            image: DecorationImage(
-                              image: NetworkImage(story!.image.toString()),
-                              // : NetworkImage(socialUserModel.coverimage!),
-                              fit: BoxFit.cover,
+                        Stack(
+                          alignment: AlignmentDirectional.bottomCenter,
+                          children: [
+                            //NOTE : Cover Image
+                            Align(
+                              alignment: AlignmentDirectional.topCenter,
+                              child: Container(
+                                  decoration: BoxDecoration(
+                                image: DecorationImage(
+                                  image: NetworkImage(story!.image.toString()),
+                                  // : NetworkImage(socialUserModel.coverimage!),
+                                  fit: BoxFit.cover,
+                                ),
+                              )),
                             ),
-                          )),
+
+                            //NOTE profileImage
+
+                            Padding(
+                              padding: const EdgeInsetsDirectional.only(
+                                  bottom: 10, end: 15),
+                              child: Text(
+                                'Your Story',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
-
-                        //NOTE profileImage
-
                         Padding(
-                          padding: const EdgeInsetsDirectional.only(
-                              bottom: 10, end: 15),
-                          child: Text(
-                            'Your Story',
-                            style: TextStyle(
-                              color: Colors.white,
-                            ),
+                          padding: const EdgeInsets.all(12.0),
+                          child: CircleAvatar(
+                              radius: 28,
+                              backgroundColor: defaultColor.shade800),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(14.0),
+                          child: CircleAvatar(
+                            radius: 26,
+                            backgroundColor: Colors.grey.shade400,
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(16),
+                          child: CircleAvatar(
+                            radius: 24,
+                            backgroundImage: story.storyUserImage == null ||
+                                    story.storyUserImage == ""
+                                ? AssetImage('assets/default profile.png')
+                                    as ImageProvider
+                                : NetworkImage(story.storyUserImage!),
                           ),
                         ),
                       ],
@@ -384,13 +412,13 @@ class FeedsScreen extends StatelessWidget {
             margin: EdgeInsets.zero,
             elevation: 5,
             clipBehavior: Clip.antiAliasWithSaveLayer,
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  //NOTE : header of post (circle avatar and name and date of post)
-                  Row(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                //NOTE : header of post (circle avatar and name and date of post)
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
                     children: [
                       CircleAvatar(
                         radius: 20,
@@ -440,195 +468,195 @@ class FeedsScreen extends StatelessWidget {
                           )),
                     ],
                   ),
-                  //NOTE: Divider()
-                  // Padding(
-                  //   padding: const EdgeInsets.symmetric(vertical: 10.0),
-                  //   child: Container(
-                  //     width: double.infinity,
-                  //     height: 1,
-                  //     color: Colors.grey,
-                  //   ),
-                  // ),
-                  //NOTE: post body()
-                  if (model.text != "")
-                    Padding(
-                      padding: const EdgeInsets.only(top: 10),
-                      child: Text('${model.text}'),
-                    ),
-                  //NOTE : Tags
-                  // Padding(
-                  //   padding: const EdgeInsets.only(top: 10),
-                  //   child: Container(
-                  //     width: double.infinity,
-                  //     child: Wrap(
-                  //       alignment: WrapAlignment.start,
-                  //       children: [
-                  //         Padding(
-                  //           padding:
-                  //               const EdgeInsetsDirectional.only(end: 7.0),
-                  //           child: Container(
-                  //             height: 25,
-                  //             child: MaterialButton(
-                  //                 padding: EdgeInsets.zero,
-                  //                 minWidth: 1,
-                  //                 onPressed: () {},
-                  //                 child: Text(
-                  //                   "#software_Engineer",
-                  //                   style: Theme.of(context)
-                  //                       .textTheme
-                  //                       .caption!
-                  //                       .copyWith(
-                  //                         color: defaultColor,
-                  //                       ),
-                  //                 )),
-                  //           ),
-                  //         ),
-                  //       ],
-                  //     ),
-                  //   ),
-                  // ),
+                ),
+                //NOTE: Divider()
+                // Padding(
+                //   padding: const EdgeInsets.symmetric(vertical: 10.0),
+                //   child: Container(
+                //     width: double.infinity,
+                //     height: 1,
+                //     color: Colors.grey,
+                //   ),
+                // ),
+                //NOTE: post body()
+                if (model.text != "")
+                  Padding(
+                    padding:
+                        const EdgeInsets.symmetric(vertical: 5, horizontal: 8),
+                    child: Text('${model.text}'),
+                  ),
+                //NOTE : Tags
+                // Padding(
+                //   padding: const EdgeInsets.only(top: 10),
+                //   child: Container(
+                //     width: double.infinity,
+                //     child: Wrap(
+                //       alignment: WrapAlignment.start,
+                //       children: [
+                //         Padding(
+                //           padding:
+                //               const EdgeInsetsDirectional.only(end: 7.0),
+                //           child: Container(
+                //             height: 25,
+                //             child: MaterialButton(
+                //                 padding: EdgeInsets.zero,
+                //                 minWidth: 1,
+                //                 onPressed: () {},
+                //                 child: Text(
+                //                   "#software_Engineer",
+                //                   style: Theme.of(context)
+                //                       .textTheme
+                //                       .caption!
+                //                       .copyWith(
+                //                         color: defaultColor,
+                //                       ),
+                //                 )),
+                //           ),
+                //         ),
+                //       ],
+                //     ),
+                //   ),
+                // ),
 
-                  //NOTE : Image Of post
-                  if (model.postImage != null)
-                    Padding(
-                      padding: const EdgeInsets.only(top: 13.0),
-                      child: Container(
-                          width: double.infinity,
-                          height: 230,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(4),
-                            image: DecorationImage(
-                              image: NetworkImage('${model.postImage}'),
-                              fit: BoxFit.cover,
-                            ),
-                          )),
-                    ),
-                  //NOTE : Likes And Comments
+                //NOTE : Image Of post
+                if (model.postImage != null)
                   Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 10.0),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: InkWell(
-                            child: Row(
-                              children: [
-                                Icon(Icons.favorite_border, color: Colors.red),
-                                SizedBox(
-                                  width: 5,
-                                ),
-                                Text(
-                                  model.nbOfLikes.toString(),
-                                  style: Theme.of(context).textTheme.caption,
-                                ),
-                              ],
-                            ),
-                            onTap: () {},
+                    padding: const EdgeInsets.only(top: 13.0),
+                    child: Container(
+                        width: double.infinity,
+                        height: 230,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(4),
+                          image: DecorationImage(
+                            image: NetworkImage('${model.postImage}'),
+                            fit: BoxFit.cover,
                           ),
-                        ),
-                        Expanded(
-                          child: InkWell(
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                Icon(Icons.comment_rounded,
-                                    color: Colors.amber),
-                                SizedBox(
-                                  width: 5,
-                                ),
-                                Text(
-                                  "0 comments",
-                                  style: Theme.of(context).textTheme.caption,
-                                ),
-                              ],
-                            ),
-                            onTap: () {},
-                          ),
-                        ),
-                      ],
-                    ),
+                        )),
                   ),
-                  //NOTE: Divider()
-                  Container(
-                    width: double.infinity,
-                    height: 1,
-                    color: Colors.grey,
-                  ),
-                  //NOTE : Write a Comment  and like post
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 8.0),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: InkWell(
-                            child: Row(
-                              children: [
-                                CircleAvatar(
-                                  radius: 15,
-                                  backgroundImage: userModel.image == null ||
-                                          userModel.image == ""
-                                      ? AssetImage('assets/default profile.png')
-                                          as ImageProvider
-                                      : NetworkImage('${userModel.image}'),
-                                ),
-                                SizedBox(
-                                  width: 15,
-                                ),
-                                Text("Write a Comment",
-                                    style: Theme.of(context).textTheme.caption),
-                              ],
-                            ),
-                            onTap: () {},
-                          ),
-                        ),
-                        InkWell(
+                //NOTE : Likes And Comments
+                Padding(
+                  padding: const EdgeInsets.all(8),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: InkWell(
                           child: Row(
                             children: [
-                              Icon(
-                                  model.likes!.length > 0 &&
-                                          model.likes!.contains(uId.toString())
-                                      ? Icons.favorite
-                                      : Icons.favorite_border,
-                                  color: Colors.red),
+                              Icon(Icons.favorite_border, color: Colors.red),
                               SizedBox(
                                 width: 5,
                               ),
                               Text(
-                                "Like",
+                                model.nbOfLikes.toString(),
                                 style: Theme.of(context).textTheme.caption,
                               ),
                             ],
                           ),
-                          onTap: () {
-                            if (model.likes!.any(
-                              (element) => element == uId,
-                            )) {
-                              controller_NeededInBuildPost.likePost(
-                                  model.postId.toString(),
-                                  isForremove: true);
-                            } else {
-                              controller_NeededInBuildPost
-                                  .likePost(model.postId.toString());
-                            }
-
-                            model.likes!.forEach((element) {
-                              print(element);
-                            });
-                            // if (model.likes!.length > 0 &&
-                            //     model.likes!.contains(uId)) {
-                            //   controller_NeededInBuildPost.likePost(
-                            //       model.postId.toString(),
-                            //       isForremove: true);
-                            // } else {
-                            //   controller_NeededInBuildPost
-                            //       .likePost(model.postId.toString());
-                            // }
-                          },
+                          onTap: () {},
                         ),
-                      ],
-                    ),
+                      ),
+                      Expanded(
+                        child: InkWell(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              Icon(Icons.comment_rounded, color: Colors.amber),
+                              SizedBox(
+                                width: 5,
+                              ),
+                              Text(
+                                "0 comments",
+                                style: Theme.of(context).textTheme.caption,
+                              ),
+                            ],
+                          ),
+                          onTap: () {},
+                        ),
+                      ),
+                    ],
                   ),
-                ],
-              ),
+                ),
+                //NOTE: Divider()
+                Container(
+                  width: double.infinity,
+                  height: 1,
+                  color: Colors.grey,
+                ),
+                //NOTE : Write a Comment  and like post
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: InkWell(
+                          child: Row(
+                            children: [
+                              CircleAvatar(
+                                radius: 15,
+                                backgroundImage: userModel.image == null ||
+                                        userModel.image == ""
+                                    ? AssetImage('assets/default profile.png')
+                                        as ImageProvider
+                                    : NetworkImage('${userModel.image}'),
+                              ),
+                              SizedBox(
+                                width: 15,
+                              ),
+                              Text("Write a Comment",
+                                  style: Theme.of(context).textTheme.caption),
+                            ],
+                          ),
+                          onTap: () {},
+                        ),
+                      ),
+                      InkWell(
+                        child: Row(
+                          children: [
+                            Icon(
+                                model.likes!.length > 0 &&
+                                        model.likes!.contains(uId.toString())
+                                    ? Icons.favorite
+                                    : Icons.favorite_border,
+                                color: Colors.red),
+                            SizedBox(
+                              width: 5,
+                            ),
+                            Text(
+                              "Like",
+                              style: Theme.of(context).textTheme.caption,
+                            ),
+                          ],
+                        ),
+                        onTap: () {
+                          if (model.likes!.any(
+                            (element) => element == uId,
+                          )) {
+                            controller_NeededInBuildPost.likePost(
+                                model.postId.toString(),
+                                isForremove: true);
+                          } else {
+                            controller_NeededInBuildPost
+                                .likePost(model.postId.toString());
+                          }
+
+                          model.likes!.forEach((element) {
+                            print(element);
+                          });
+                          // if (model.likes!.length > 0 &&
+                          //     model.likes!.contains(uId)) {
+                          //   controller_NeededInBuildPost.likePost(
+                          //       model.postId.toString(),
+                          //       isForremove: true);
+                          // } else {
+                          //   controller_NeededInBuildPost
+                          //       .likePost(model.postId.toString());
+                          // }
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             )),
       );
 

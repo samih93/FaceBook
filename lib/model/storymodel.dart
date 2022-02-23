@@ -21,6 +21,7 @@ class StoryModel {
   String? image;
   String? caption;
   String? storyDate;
+  String? storyUserImage;
 
   StoryModel(
       {required this.storyId,
@@ -28,7 +29,8 @@ class StoryModel {
       required this.storyName,
       required this.image,
       required this.caption,
-      required this.storyDate});
+      required this.storyDate,
+      required this.storyUserImage});
 
   StoryModel.formJson(Map<String, dynamic> json) {
     storyId = json['storyId'];
@@ -37,6 +39,7 @@ class StoryModel {
     image = json['image'];
     caption = json['caption'];
     storyDate = json['storyDate'];
+    storyUserImage = json['storyUserImage'];
   }
 
   Map<String, dynamic> toJson() {
@@ -47,6 +50,7 @@ class StoryModel {
       'image': image,
       'caption': caption,
       'storyDate': storyDate,
+      'storyUserImage': storyUserImage,
     };
   }
 }
