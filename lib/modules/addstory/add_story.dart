@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:social_app/layout/layout.dart';
 import 'package:social_app/layout/layout_controller.dart';
 import 'package:social_app/modules/addstory/story_controller.dart';
 import 'package:social_app/shared/components/componets.dart';
+import 'package:social_app/shared/helper/binding.dart';
 
 class AddStoryScreen extends StatelessWidget {
   AddStoryScreen({Key? key}) : super(key: key);
@@ -18,8 +20,8 @@ class AddStoryScreen extends StatelessWidget {
       SystemUiMode.manual,
       overlays: [],
     );
-    return GetBuilder<StoryController>(
-      init: StoryController(),
+    return GetBuilder<StoriesController>(
+      init: StoriesController(tag: "AddStoryScreen"),
       builder: (storyController) => Scaffold(
         backgroundColor: Colors.black,
         body: storyController.storyimage != null
@@ -99,14 +101,34 @@ class AddStoryScreen extends StatelessWidget {
                             SizedBox(
                               width: 5,
                             ),
-                            GestureDetector(
-                              onTap: () {
-                                print("send button");
-                              },
-                              child: CircleAvatar(
-                                radius: 25,
-                                child: Icon(Icons.send),
-                              ),
+                            Obx(
+                              () => storyController.isLoadingAddStory.value
+                                  ? CircularProgressIndicator()
+                                  : GestureDetector(
+                                      onTap: () async {
+                                        print("send button");
+                                        await storyController
+                                                .AddStoryToFireStore(
+                                                    caption: storyBodyController
+                                                        .text
+                                                        .toString()
+                                                        .trim())
+                                            .then((value) async {
+                                          await socialLayoutController
+                                              .getStories()
+                                              .then((value) {
+                                            print("THEN");
+                                          });
+                                          print("OUTIDE THEN");
+                                          Get.back();
+                                          print('after back');
+                                        });
+                                      },
+                                      child: CircleAvatar(
+                                        radius: 25,
+                                        child: Icon(Icons.send),
+                                      ),
+                                    ),
                             )
                           ],
                         )),

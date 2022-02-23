@@ -86,6 +86,7 @@ class FeedsScreen extends StatelessWidget {
                                       buildStoryItem(
                                           context: context,
                                           isForMe: false,
+                                          isHasStories: true,
                                           story: StoryModel.formJson(
                                               e.value.last)),
                               ],
@@ -218,7 +219,7 @@ class FeedsScreen extends StatelessWidget {
                                         : NetworkImage(
                                             '${controller_NeededInBuildPost.socialUserModel!.image}'),
                                     // : NetworkImage(socialUserModel.coverimage!),
-                                    fit: BoxFit.cover,
+                                    fit: BoxFit.fill,
                                   ),
                                 )),
                           ),

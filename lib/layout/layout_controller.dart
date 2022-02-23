@@ -716,9 +716,10 @@ class SocialLayoutController extends GetxController {
   var isloadingGetStories = false.obs;
   Future<void> getStories() async {
     isloadingGetStories.value = true;
+    storiestemp = [];
     await FirebaseFirestore.instance
         .collection('stories')
-        .orderBy('storyDate', descending: true)
+        .orderBy('storyDate')
         .limit(20)
         .get()
         .then((querySnap_of_stories) {
@@ -733,8 +734,8 @@ class SocialLayoutController extends GetxController {
       });
     });
     storiesMap = groupBy(storiestemp, (Map obj) => obj['storyUserId']);
-    var elment = storiesMap![uId.toString()]!.length;
-    print(elment);
+    //var elment = storiesMap![uId.toString()]!.length;
+    print(storiesMap);
     isloadingGetStories.value = false;
     update();
   }

@@ -8,12 +8,17 @@ import 'package:social_app/layout/layout_controller.dart';
 import 'package:social_app/model/storymodel.dart';
 import 'package:social_app/shared/constants.dart';
 
-class StoryController extends GetxController {
+class StoriesController extends GetxController {
+  String? tag;
+  StoriesController({this.tag});
+
   SocialLayoutController socialLayoutController =
       Get.find<SocialLayoutController>();
   void onInit() async {
     super.onInit();
-    pickStoryImage();
+
+    print("tag " + tag.toString());
+    if (tag.toString() == 'AddStoryScreen') pickStoryImage();
   }
 
   // NOTE Pick Story image
@@ -40,33 +45,6 @@ class StoryController extends GetxController {
     update();
   }
 
-  // NOTE ------------------- Add Story ------------------------
-
-  Future<void> AddStoryToFireStore(String uId) async {
-    StoryModel storyModel = StoryModel(
-        storyId: '',
-        storyUserId: uId,
-        storyName: socialLayoutController.socialUserModel!.name,
-        image:
-            'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQJiDUsiX6YaPIQ1cWEEehfjPYQjHyjJkMU3Q&usqp=CAU',
-        caption: "instagram",
-        storyDate: DateTime.now().toString());
-
-    await FirebaseFirestore.instance
-        .collection('stories')
-        .add(storyModel.toJson())
-        .then((value) async {
-      print("story inserted in stories collection");
-      storyModel.storyId = value.id;
-      await FirebaseFirestore.instance
-          .collection('stories')
-          .doc(value.id)
-          .update({'storyId': value.id}).then((value) {
-        print("story updated in stories collection");
-      });
-    });
-  }
-
 // NOTE :  upload post image
   bool? _isloadingurlStory = false;
   bool? get isloadingurlStory => _isloadingurlStory;
@@ -77,12 +55,12 @@ class StoryController extends GetxController {
   Future<void> uploadStoryImage() async {
     _isloadingurlStory = true;
     update();
-    FirebaseStorage.instance
+    await FirebaseStorage.instance
         .ref('')
         .child('Stories/$uId/${Uri.file(_storyimage!.path).pathSegments.last}')
         .putFile(_storyimage!)
-        .then((value) {
-      value.ref.getDownloadURL().then((value) {
+        .then((value) async {
+      await value.ref.getDownloadURL().then((value) {
         _imageStoryUrl = value;
         _isloadingurlStory = false;
         update();
@@ -94,5 +72,47 @@ class StoryController extends GetxController {
     }).catchError((error) {
       print(error.toString());
     });
+  }
+
+  // NOTE ------------------- Add Story ------------------------
+  var isLoadingAddStory = false.obs;
+
+  Future<void> AddStoryToFireStore({String? caption = ''}) async {
+    isLoadingAddStory.value = true;
+    if (_storyimage != null)
+      await uploadStoryImage().then((value) async {
+        print("image" + _storyimage.toString());
+        // Future.delayed(Duration(seconds: 2));
+        StoryModel storyModel = StoryModel(
+            storyId: '',
+            storyUserId: uId,
+            storyName: socialLayoutController.socialUserModel!.name,
+            image: _imageStoryUrl,
+            caption: caption,
+            storyDate: DateTime.now().toString());
+
+        await FirebaseFirestore.instance
+            .collection('stories')
+            .add(storyModel.toJson())
+            .then((value) async {
+          print("story inserted in stories collection");
+          storyModel.storyId = value.id;
+          await FirebaseFirestore.instance
+              .collection('stories')
+              .doc(value.id)
+              .update({'storyId': value.id}).then((value) {
+            print("story updated in stories collection");
+            isLoadingAddStory.value = false;
+          });
+        });
+      });
+  }
+
+  // Note For Time of Story
+
+  var storytime = ''.obs;
+
+  onchangeStorytime(val) {
+    storytime.value = val;
   }
 }

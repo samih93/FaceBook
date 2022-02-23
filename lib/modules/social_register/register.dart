@@ -128,10 +128,10 @@ class RegisterScreen extends StatelessWidget {
                               // NOTE : GET STATUS OF  register method
                               if (_formkey.currentState!.validate()) {
                                 await socialRegisterController.registerUser(
-                                    name: nameController.text,
-                                    email: emailController.text,
-                                    password: passwordController.text,
-                                    phone: phoneController.text);
+                                    name: nameController.text.trim(),
+                                    email: emailController.text.trim(),
+                                    password: passwordController.text.trim(),
+                                    phone: phoneController.text.trim());
                               }
                               print(
                                   "status firestore ${socialRegisterController.isSuccessRegisterToFireStore}");
