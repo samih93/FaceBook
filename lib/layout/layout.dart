@@ -37,8 +37,10 @@ class SocialLayout extends StatelessWidget {
                     icon: Icon(Icons.notifications))
               ],
             ),
-            body: socialLayoutController
-                .screens[socialLayoutController.currentIndex],
+            body: socialLayoutController.isGetNeededData!
+                ? socialLayoutController
+                    .screens[socialLayoutController.currentIndex]
+                : Center(child: CircularProgressIndicator()),
             bottomNavigationBar: BottomNavigationBar(
               elevation: 30,
               type: BottomNavigationBarType.fixed,

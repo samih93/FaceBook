@@ -80,7 +80,6 @@ void main() async {
     SystemUiMode.manual,
     overlays: [SystemUiOverlay.top],
   );
-
   runApp(MyApp(widget));
 }
 
@@ -93,7 +92,7 @@ class MyApp extends StatelessWidget {
     return GetMaterialApp(
       theme: lightTheme(),
       themeMode: ThemeMode.light,
-      // initialBinding: Binding(),
+      initialBinding: Binding(),
       debugShowCheckedModeBanner: false,
       home: widget,
     );

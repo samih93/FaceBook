@@ -23,16 +23,27 @@ import 'package:social_app/shared/network/local/cashhelper.dart';
 import 'package:social_app/shared/network/remote/diohelper.dart';
 
 class SocialLayoutController extends GetxController {
+  bool? isGetNeededData = false;
+
   @override
   void onInit() {
     // TODO: implement onInit
     super.onInit();
+
+    isGetNeededData = false;
+    print(isGetNeededData);
+    update();
     isHasTokenInFireStore = CashHelper.getData(key: "deviceToken") ?? null;
-    if (uId != null) getLoggedInUserData().then((value) {});
+    getLoggedInUserData().then((value) {});
     getStories().then((value) {});
-    //getPosts().then((value) {});
+    //getPosts().the;n((value) {});
     getAllUsers().then((value) {});
-    getMyFriend().then((value) {});
+    getMyFriend().then((value) {
+      print('get my friend');
+      isGetNeededData = true;
+      print(isGetNeededData);
+      update();
+    });
   }
 
   @override
@@ -95,7 +106,7 @@ class SocialLayoutController extends GetxController {
         .then((value) {
       //   print(value.data());
       _socialUserModel = UserModel.fromJson(value.data()!);
-      // print("get user email :" + _socialUserModel!.email.toString());
+      print(_socialUserModel!.toJson().toString());
       update();
     });
   }

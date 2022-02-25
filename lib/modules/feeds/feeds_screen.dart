@@ -212,24 +212,22 @@ class FeedsScreen extends StatelessWidget {
                                 height: 160,
                                 decoration: BoxDecoration(
                                   image: DecorationImage(
-                                    image: controller_NeededInBuildPost
-                                                .socialUserModel !=
-                                            null
-                                        ? controller_NeededInBuildPost
+                                    image: (controller_NeededInBuildPost
+                                                    .socialUserModel !=
+                                                null &&
+                                            (controller_NeededInBuildPost
                                                         .socialUserModel!
                                                         .image ==
                                                     null ||
                                                 controller_NeededInBuildPost
                                                         .socialUserModel!
                                                         .image ==
-                                                    ""
-                                            ? AssetImage(
-                                                    'assets/default profile.png')
-                                                as ImageProvider
-                                            : NetworkImage(
-                                                '${controller_NeededInBuildPost.socialUserModel!.image}')
-                                        : AssetImage(
-                                            'assets/default profile.png'),
+                                                    ""))
+                                        ? AssetImage(
+                                                'assets/default profile.png')
+                                            as ImageProvider
+                                        : NetworkImage(
+                                            '${controller_NeededInBuildPost.socialUserModel!.image.toString()}'),
                                     // : NetworkImage(socialUserModel.coverimage!),
                                     fit: BoxFit.fill,
                                   ),

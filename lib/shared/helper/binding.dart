@@ -6,6 +6,6 @@ class Binding extends Bindings {
   void dependencies() {
     //NOTE:  implement dependencies
 
-    Get.put(() => SocialLayoutController());
+    Get.lazyPut<SocialLayoutController>(() => SocialLayoutController());
   }
 }
