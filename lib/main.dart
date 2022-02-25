@@ -92,7 +92,7 @@ class MyApp extends StatelessWidget {
     return GetMaterialApp(
       theme: lightTheme(),
       themeMode: ThemeMode.light,
-      initialBinding: Binding(),
+      // initialBinding: Binding(),
       debugShowCheckedModeBanner: false,
       home: widget,
     );
