@@ -62,10 +62,13 @@ class FeedsScreen extends StatelessWidget {
                           socialLayoutController.storiesMap.length > 0
                               ? Row(
                                   children: [
-                                    socialLayoutController
-                                                .storiesMap[uId.toString()]!
-                                                .length >
-                                            0
+                                    socialLayoutController.storiesMap[
+                                                    uId.toString()] !=
+                                                null &&
+                                            socialLayoutController
+                                                    .storiesMap[uId.toString()]!
+                                                    .length >
+                                                0
                                         ? buildStoryItem(
                                             context: context,
                                             isForMe: true,
