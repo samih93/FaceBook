@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:social_app/layout/layout_controller.dart';
 import 'package:social_app/model/storymodel.dart';
@@ -16,6 +17,11 @@ class StoryViewScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    //NOTE remove status and bottom bar
+    SystemChrome.setEnabledSystemUIMode(
+      SystemUiMode.manual,
+      overlays: [],
+    );
     return GetBuilder<SocialLayoutController>(
         init: Get.find<SocialLayoutController>(),
         builder: (socialLayoutController) {
@@ -70,13 +76,18 @@ class StoryViewScreen extends StatelessWidget {
             onComplete: () {
               print("Completed a cycle");
               Get.back();
+              //NOTE show top bar after finishing
+              SystemChrome.setEnabledSystemUIMode(
+                SystemUiMode.manual,
+                overlays: [SystemUiOverlay.top],
+              );
             },
             progressPosition: ProgressPosition.top,
             repeat: false,
             //  inline: true,
           ),
           Padding(
-            padding: const EdgeInsets.only(top: 50.0, left: 25),
+            padding: const EdgeInsets.only(top: 35.0, left: 25),
             child: Row(
               children: [
                 CircleAvatar(
