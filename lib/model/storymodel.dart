@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class StoriesModel {
   String? storyuId;
   List<StoryModel>? stories = [];
@@ -20,7 +22,7 @@ class StoryModel {
   String? storyName;
   String? image;
   String? caption;
-  String? storyDate;
+  Timestamp? storyDate;
   String? storyUserImage;
 
   StoryModel(
