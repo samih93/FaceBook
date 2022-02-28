@@ -90,7 +90,7 @@ class StoriesController extends GetxController {
             image: _imageStoryUrl,
             caption: caption,
             storyUserImage: socialLayoutController.socialUserModel!.image,
-            storyDate: DateTime.now().toString());
+            storyDate: Timestamp.fromDate(DateTime.now()));
 
         await FirebaseFirestore.instance
             .collection('stories')
@@ -111,9 +111,12 @@ class StoriesController extends GetxController {
 
   // Note For Time of Story
 
-  var storytime = ''.obs;
+  Timestamp? _storytime;
+
+  Timestamp? get storytime => _storytime;
 
   onchangeStorytime(val) {
-    storytime.value = val;
+    _storytime = val;
+    update();
   }
 }
