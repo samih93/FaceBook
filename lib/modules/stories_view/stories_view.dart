@@ -12,7 +12,7 @@ class StoryViewScreen extends StatelessWidget {
   StoryViewScreen(this.storyUId);
 
   final storyController = StoryController();
-  var storiesController = Get.put(StoriesController());
+  var storiesController_needed = Get.put(StoriesController());
 
   @override
   Widget build(BuildContext context) {
@@ -48,63 +48,66 @@ class StoryViewScreen extends StatelessWidget {
         ),
       ));
       print(DateTime.parse(stories[0].storyDate!.toDate().toString()));
-      storiesController.onchangeStorytime(stories[0].storyDate);
+      storiesController_needed.onchangeStorytime(stories[0].storyDate);
     });
 
-    return Stack(
-      alignment: AlignmentDirectional.topStart,
-      children: [
-        StoryView(
-          controller: storyController,
-          storyItems: storyItems,
+    return GetBuilder<StoriesController>(
+      init: StoriesController(),
+      builder: (storiesController) => Stack(
+        alignment: AlignmentDirectional.topStart,
+        children: [
+          StoryView(
+            controller: storyController,
+            storyItems: storyItems,
 
-          onStoryShow: (storyitem) {
-            print("Showing a story");
-            int pos = storyItems.indexOf(storyitem);
-            if (pos > 0) {
-              storiesController.onchangeStorytime(stories[pos].storyDate);
-            }
-          },
-          onComplete: () {
-            print("Completed a cycle");
-            Get.back();
-          },
-          progressPosition: ProgressPosition.top,
-          repeat: false,
-          //  inline: true,
-        ),
-        Padding(
-          padding: const EdgeInsets.only(top: 50.0, left: 25),
-          child: Row(
-            children: [
-              CircleAvatar(
-                  radius: 22,
-                  backgroundImage: AssetImage('assets/default profile.png')),
-              SizedBox(
-                width: 10,
-              ),
-              Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    stories[0].storyName.toString(),
-                    style: TextStyle(
-                      height: 1.4,
-                      color: Colors.white,
-                      fontSize: 20,
-                    ),
-                  ),
-                  Text(
-                    '${convertToAgo(DateTime.parse(storiesController.storytime!.toDate().toString()))} ago',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                ],
-              ),
-            ],
+            onStoryShow: (storyitem) {
+              print("Showing a story");
+              int pos = storyItems.indexOf(storyitem);
+              if (pos > 0) {
+                storiesController.onchangeStorytime(stories[pos].storyDate);
+              }
+            },
+            onComplete: () {
+              print("Completed a cycle");
+              Get.back();
+            },
+            progressPosition: ProgressPosition.top,
+            repeat: false,
+            //  inline: true,
           ),
-        ),
-      ],
+          Padding(
+            padding: const EdgeInsets.only(top: 50.0, left: 25),
+            child: Row(
+              children: [
+                CircleAvatar(
+                    radius: 22,
+                    backgroundImage: AssetImage('assets/default profile.png')),
+                SizedBox(
+                  width: 10,
+                ),
+                Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      stories[0].storyName.toString(),
+                      style: TextStyle(
+                        height: 1.4,
+                        color: Colors.white,
+                        fontSize: 20,
+                      ),
+                    ),
+                    Text(
+                      '${convertToAgo(DateTime.parse(storiesController.storytime!.toDate().toString()))} ago',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
