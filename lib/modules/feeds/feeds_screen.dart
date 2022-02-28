@@ -326,20 +326,20 @@ class FeedsScreen extends StatelessWidget {
                         Padding(
                           padding: const EdgeInsets.all(12.0),
                           child: CircleAvatar(
-                              radius: 28,
+                              radius: 26,
                               backgroundColor: defaultColor.shade800),
                         ),
                         Padding(
                           padding: const EdgeInsets.all(14.0),
                           child: CircleAvatar(
-                            radius: 26,
+                            radius: 24,
                             backgroundColor: Colors.grey.shade400,
                           ),
                         ),
                         Padding(
                           padding: const EdgeInsets.all(16),
                           child: CircleAvatar(
-                            radius: 24,
+                            radius: 22,
                             backgroundImage: story.storyUserImage == null ||
                                     story.storyUserImage == ""
                                 ? AssetImage('assets/default profile.png')
