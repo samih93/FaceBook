@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:social_app/layout/layout_controller.dart';
@@ -46,7 +47,8 @@ class StoryViewScreen extends StatelessWidget {
           ),
         ),
       ));
-      storiesController.storytime.value = stories[0].storyDate.toString();
+      print(DateTime.parse(stories[0].storyDate!.toDate().toString()));
+      storiesController.onchangeStorytime(stories[0].storyDate);
     });
 
     return Stack(
@@ -93,11 +95,9 @@ class StoryViewScreen extends StatelessWidget {
                       fontSize: 20,
                     ),
                   ),
-                  Obx(
-                    () => Text(
-                      '${convertToAgo(DateTime.parse(storiesController.storytime.value.toString()))} ago',
-                      style: TextStyle(color: Colors.white),
-                    ),
+                  Text(
+                    '${convertToAgo(DateTime.parse(storiesController.storytime!.toDate().toString()))} ago',
+                    style: TextStyle(color: Colors.white),
                   ),
                 ],
               ),

@@ -731,8 +731,7 @@ class SocialLayoutController extends GetxController {
     storiestemp = [];
     await FirebaseFirestore.instance
         .collection('stories')
-        .orderBy('storyDate')
-        .limit(20)
+        .where('storyDate', isLessThan: DateTime.now())
         .get()
         .then((querySnap_of_stories) {
       querySnap_of_stories.docs.forEach((doc_of_stories) {
