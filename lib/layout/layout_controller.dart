@@ -34,16 +34,16 @@ class SocialLayoutController extends GetxController {
     print(isGetNeededData);
     update();
     isHasTokenInFireStore = CashHelper.getData(key: "deviceToken") ?? null;
-    getLoggedInUserData().then((value) {});
-    getStories().then((value) {});
-    //getPosts().the;n((value) {});
-    getAllUsers().then((value) {});
-    getMyFriend().then((value) {
-      print('get my friend');
+    getLoggedInUserData().then((value) {
+      print('get logged in user');
       isGetNeededData = true;
       print(isGetNeededData);
       update();
     });
+    getStories().then((value) {});
+    //getPosts().the;n((value) {});
+    getAllUsers().then((value) {});
+    getMyFriend().then((value) {});
   }
 
   @override
@@ -104,7 +104,7 @@ class SocialLayoutController extends GetxController {
         .doc(uId)
         .get()
         .then((value) {
-      //   print(value.data());
+      print(value.data());
       _socialUserModel = UserModel.fromJson(value.data()!);
       print(_socialUserModel!.toJson().toString());
       update();
