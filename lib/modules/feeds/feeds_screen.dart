@@ -323,30 +323,8 @@ class FeedsScreen extends StatelessWidget {
                             ),
                           ],
                         ),
-                        Padding(
-                          padding: const EdgeInsets.all(12.0),
-                          child: CircleAvatar(
-                              radius: 26,
-                              backgroundColor: defaultColor.shade800),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(14.0),
-                          child: CircleAvatar(
-                            radius: 24,
-                            backgroundColor: Colors.grey.shade400,
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(16),
-                          child: CircleAvatar(
-                            radius: 22,
-                            backgroundImage: story.storyUserImage == null ||
-                                    story.storyUserImage == ""
-                                ? AssetImage('assets/default profile.png')
-                                    as ImageProvider
-                                : NetworkImage(story.storyUserImage!),
-                          ),
-                        ),
+                        // NOTE circle avatar inside story
+                        ...profileStory(story)
                       ],
                     ),
                   ),
@@ -368,33 +346,40 @@ class FeedsScreen extends StatelessWidget {
                 height: 175,
                 width: MediaQuery.of(context).size.width * 0.3,
                 child: Stack(
-                  alignment: AlignmentDirectional.bottomCenter,
+                  alignment: AlignmentDirectional.topStart,
                   children: [
-                    //NOTE : Cover Image
-                    Align(
-                      alignment: AlignmentDirectional.topCenter,
-                      child: Container(
-                          decoration: BoxDecoration(
-                        image: DecorationImage(
-                          image: NetworkImage(story!.image.toString()),
-                          // : NetworkImage(socialUserModel.coverimage!),
-                          fit: BoxFit.cover,
+                    Stack(
+                      alignment: AlignmentDirectional.bottomCenter,
+                      children: [
+                        //NOTE : Cover Image
+                        Align(
+                          alignment: AlignmentDirectional.topCenter,
+                          child: Container(
+                              decoration: BoxDecoration(
+                            image: DecorationImage(
+                              image: NetworkImage(story!.image.toString()),
+                              // : NetworkImage(socialUserModel.coverimage!),
+                              fit: BoxFit.cover,
+                            ),
+                          )),
                         ),
-                      )),
-                    ),
 
-                    //NOTE profileImage
+                        //NOTE profileImage
 
-                    Padding(
-                      padding:
-                          const EdgeInsetsDirectional.only(bottom: 10, end: 15),
-                      child: Text(
-                        story.storyName.toString(),
-                        style: TextStyle(
-                          color: Colors.white,
+                        Padding(
+                          padding: const EdgeInsetsDirectional.only(
+                              bottom: 10, end: 15),
+                          child: Text(
+                            story.storyName.toString(),
+                            style: TextStyle(
+                              color: Colors.white,
+                            ),
+                          ),
                         ),
-                      ),
+                      ],
                     ),
+                    // NOTE circle avatar inside story // this is list of circle avatar in a stack
+                    ...profileStory(story)
                   ],
                 ),
               ),
@@ -660,6 +645,32 @@ class FeedsScreen extends StatelessWidget {
               ],
             )),
       );
+
+  profileStory(StoryModel story) {
+    return [
+      Padding(
+        padding: const EdgeInsets.all(12.0),
+        child: CircleAvatar(radius: 24, backgroundColor: defaultColor.shade800),
+      ),
+      Padding(
+        padding: const EdgeInsets.all(14.0),
+        child: CircleAvatar(
+          radius: 22,
+          backgroundColor: Colors.grey.shade400,
+        ),
+      ),
+      Padding(
+        padding: const EdgeInsets.all(16),
+        child: CircleAvatar(
+          radius: 20,
+          backgroundImage:
+              story.storyUserImage == null || story.storyUserImage == ""
+                  ? AssetImage('assets/default profile.png') as ImageProvider
+                  : NetworkImage(story.storyUserImage!),
+        ),
+      ),
+    ];
+  }
 
   // Future _refreshData() async {
   //   Get.delete<SocialLayoutController>();
