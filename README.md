@@ -1,4 +1,4 @@
-# social_app Like Facebook(add post , like and comment to a post , chat with friend , Add story , FCm notification)
+# social_app Like Facebook(add post , like and comment to a post , chat with friend , Add story , FCm notification & more features)
 ![375675c8-30c7-4957-8a48-53b456a105b8](https://user-images.githubusercontent.com/78031951/156540731-fd45b4c9-3943-409b-93f1-97238d742be5.jpg)
 ![a7c20524-b959-4fab-ba77-510e7133885d](https://user-images.githubusercontent.com/78031951/156540726-5389d7c7-9652-41d1-bfea-c1404a94b1d2.jpg)
 ![8211db75-1c28-45f3-89dc-0883462c56a6](https://user-images.githubusercontent.com/78031951/156540724-3942d993-7a40-4541-bd50-0754df389ff3.jpg)
