@@ -11,6 +11,7 @@ final String taskTable = "tasks";
 void signOut() {
   FirebaseAuth.instance.signOut().then((value) {
     print("Sign out successfully");
+    CashHelper.removeDatabykey(key: "deviceToken");
     CashHelper.removeDatabykey(key: "uId").then((value) {
       if (value) {
         Get.offAll(LoginScreen());

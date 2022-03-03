@@ -656,7 +656,7 @@ class FeedsScreen extends StatelessWidget {
         padding: const EdgeInsets.all(14.0),
         child: CircleAvatar(
           radius: 22,
-          backgroundColor: Colors.grey.shade400,
+          backgroundColor: Colors.grey.shade400.withOpacity(0.3),
         ),
       ),
       Padding(
