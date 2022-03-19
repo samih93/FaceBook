@@ -183,18 +183,17 @@ class SettingScreen extends StatelessWidget {
                       children: [
                         Expanded(
                           child: OutlinedButton(
-                            onPressed: () {},
-                            child: Text("Edit Profile"),
-                          ),
-                        ),
-                        SizedBox(
-                          width: 5,
-                        ),
-                        OutlinedButton(
                             onPressed: () {
                               Get.to(EditProfile());
                             },
-                            child: Icon(Icons.edit)),
+                            child: Text("Edit Profile"),
+                          ),
+                        ),
+                        // SizedBox(
+                        //   width: 5,
+                        // ),
+                        // OutlinedButton(
+                        //     onPressed: () {}, child: Icon(Icons.edit)),
                       ],
                     ),
 
