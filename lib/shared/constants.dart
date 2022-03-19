@@ -1,6 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/date_symbol_data_local.dart';
+import 'package:intl/intl.dart';
 
 import 'package:social_app/layout/layout_controller.dart';
 import 'package:social_app/modules/social_login/login.dart';
@@ -57,13 +59,15 @@ String getMessageTimeFromDate(String date) {
 //NOTE : cover DateTime To Ago
 String convertToAgo(DateTime input) {
   Duration diff = DateTime.now().difference(input);
-//initializeDateFormatting('en_US,', null);
+  //initializeDateFormatting('en_US,', null);
 // if (diff.inDays >= 6) {
 //     //! TODo:
 //     return DateFormat.yMMMd(input.toString()).toString();
 //   } else if
 
-  if (diff.inDays >= 1) {
+  if (diff.inDays > 6) {
+    return DateFormat.yMMMd().format(input);
+  } else if (diff.inDays <= 6 && diff.inDays >= 1) {
     return '${diff.inDays}d';
   } else if (diff.inHours >= 1) {
     return '${diff.inHours}h';
