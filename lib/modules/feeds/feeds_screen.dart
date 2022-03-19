@@ -9,6 +9,7 @@ import 'package:social_app/model/storymodel.dart';
 import 'package:social_app/model/user_model.dart';
 import 'package:social_app/modules/addstory/add_story.dart';
 import 'package:social_app/modules/stories_view/stories_view.dart';
+import 'package:social_app/shared/components/componets.dart';
 import 'package:social_app/shared/constants.dart';
 import 'package:social_app/shared/styles/colors.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -671,12 +672,26 @@ class FeedsScreen extends StatelessWidget {
   }
 
   _noStoriesWidget(BuildContext context) => Container(
-        width: MediaQuery.of(context).size.width * 0.6,
+        clipBehavior: Clip.antiAliasWithSaveLayer,
+        decoration: BoxDecoration(
+          border: Border.all(color: Colors.grey),
+          borderRadius: BorderRadius.circular(10),
+        ),
+        width: MediaQuery.of(context).size.width * 0.55,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text("No stories yet"),
-            Text("Add A Story"),
+            const Text(
+              "No stories yet",
+              style: TextStyle(color: Colors.grey, fontSize: 24),
+            ),
+            SizedBox(height: 10),
+            defaultButton(
+                text: "Try Again",
+                textSize: 12,
+                background: defaultColor,
+                radius: 20,
+                width: 90),
           ],
         ),
       );

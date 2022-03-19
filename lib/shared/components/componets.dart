@@ -29,6 +29,7 @@ Widget defaultButton(
         required String text,
         double radius = 0,
         double height = 40,
+        double textSize =14,
         bool? isUppercase}) =>
     Container(
       width: width,
@@ -39,6 +40,7 @@ Widget defaultButton(
           (isUppercase != null && isUppercase) ? text.toUpperCase() : text,
           style: TextStyle(
             color: Colors.white,
+            fontSize: textSize
           ),
         ),
       ),
