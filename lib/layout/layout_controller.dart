@@ -76,10 +76,10 @@ class SocialLayoutController extends GetxController {
     BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
     BottomNavigationBarItem(icon: Icon(Icons.chat), label: "Chats"),
     BottomNavigationBarItem(icon: Icon(Icons.post_add_sharp), label: "Post"),
-    BottomNavigationBarItem(
-      icon: Icon(Icons.person),
-      label: "Users",
-    ),
+    // BottomNavigationBarItem(
+    //   icon: Icon(Icons.person),
+    //   label: "Users",
+    // ),
     BottomNavigationBarItem(icon: Icon(Icons.settings), label: "Settings"),
   ];
 
@@ -88,7 +88,7 @@ class SocialLayoutController extends GetxController {
     FeedsScreen(),
     ChatScreen(),
     NewPostScreen(),
-    UsersScreen(),
+   // UsersScreen(),
     SettingScreen()
   ];
 
