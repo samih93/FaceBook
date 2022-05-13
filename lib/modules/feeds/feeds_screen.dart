@@ -624,10 +624,10 @@ class FeedsScreen extends StatelessWidget {
                             // size: buttonSize,
                             circleColor: CircleColor(
                                 start: Color.fromARGB(255, 209, 7, 7),
-                                end: Color(0xff0099cc)),
+                                end: Color.fromARGB(255, 209, 7, 7)),
                             bubblesColor: BubblesColor(
                               dotPrimaryColor: Color.fromARGB(255, 209, 7, 7),
-                              dotSecondaryColor: Color(0xff0099cc),
+                              dotSecondaryColor: Color.fromARGB(255, 209, 7, 7),
                             ),
                             isLiked: model.likes!.length > 0 &&
                                     model.likes!.contains(uId.toString())
