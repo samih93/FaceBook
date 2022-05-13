@@ -595,87 +595,85 @@ class FeedsScreen extends StatelessWidget {
                           onTap: () {},
                         ),
                       ),
-                      InkWell(
-                        child: Row(
-                          children: [
-                            LikeButton(
-                              // size: buttonSize,
-                              circleColor: CircleColor(
-                                  start: Color(0xff00ddff),
-                                  end: Color(0xff0099cc)),
-                              bubblesColor: BubblesColor(
-                                dotPrimaryColor: Color(0xff33b5e5),
-                                dotSecondaryColor: Color(0xff0099cc),
-                              ),
-                              likeBuilder: (bool isLiked) {
-                                return Icon(
-                                  Icons.home,
-                                  color: isLiked
-                                      ? Colors.deepPurpleAccent
-                                      : Colors.grey,
-                                  // size: buttonSize,
-                                );
-                              },
-                              likeCount: 665,
-                              // countBuilder:
-                              //     (int count, bool isLiked, String text) {
-                              //   var color = isLiked
-                              //       ? Colors.deepPurpleAccent
-                              //       : Colors.grey;
-                              //   Widget result;
-                              //   if (count == 0) {
-                              //     result = Text(
-                              //       "love",
-                              //       style: TextStyle(color: color),
-                              //     );
-                              //   } else
-                              //     result = Text(
-                              //       text,
-                              //       style: TextStyle(color: color),
-                              //     );
-                              //   return result;
-                              // },
-                            ),
-                            // Icon(
-                            //     model.likes!.length > 0 &&
-                            //             model.likes!.contains(uId.toString())
-                            //         ? Icons.favorite
-                            //         : Icons.favorite_border,
-                            //     color: Colors.red),
-                            SizedBox(
-                              width: 5,
-                            ),
-                            Text(
-                              "Like",
-                              style: Theme.of(context).textTheme.caption,
-                            ),
-                          ],
-                        ),
-                        onTap: () {
-                          if (model.likes!.any(
-                            (element) => element == uId,
-                          )) {
-                            controller_NeededInBuildPost.likePost(
-                                model.postId.toString(),
-                                isForremove: true);
-                          } else {
-                            controller_NeededInBuildPost
-                                .likePost(model.postId.toString());
-                          }
+                      Row(
+                        children: [
+                          LikeButton(
+                            onTap: (isLiked) async {
+                              if (model.likes!.any(
+                                (element) => element == uId,
+                              )) {
+                                controller_NeededInBuildPost.likePost(
+                                    model.postId.toString(),
+                                    isForremove: true);
+                              } else {
+                                controller_NeededInBuildPost
+                                    .likePost(model.postId.toString());
+                              }
+                              return !isLiked;
+                            },
 
-                          model.likes!.forEach((element) {
-                            print(element);
-                          });
-                          // if (model.likes!.length > 0 &&
-                          //     model.likes!.contains(uId)) {
-                          //   controller_NeededInBuildPost.likePost(
-                          //       model.postId.toString(),
-                          //       isForremove: true);
-                          // } else {
-                          //   controller_NeededInBuildPost
-                          //       .likePost(model.postId.toString());
-                          // }
-                        },
+                            // if (model.likes!.length > 0 &&
+                            //     model.likes!.contains(uId)) {
+                            //   controller_NeededInBuildPost.likePost(
+                            //       model.postId.toString(),
+                            //       isForremove: true);
+                            // } else {
+                            //   controller_NeededInBuildPost
+                            //       .likePost(model.postId.toString());
+                            // }
+                            // size: buttonSize,
+                            circleColor: CircleColor(
+                                start: Color.fromARGB(255, 209, 7, 7),
+                                end: Color(0xff0099cc)),
+                            bubblesColor: BubblesColor(
+                              dotPrimaryColor: Color.fromARGB(255, 209, 7, 7),
+                              dotSecondaryColor: Color(0xff0099cc),
+                            ),
+                            isLiked: model.likes!.length > 0 &&
+                                    model.likes!.contains(uId.toString())
+                                ? true
+                                : false,
+                            likeBuilder: (bool isLiked) {
+                              return Icon(
+                                  isLiked
+                                      ? Icons.favorite
+                                      : Icons.favorite_border,
+                                  color: Colors.red);
+                            },
+                            //likeCount: 665,
+                            // countBuilder:
+                            //     (int count, bool isLiked, String text) {
+                            //   var color = isLiked
+                            //       ? Colors.deepPurpleAccent
+                            //       : Colors.grey;
+                            //   Widget result;
+                            //   if (count == 0) {
+                            //     result = Text(
+                            //       "love",
+                            //       style: TextStyle(color: color),
+                            //     );
+                            //   } else
+                            //     result = Text(
+                            //       text,
+                            //       style: TextStyle(color: color),
+                            //     );
+                            //   return result;
+                            // },
+                          ),
+                          // Icon(
+                          //     model.likes!.length > 0 &&
+                          //             model.likes!.contains(uId.toString())
+                          //         ? Icons.favorite
+                          //         : Icons.favorite_border,
+                          //     color: Colors.red),
+                          SizedBox(
+                            width: 5,
+                          ),
+                          Text(
+                            "Like",
+                            style: Theme.of(context).textTheme.caption,
+                          ),
+                        ],
                       ),
                     ],
                   ),
