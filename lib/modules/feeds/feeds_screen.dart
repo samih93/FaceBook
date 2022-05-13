@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterfire_ui/firestore.dart';
 import 'package:get/get.dart';
+import 'package:like_button/like_button.dart';
 import 'package:social_app/layout/layout_controller.dart';
 import 'package:social_app/model/post_model.dart';
 import 'package:social_app/model/storymodel.dart';
@@ -597,12 +598,50 @@ class FeedsScreen extends StatelessWidget {
                       InkWell(
                         child: Row(
                           children: [
-                            Icon(
-                                model.likes!.length > 0 &&
-                                        model.likes!.contains(uId.toString())
-                                    ? Icons.favorite
-                                    : Icons.favorite_border,
-                                color: Colors.red),
+                            LikeButton(
+                              // size: buttonSize,
+                              circleColor: CircleColor(
+                                  start: Color(0xff00ddff),
+                                  end: Color(0xff0099cc)),
+                              bubblesColor: BubblesColor(
+                                dotPrimaryColor: Color(0xff33b5e5),
+                                dotSecondaryColor: Color(0xff0099cc),
+                              ),
+                              likeBuilder: (bool isLiked) {
+                                return Icon(
+                                  Icons.home,
+                                  color: isLiked
+                                      ? Colors.deepPurpleAccent
+                                      : Colors.grey,
+                                  // size: buttonSize,
+                                );
+                              },
+                              likeCount: 665,
+                              // countBuilder:
+                              //     (int count, bool isLiked, String text) {
+                              //   var color = isLiked
+                              //       ? Colors.deepPurpleAccent
+                              //       : Colors.grey;
+                              //   Widget result;
+                              //   if (count == 0) {
+                              //     result = Text(
+                              //       "love",
+                              //       style: TextStyle(color: color),
+                              //     );
+                              //   } else
+                              //     result = Text(
+                              //       text,
+                              //       style: TextStyle(color: color),
+                              //     );
+                              //   return result;
+                              // },
+                            ),
+                            // Icon(
+                            //     model.likes!.length > 0 &&
+                            //             model.likes!.contains(uId.toString())
+                            //         ? Icons.favorite
+                            //         : Icons.favorite_border,
+                            //     color: Colors.red),
                             SizedBox(
                               width: 5,
                             ),
