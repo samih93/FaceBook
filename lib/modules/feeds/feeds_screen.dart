@@ -471,38 +471,6 @@ class FeedsScreen extends StatelessWidget {
                         const EdgeInsets.symmetric(vertical: 5, horizontal: 8),
                     child: Text('${model.text}'),
                   ),
-                //NOTE : Tags
-                // Padding(
-                //   padding: const EdgeInsets.only(top: 10),
-                //   child: Container(
-                //     width: double.infinity,
-                //     child: Wrap(
-                //       alignment: WrapAlignment.start,
-                //       children: [
-                //         Padding(
-                //           padding:
-                //               const EdgeInsetsDirectional.only(end: 7.0),
-                //           child: Container(
-                //             height: 25,
-                //             child: MaterialButton(
-                //                 padding: EdgeInsets.zero,
-                //                 minWidth: 1,
-                //                 onPressed: () {},
-                //                 child: Text(
-                //                   "#software_Engineer",
-                //                   style: Theme.of(context)
-                //                       .textTheme
-                //                       .caption!
-                //                       .copyWith(
-                //                         color: defaultColor,
-                //                       ),
-                //                 )),
-                //           ),
-                //         ),
-                //       ],
-                //     ),
-                //   ),
-                // ),
 
                 //NOTE : Image Of post
                 if (model.postImage != null)
@@ -542,21 +510,15 @@ class FeedsScreen extends StatelessWidget {
                         ),
                       ),
                       Expanded(
-                        child: InkWell(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              Icon(Icons.comment_rounded, color: Colors.amber),
-                              SizedBox(
-                                width: 5,
-                              ),
-                              Text(
-                                "0 comments",
-                                style: Theme.of(context).textTheme.caption,
-                              ),
-                            ],
+                        child: Align(
+                          alignment: Alignment.bottomRight,
+                          child: InkWell(
+                            child: Text(
+                              "0 comments",
+                              style: Theme.of(context).textTheme.caption,
+                            ),
+                            onTap: () {},
                           ),
-                          onTap: () {},
                         ),
                       ),
                     ],
@@ -597,7 +559,8 @@ class FeedsScreen extends StatelessWidget {
                             end: Color.fromARGB(255, 209, 7, 7)),
                         bubblesColor: BubblesColor(
                           dotPrimaryColor: Color.fromARGB(255, 209, 7, 7),
-                          dotSecondaryColor: Color.fromARGB(255, 209, 7, 7),
+                          dotSecondaryColor: defaultColor,
+                          // dotThirdColor: Color.fromARGB(220, 12, 199, 43),
                         ),
                         isLiked: model.likes!.length > 0 &&
                                 model.likes!.contains(uId.toString())
@@ -648,7 +611,7 @@ class FeedsScreen extends StatelessWidget {
                       Row(
                         children: [
                           Icon(
-                            Icons.reply,
+                            Icons.share,
                             color: Colors.grey,
                           ),
                           SizedBox(
