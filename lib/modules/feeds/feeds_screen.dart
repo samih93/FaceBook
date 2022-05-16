@@ -563,11 +563,116 @@ class FeedsScreen extends StatelessWidget {
                   ),
                 ),
                 //NOTE: Divider()
-                Container(
-                  width: double.infinity,
-                  height: 1,
-                  color: Colors.grey,
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 15),
+                  child: Container(
+                    width: double.infinity,
+                    height: 0.5,
+                    color: Colors.grey,
+                  ),
                 ),
+                // NOTE like share comment
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      LikeButton(
+                        size: 51,
+                        onTap: (isLiked) async {
+                          if (model.likes!.any(
+                            (element) => element == uId,
+                          )) {
+                            controller_NeededInBuildPost.likePost(
+                                model.postId.toString(),
+                                isForremove: true);
+                          } else {
+                            controller_NeededInBuildPost
+                                .likePost(model.postId.toString());
+                          }
+                          return !isLiked;
+                        },
+                        circleColor: CircleColor(
+                            start: Color.fromARGB(255, 209, 7, 7),
+                            end: Color.fromARGB(255, 209, 7, 7)),
+                        bubblesColor: BubblesColor(
+                          dotPrimaryColor: Color.fromARGB(255, 209, 7, 7),
+                          dotSecondaryColor: Color.fromARGB(255, 209, 7, 7),
+                        ),
+                        isLiked: model.likes!.length > 0 &&
+                                model.likes!.contains(uId.toString())
+                            ? true
+                            : false,
+                        likeBuilder: (bool isLiked) {
+                          return Row(
+                            children: [
+                              Icon(
+                                  isLiked
+                                      ? Icons.favorite
+                                      : Icons.favorite_border,
+                                  color: isLiked ? Colors.red : Colors.grey),
+                              SizedBox(
+                                width: 5,
+                              ),
+                              Text(
+                                "Like",
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .caption
+                                    ?.copyWith(
+                                        color:
+                                            isLiked ? Colors.red : Colors.grey),
+                              ),
+                            ],
+                          );
+                        },
+                      ),
+                      Row(
+                        children: [
+                          Icon(
+                            Icons.comment,
+                            color: Colors.grey,
+                          ),
+                          SizedBox(
+                            width: 5,
+                          ),
+                          Text(
+                            "Comments",
+                            style: Theme.of(context)
+                                .textTheme
+                                .caption
+                                ?.copyWith(color: Colors.grey),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          Icon(
+                            Icons.share,
+                            color: Colors.grey,
+                          ),
+                          SizedBox(
+                            width: 5,
+                          ),
+                          Text(
+                            "Share",
+                            style: Theme.of(context).textTheme.caption,
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                //NOTE: Divider()
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 15),
+                  child: Container(
+                    width: double.infinity,
+                    height: 0.5,
+                    color: Colors.grey,
+                  ),
+                ),
+
                 //NOTE : Write a Comment  and like post
                 Padding(
                   padding: const EdgeInsets.all(8.0),
@@ -594,86 +699,6 @@ class FeedsScreen extends StatelessWidget {
                           ),
                           onTap: () {},
                         ),
-                      ),
-                      Row(
-                        children: [
-                          LikeButton(
-                            onTap: (isLiked) async {
-                              if (model.likes!.any(
-                                (element) => element == uId,
-                              )) {
-                                controller_NeededInBuildPost.likePost(
-                                    model.postId.toString(),
-                                    isForremove: true);
-                              } else {
-                                controller_NeededInBuildPost
-                                    .likePost(model.postId.toString());
-                              }
-                              return !isLiked;
-                            },
-
-                            // if (model.likes!.length > 0 &&
-                            //     model.likes!.contains(uId)) {
-                            //   controller_NeededInBuildPost.likePost(
-                            //       model.postId.toString(),
-                            //       isForremove: true);
-                            // } else {
-                            //   controller_NeededInBuildPost
-                            //       .likePost(model.postId.toString());
-                            // }
-                            // size: buttonSize,
-                            circleColor: CircleColor(
-                                start: Color.fromARGB(255, 209, 7, 7),
-                                end: Color.fromARGB(255, 209, 7, 7)),
-                            bubblesColor: BubblesColor(
-                              dotPrimaryColor: Color.fromARGB(255, 209, 7, 7),
-                              dotSecondaryColor: Color.fromARGB(255, 209, 7, 7),
-                            ),
-                            isLiked: model.likes!.length > 0 &&
-                                    model.likes!.contains(uId.toString())
-                                ? true
-                                : false,
-                            likeBuilder: (bool isLiked) {
-                              return Icon(
-                                  isLiked
-                                      ? Icons.favorite
-                                      : Icons.favorite_border,
-                                  color: Colors.red);
-                            },
-                            //likeCount: 665,
-                            // countBuilder:
-                            //     (int count, bool isLiked, String text) {
-                            //   var color = isLiked
-                            //       ? Colors.deepPurpleAccent
-                            //       : Colors.grey;
-                            //   Widget result;
-                            //   if (count == 0) {
-                            //     result = Text(
-                            //       "love",
-                            //       style: TextStyle(color: color),
-                            //     );
-                            //   } else
-                            //     result = Text(
-                            //       text,
-                            //       style: TextStyle(color: color),
-                            //     );
-                            //   return result;
-                            // },
-                          ),
-                          // Icon(
-                          //     model.likes!.length > 0 &&
-                          //             model.likes!.contains(uId.toString())
-                          //         ? Icons.favorite
-                          //         : Icons.favorite_border,
-                          //     color: Colors.red),
-                          SizedBox(
-                            width: 5,
-                          ),
-                          Text(
-                            "Like",
-                            style: Theme.of(context).textTheme.caption,
-                          ),
-                        ],
                       ),
                     ],
                   ),
