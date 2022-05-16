@@ -648,7 +648,7 @@ class FeedsScreen extends StatelessWidget {
                       Row(
                         children: [
                           Icon(
-                            Icons.share,
+                            Icons.reply,
                             color: Colors.grey,
                           ),
                           SizedBox(
