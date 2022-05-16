@@ -48,10 +48,8 @@ class SocialLayout extends StatelessWidget {
               onTap: (index) {
                 print(index);
                 //NOTE : if index equal 2 open NewPostScreen without change index
-                if (index == 2)
-                  Get.to(NewPostScreen());
-                else
-                  socialLayoutController.onchangeIndex(index);
+
+                socialLayoutController.onchangeIndex(index);
               },
               currentIndex: socialLayoutController.currentIndex,
               items: socialLayoutController.bottomItems,
