@@ -9,6 +9,7 @@ import 'package:social_app/model/post_model.dart';
 import 'package:social_app/model/storymodel.dart';
 import 'package:social_app/model/user_model.dart';
 import 'package:social_app/modules/addstory/add_story.dart';
+import 'package:social_app/modules/new_post/new_post_screen.dart';
 import 'package:social_app/modules/stories_view/stories_view.dart';
 import 'package:social_app/shared/components/componets.dart';
 import 'package:social_app/shared/constants.dart';
@@ -48,6 +49,9 @@ class FeedsScreen extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  // NOTE what's on your mind
+                  _buildWhatonYourMind(socialLayoutController.socialUserModel),
+
                   //NOTE for Story
                   Container(
                       margin: EdgeInsets.only(top: 10),
@@ -720,6 +724,125 @@ class FeedsScreen extends StatelessWidget {
           ],
         ),
       );
+
+  _buildWhatonYourMind(UserModel? socialUserModel) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+      ),
+      child: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Row(
+                    children: [
+                      CircleAvatar(
+                        radius: 20,
+                        backgroundImage: socialUserModel!.image == null ||
+                                socialUserModel.image == ""
+                            ? AssetImage('assets/default profile.png')
+                                as ImageProvider
+                            : NetworkImage(socialUserModel.image!),
+                      ),
+                      SizedBox(
+                        width: 10,
+                      ),
+                      Expanded(
+                        child: GestureDetector(
+                          onTap: () {
+                            Get.to(NewPostScreen());
+                          },
+                          child: Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(40),
+                              border: Border.all(color: Colors.grey),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(10.0),
+                              child: Text("What's on your mind?"),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(
+                  width: 10,
+                ),
+                IconButton(
+                  icon: Icon(Icons.image, color: Colors.green),
+                  onPressed: () {},
+                ),
+              ],
+            ),
+          ),
+          _buildStreamsRow(),
+        ],
+      ),
+    );
+  }
+
+  List<String> _streamItems = ['Reel', 'Room', 'Group', 'Live'];
+  List<IconData> _streamIcons = [
+    Icons.video_collection_outlined,
+    Icons.video_call,
+    Icons.groups_rounded,
+    Icons.live_tv_sharp
+  ];
+  List<Color> _streamIconColors = [
+    Colors.pink.shade400,
+    Colors.purple.shade400,
+    defaultColor,
+    Colors.red.shade400
+  ];
+
+  _buildStreamsRow() {
+    return Container(
+      color: Colors.grey.shade100,
+      padding: const EdgeInsets.all(10.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          ..._streamItems.map((e) => _buildStreamItem(
+              e,
+              _streamIcons[_streamItems.indexOf(e)],
+              _streamIconColors[_streamItems.indexOf(e)])),
+        ],
+      ),
+    );
+  }
+
+  _buildStreamItem(String text, IconData icon, Color color) {
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(40),
+        border: Border.all(color: Colors.grey),
+        color: Colors.white,
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Row(
+          children: [
+            Icon(
+              icon,
+              color: color,
+            ),
+            SizedBox(
+              width: 5,
+            ),
+            Text(
+              text,
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 
   // Future _refreshData() async {
   //   Get.delete<SocialLayoutController>();
