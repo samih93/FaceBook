@@ -16,6 +16,7 @@ import 'package:social_app/modules/addstory/add_story.dart';
 import 'package:social_app/modules/chats/chat_screen.dart';
 import 'package:social_app/modules/feeds/feeds_screen.dart';
 import 'package:social_app/modules/new_post/new_post_screen.dart';
+import 'package:social_app/modules/notifications_screen/notificationsscreen.dart';
 import 'package:social_app/modules/settings/setting_screen.dart';
 import 'package:social_app/modules/users/users_screen.dart';
 import 'package:social_app/shared/constants.dart';
@@ -75,7 +76,8 @@ class SocialLayoutController extends GetxController {
   List<BottomNavigationBarItem> bottomItems = [
     BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
     BottomNavigationBarItem(icon: Icon(Icons.chat), label: "Chats"),
-    BottomNavigationBarItem(icon: Icon(Icons.post_add_sharp), label: "Post"),
+    BottomNavigationBarItem(
+        icon: Icon(Icons.notifications), label: "Notifications"),
     // BottomNavigationBarItem(
     //   icon: Icon(Icons.person),
     //   label: "Users",
@@ -87,8 +89,8 @@ class SocialLayoutController extends GetxController {
   final screens = [
     FeedsScreen(),
     ChatScreen(),
-    NewPostScreen(),
-   // UsersScreen(),
+    NotificationsScreen(),
+    // UsersScreen(),
     SettingScreen()
   ];
 
