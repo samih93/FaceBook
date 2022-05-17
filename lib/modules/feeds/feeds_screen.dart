@@ -6,6 +6,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:like_button/like_button.dart';
 import 'package:social_app/layout/layout_controller.dart';
+import 'package:social_app/model/comment_model.dart';
 import 'package:social_app/model/post_model.dart';
 import 'package:social_app/model/storymodel.dart';
 import 'package:social_app/model/user_model.dart';
@@ -34,6 +35,8 @@ class FeedsScreen extends StatelessWidget {
   //     );
 
   late SocialLayoutController controller_NeededInBuildPost;
+
+  var comment_textcontroller = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -618,6 +621,7 @@ class FeedsScreen extends StatelessWidget {
                     GestureDetector(
                       onTap: () {
                         print("pressed");
+                        _showBottomSheet(context);
                       },
                       child: Row(
                         children: [
@@ -886,6 +890,55 @@ class FeedsScreen extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  _showBottomSheet(BuildContext context) {
+    Get.bottomSheet(
+        Container(
+          padding: EdgeInsets.all(10),
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(20), topRight: Radius.circular(20))),
+          height: MediaQuery.of(context).size.height - 15,
+          child: Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    "Be the first to like this",
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  FaIcon(
+                    FontAwesomeIcons.solidThumbsUp,
+                    color: Colors.grey,
+                  )
+                ],
+              ),
+              Expanded(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    FaIcon(FontAwesomeIcons.solidMessage,
+                        color: Colors.grey, size: 40),
+                    Text("No Comments yet",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.grey,
+                        )),
+                    Text("Be the first to Comment",
+                        style: TextStyle(
+                          color: Colors.grey,
+                        )),
+                  ],
+                ),
+              ),
+              TextFormField(),
+            ],
+          ),
+        ),
+        backgroundColor: Colors.white,
+        isScrollControlled: true);
   }
 
   // Future _refreshData() async {

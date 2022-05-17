@@ -50,6 +50,8 @@ ThemeData lightTheme() => ThemeData(
             statusBarColor: Colors.white,
             statusBarIconBrightness: Brightness.dark,
           )),
+      bottomSheetTheme:
+          BottomSheetThemeData(backgroundColor: Colors.black.withOpacity(0)),
       floatingActionButtonTheme:
           FloatingActionButtonThemeData(backgroundColor: defaultColor),
 
