@@ -80,9 +80,6 @@ class ChatDetailsScreen extends StatelessWidget {
                 ],
               ),
             ),
-            // chatDetailsController.isGetMessageSuccess == false
-            //     ? Center(child: CircularProgressIndicator())
-            //     :
             body: Column(
               children: [
                 // NOTE while image uploading to firebase storage

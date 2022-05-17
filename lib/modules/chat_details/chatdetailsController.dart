@@ -17,23 +17,23 @@ class ChatDetailsController extends GetxController {
   // NOTE on type in text field to check if empty or not
   var messageText = "".obs;
 
-   @override 
-    void onInit() {
-       // Here you can fetch you product from server
-       super.onInit();
-    }
+  @override
+  void onInit() {
+    // Here you can fetch you product from server
+    super.onInit();
+  }
 
-    @override 
-    void onReady() {
-       super.onReady();
-    }
+  @override
+  void onReady() {
+    super.onReady();
+  }
 
-    @override
-    void onClose() { 
-          // Here, you can dispose your StreamControllers
-          // you can cancel timers
-          super.onClose();
-    }
+  @override
+  void onClose() {
+    // Here, you can dispose your StreamControllers
+    // you can cancel timers
+    super.onClose();
+  }
 
   @override
   // TODO: implement onDelete
@@ -126,37 +126,37 @@ class ChatDetailsController extends GetxController {
 
   // NOTE : -------------- get Messages-----------------
 
-  List<MessageModel> _listOfMessages = [];
-  List<MessageModel> get listOfMessages => _listOfMessages;
+  // List<MessageModel> _listOfMessages = [];
+  // List<MessageModel> get listOfMessages => _listOfMessages;
 
-  var isGetMessageSuccess = false.obs;
+  // var isGetMessageSuccess = false.obs;
 
-  void getMessages({required String receiverId}) {
-    isGetMessageSuccess.value = false;
-    update();
+  // void getMessages({required String receiverId}) {
+  //   isGetMessageSuccess.value = false;
+  //   update();
 
-    FirebaseFirestore.instance
-        .collection('users')
-        .doc(uId)
-        .collection('chats')
-        .doc(receiverId)
-        .collection('messages')
-        .orderBy('messageDate')
-        .limitToLast(10)
-        .snapshots()
-        // ! Stream => of type Stream<QureySnapshot>  get data and still open to receive new updates
-        // ! get => of type Future<QuerySnapshot> get data one time
-        .listen((event) {
-      _listOfMessages = []; // ! cz listen get old and new data
-      // update();
-      event.docs.forEach((element) {
-        _listOfMessages.add(MessageModel.fromJson(element.data()));
-        update();
-      });
-    });
-    isGetMessageSuccess.value = true;
-    update();
-  }
+  //   FirebaseFirestore.instance
+  //       .collection('users')
+  //       .doc(uId)
+  //       .collection('chats')
+  //       .doc(receiverId)
+  //       .collection('messages')
+  //       .orderBy('messageDate')
+  //       .limitToLast(10)
+  //       .snapshots()
+  //       // ! Stream => of type Stream<QureySnapshot>  get data and still open to receive new updates
+  //       // ! get => of type Future<QuerySnapshot> get data one time
+  //       .listen((event) {
+  //     _listOfMessages = []; // ! cz listen get old and new data
+  //     // update();
+  //     event.docs.forEach((element) {
+  //       _listOfMessages.add(MessageModel.fromJson(element.data()));
+  //       update();
+  //     });
+  //   });
+  //   isGetMessageSuccess.value = true;
+  //   update();
+  // }
 
 // NOTE Picke Image
   File? _messageImage = null;
@@ -253,7 +253,7 @@ class ChatDetailsController extends GetxController {
         .doc(messagesModel.first.receiverId)
         .collection('messages')
         .orderBy('messageDate')
-        .limit(messagesModel.length); // Snapshot 
+        .limit(messagesModel.length); // Snapshot
 
     first.get().then((value) {
       value.docs.forEach((element) {
