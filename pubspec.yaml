@@ -54,7 +54,7 @@ dependencies:
   firebase_messaging: ^11.2.5
   firebase_storage: ^10.2.4
   cloud_firestore: ^3.1.7
-  flutterfire_ui: ^0.3.4
+  flutterfire_ui: ^0.4.1
   # errpr : Unable to log event: analytics library is missing
   firebase_analytics: ^9.1.0
 
