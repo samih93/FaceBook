@@ -484,7 +484,7 @@ class FeedsScreen extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.only(top: 13.0),
                   child: Container(
-                    width: double.infinity,
+                    width: MediaQuery.of(context).size.width,
                     //NOTE height - heigt /1.5 ==> about 40% from real height
                     height: model.imageHeight,
 
@@ -498,11 +498,12 @@ class FeedsScreen extends StatelessWidget {
                       child: InteractiveViewer(
                           // transformationController: transformationController,
                           constrained: true,
-                          //minScale: 0.5,
+                          //minScale: 1,
                           maxScale: 2.5,
-                          child: AspectRatio(
-                              aspectRatio: 1,
-                              child: Image.network(model.postImage!))),
+                          child: Image.network(
+                            model.postImage!,
+                            fit: BoxFit.fitWidth,
+                          )),
                     ),
                   ),
                 ),
