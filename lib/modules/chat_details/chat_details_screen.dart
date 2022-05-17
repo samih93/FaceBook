@@ -270,8 +270,10 @@ class ChatDetailsScreen extends StatelessWidget {
                             maxLines: 100,
                           ),
                         ),
-                        SizedBox(
-                          width: 80,
+                        Flexible(
+                          child: SizedBox(
+                            width: 80,
+                          ),
                         ),
                       ],
                     ),
