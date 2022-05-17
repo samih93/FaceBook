@@ -1,6 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:flutterfire_ui/firestore.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:social_app/layout/layout.dart';
@@ -14,8 +17,23 @@ import 'package:social_app/shared/styles/colors.dart';
 
 class ChatDetailsScreen extends StatelessWidget {
   UserModel socialUserModel;
+  var messagesQuery;
 
-  ChatDetailsScreen({required this.socialUserModel});
+  ChatDetailsScreen({required this.socialUserModel}) {
+    messagesQuery = FirebaseFirestore.instance
+        .collection('users')
+        .doc(uId)
+        .collection('chats')
+        .doc(socialUserModel.uId)
+        .collection('messages')
+        .orderBy('messageDate', descending: true)
+        .limit(20)
+        .withConverter<MessageModel>(
+          fromFirestore: (snapshot, _) =>
+              MessageModel.fromJson(snapshot.data()!),
+          toFirestore: (message, _) => message.toJson(),
+        );
+  }
   var textController = TextEditingController();
   var scrollController = ScrollController();
 
@@ -24,12 +42,12 @@ class ChatDetailsScreen extends StatelessWidget {
     return GetBuilder<ChatDetailsController>(
         init: ChatDetailsController(),
         builder: (chatDetailsController) {
-          chatDetailsController.getMessages(receiverId: socialUserModel.uId!);
+          //  chatDetailsController.getMessages(receiverId: socialUserModel.uId!);
 
-          if (chatDetailsController.listOfMessages.length > 0 &&
-              chatDetailsController.listOfMessages.first.senderId != uId!)
-            chatDetailsController
-                .updatestatusMessage(chatDetailsController.listOfMessages);
+          //   if (chatDetailsController.listOfMessages.length > 0 &&
+          //       chatDetailsController.listOfMessages.first.senderId != uId!)
+          //     chatDetailsController
+          //         .updatestatusMessage(chatDetailsController.listOfMessages);
 
           return Scaffold(
             appBar: AppBar(
@@ -62,188 +80,220 @@ class ChatDetailsScreen extends StatelessWidget {
                 ],
               ),
             ),
-            body: chatDetailsController.isGetMessageSuccess == false
-                ? Center(child: CircularProgressIndicator())
-                : Column(
-                    children: [
-                      // NOTE while image uploading to firebase storage
-                      chatDetailsController.isloadingUrlMessage == true
-                          ? LinearProgressIndicator()
-                          : SizedBox(
-                              height: 0,
-                            ),
-
-                      Expanded(
-                        child: Container(
-                          padding: EdgeInsets.all(20),
-                          decoration: BoxDecoration(
-                            image: DecorationImage(
-                              image: AssetImage("assets/background_image.png"),
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                          child: ListView.separated(
-                              controller: scrollController,
-                              physics: BouncingScrollPhysics(),
-                              itemBuilder: (context, index) {
-                                var message =
-                                    chatDetailsController.listOfMessages[index];
-                                if (message.senderId == uId) {
-                                  return _buildMyMessage(message, context);
-                                } else {
-                                  return _buildMessage(message, context);
-                                }
-                              },
-                              separatorBuilder: (context, index) =>
-                                  SizedBox(height: 10),
-                              itemCount:
-                                  chatDetailsController.listOfMessages.length),
-                        ),
+            // chatDetailsController.isGetMessageSuccess == false
+            //     ? Center(child: CircularProgressIndicator())
+            //     :
+            body: Column(
+              children: [
+                // NOTE while image uploading to firebase storage
+                chatDetailsController.isloadingUrlMessage == true
+                    ? LinearProgressIndicator()
+                    : SizedBox(
+                        height: 0,
                       ),
 
-                      // Spacer(),
-                      Container(
-                        padding: EdgeInsets.only(left: 5),
-                        decoration: BoxDecoration(
-                          border: Border.all(color: Colors.grey),
-                          // borderRadius: BorderRadius.circular(15)),
-                        ),
-                        clipBehavior: Clip.antiAliasWithSaveLayer,
-                        child: Obx(
-                          () => Row(
+                Expanded(
+                  child: Container(
+                    padding: EdgeInsets.all(20),
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                        image: AssetImage("assets/background_image.png"),
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                    child: FirestoreListView<MessageModel>(
+                      reverse: true,
+                      //    physics: NeverScrollableScrollPhysics(),
+                      shrinkWrap: true,
+                      pageSize: 10,
+                      query: messagesQuery,
+                      loadingBuilder: (context) => Center(
+                        child: SingleChildScrollView(),
+                      ),
+                      errorBuilder: (context, error, stackTrace) => Text(
+                          'Something went wrong! ${error} - ${stackTrace}'),
+                      itemBuilder: (context, snapshot) {
+                        MessageModel model;
+                        if (snapshot.isBlank!)
+                          return Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              //NOTE if an image picked so displayed inside Row
-                              chatDetailsController.messageImage != null
-                                  ? Expanded(
-                                      child: Stack(
-                                        alignment: AlignmentDirectional.topEnd,
-                                        children: [
-                                          Container(
-                                              constraints: BoxConstraints(
-                                                maxHeight: 300,
-                                              ),
-                                              width: double.infinity,
-                                              decoration: BoxDecoration(
-                                                borderRadius: BorderRadius.only(
-                                                  topLeft: Radius.circular(5),
-                                                  topRight: Radius.circular(5),
-                                                ),
-                                                image: DecorationImage(
-                                                  image: FileImage(
-                                                      chatDetailsController
-                                                          .messageImage!),
-                                                  fit: BoxFit.fill,
-                                                ),
-                                              )),
-                                          IconButton(
-                                              onPressed: () {
-                                                //NOTE : Remove post image
-                                                chatDetailsController
-                                                    .removeMessageImage();
-                                              },
-                                              icon: CircleAvatar(
-                                                  radius: 20,
-                                                  child: Icon(
-                                                    Icons.close,
-                                                    size: 17,
-                                                  ))),
-                                        ],
-                                      ),
-                                    )
-                                  //NOTE if not image picked so textformfield display to typing
-                                  : Expanded(
-                                      child: TextFormField(
-                                        controller: textController,
-                                        keyboardType: TextInputType.multiline,
-                                        onChanged: (value) {
-                                          chatDetailsController
-                                              .ontypingmessage(value);
-                                        },
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodyText1,
-                                        maxLines: 40,
-                                        minLines: 1,
-                                        decoration: InputDecoration(
-                                            border: InputBorder.none,
-                                            hintText:
-                                                'type your message here ...'),
-                                      ),
-                                    ),
-                              // NOTE if textformField has data display send button
-                              chatDetailsController.messageText.value != ""
-                                  ? Container(
-                                      color: defaultColor,
-                                      width: 50,
-                                      child: MaterialButton(
-                                        onPressed: () {
-                                          //NOTE to close keyboard
-                                          // SystemChannels.textInput
-                                          //     .invokeMethod('TextInput.hide');
-
-                                          chatDetailsController.sendMessage(
-                                              receiverId: socialUserModel.uId
-                                                  .toString(),
-                                              messageDate:
-                                                  DateTime.now().toString(),
-                                              text: textController.text);
-                                          textController.clear();
-                                          chatDetailsController
-                                              .ontypingmessage("");
-                                          scrollController.animateTo(
-                                              scrollController
-                                                  .position.maxScrollExtent,
-                                              duration:
-                                                  Duration(microseconds: 500),
-                                              curve: Curves.fastOutSlowIn);
-                                        },
-                                        minWidth: 1,
-                                        child: Icon(
-                                          Icons.send,
-                                          color: Colors.white,
-                                        ),
-                                      ))
-                                  // NOTE if textform field is empty so is check is an image picked if yes display send else display camera button
-                                  : chatDetailsController.messageImage != null
-                                      ? Container(
-                                          color: defaultColor,
-                                          width: 50,
-                                          child: MaterialButton(
-                                            onPressed: () async {
-                                              // NOTE uplaod Image to firebase and wait to get url image
-                                              await chatDetailsController
-                                                  .uploadMessageImage(
-                                                      socialUserModel.uId
-                                                          .toString());
-                                              // NOTE remove image from row
-                                              chatDetailsController
-                                                  .removeMessageImage();
-                                            },
-                                            minWidth: 1,
-                                            child: Icon(
-                                              Icons.send,
-                                              color: Colors.white,
-                                            ),
-                                          ))
-                                      : Container(
-                                          color: defaultColor,
-                                          width: 50,
-                                          child: MaterialButton(
-                                            onPressed: () {
-                                              chatDetailsController.pickImage();
-                                            },
-                                            minWidth: 1,
-                                            child: Icon(
-                                              Icons.camera_alt,
-                                              color: Colors.white,
-                                            ),
-                                          )),
+                              Container(
+                                  height: 200,
+                                  child: SvgPicture.asset(
+                                      'assets/no_posts_yet.svg')),
+                              Text(
+                                "No Messages Yes",
+                                style:
+                                    TextStyle(color: Colors.grey, fontSize: 30),
+                              ),
                             ],
-                          ),
-                        ),
-                      ),
-                    ],
+                          );
+                        else {
+                          model = snapshot.data();
+                        }
+
+                        if (model.senderId == uId) {
+                          return Column(
+                            children: [
+                              _buildMyMessage(model, context),
+                              SizedBox(
+                                height: 15,
+                              ),
+                            ],
+                          );
+                        } else {
+                          return Column(
+                            children: [
+                              _buildMessage(model, context),
+                              SizedBox(
+                                height: 15,
+                              ),
+                            ],
+                          );
+                        }
+                      },
+                    ),
                   ),
+                ),
+
+                // Spacer(),
+                Container(
+                  padding: EdgeInsets.only(left: 5),
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.grey),
+                    // borderRadius: BorderRadius.circular(15)),
+                  ),
+                  clipBehavior: Clip.antiAliasWithSaveLayer,
+                  child: Obx(
+                    () => Row(
+                      children: [
+                        //NOTE if an image picked so displayed inside Row
+                        chatDetailsController.messageImage != null
+                            ? Expanded(
+                                child: Stack(
+                                  alignment: AlignmentDirectional.topEnd,
+                                  children: [
+                                    Container(
+                                        constraints: BoxConstraints(
+                                          maxHeight: 300,
+                                        ),
+                                        width: double.infinity,
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.only(
+                                            topLeft: Radius.circular(5),
+                                            topRight: Radius.circular(5),
+                                          ),
+                                          image: DecorationImage(
+                                            image: FileImage(
+                                                chatDetailsController
+                                                    .messageImage!),
+                                            fit: BoxFit.fill,
+                                          ),
+                                        )),
+                                    IconButton(
+                                        onPressed: () {
+                                          //NOTE : Remove post image
+                                          chatDetailsController
+                                              .removeMessageImage();
+                                        },
+                                        icon: CircleAvatar(
+                                            radius: 20,
+                                            child: Icon(
+                                              Icons.close,
+                                              size: 17,
+                                            ))),
+                                  ],
+                                ),
+                              )
+                            //NOTE if not image picked so textformfield display to typing
+                            : Expanded(
+                                child: TextFormField(
+                                  controller: textController,
+                                  keyboardType: TextInputType.multiline,
+                                  onChanged: (value) {
+                                    chatDetailsController
+                                        .ontypingmessage(value);
+                                  },
+                                  style: Theme.of(context).textTheme.bodyText1,
+                                  maxLines: 40,
+                                  minLines: 1,
+                                  decoration: InputDecoration(
+                                      border: InputBorder.none,
+                                      hintText: 'type your message here ...'),
+                                ),
+                              ),
+                        // NOTE if textformField has data display send button
+                        chatDetailsController.messageText.value != ""
+                            ? Container(
+                                color: defaultColor,
+                                width: 50,
+                                child: MaterialButton(
+                                  onPressed: () {
+                                    //NOTE to close keyboard
+                                    // SystemChannels.textInput
+                                    //     .invokeMethod('TextInput.hide');
+
+                                    chatDetailsController.sendMessage(
+                                        receiverId:
+                                            socialUserModel.uId.toString(),
+                                        messageDate: DateTime.now().toString(),
+                                        text: textController.text);
+                                    textController.clear();
+                                    chatDetailsController.ontypingmessage("");
+                                    scrollController.animateTo(
+                                        scrollController
+                                            .position.maxScrollExtent,
+                                        duration: Duration(microseconds: 500),
+                                        curve: Curves.fastOutSlowIn);
+                                  },
+                                  minWidth: 1,
+                                  child: Icon(
+                                    Icons.send,
+                                    color: Colors.white,
+                                  ),
+                                ))
+                            // NOTE if textform field is empty so is check is an image picked if yes display send else display camera button
+                            : chatDetailsController.messageImage != null
+                                ? Container(
+                                    color: defaultColor,
+                                    width: 50,
+                                    child: MaterialButton(
+                                      onPressed: () async {
+                                        // NOTE uplaod Image to firebase and wait to get url image
+                                        await chatDetailsController
+                                            .uploadMessageImage(
+                                                socialUserModel.uId.toString());
+                                        // NOTE remove image from row
+                                        chatDetailsController
+                                            .removeMessageImage();
+                                      },
+                                      minWidth: 1,
+                                      child: Icon(
+                                        Icons.send,
+                                        color: Colors.white,
+                                      ),
+                                    ))
+                                : Container(
+                                    color: defaultColor,
+                                    width: 50,
+                                    child: MaterialButton(
+                                      onPressed: () {
+                                        chatDetailsController.pickImage();
+                                      },
+                                      minWidth: 1,
+                                      child: Icon(
+                                        Icons.camera_alt,
+                                        color: Colors.white,
+                                      ),
+                                    )),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
           );
         });
   }
