@@ -490,7 +490,7 @@ class FeedsScreen extends StatelessWidget {
 
                     child: InteractiveViewer(
                         minScale: 0.5,
-                        maxScale: 4,
+                        maxScale: 2.5,
                         child: Image.network(model.postImage!)),
                   ),
                 ),
@@ -499,30 +499,31 @@ class FeedsScreen extends StatelessWidget {
                 padding: const EdgeInsets.all(8),
                 child: Row(
                   children: [
-                    Expanded(
-                      child: InkWell(
-                        child: Row(
-                          children: [
-                            CircleAvatar(
-                                radius: 10,
-                                backgroundColor: defaultColor,
-                                child: FaIcon(
-                                  FontAwesomeIcons.solidThumbsUp,
-                                  color: Colors.white,
-                                  size: 12,
-                                )),
-                            SizedBox(
-                              width: 5,
-                            ),
-                            Text(
-                              model.nbOfLikes.toString(),
-                              style: Theme.of(context).textTheme.caption,
-                            ),
-                          ],
+                    if (model.nbOfLikes > 0)
+                      Expanded(
+                        child: InkWell(
+                          child: Row(
+                            children: [
+                              CircleAvatar(
+                                  radius: 10,
+                                  backgroundColor: defaultColor,
+                                  child: FaIcon(
+                                    FontAwesomeIcons.solidThumbsUp,
+                                    color: Colors.white,
+                                    size: 12,
+                                  )),
+                              SizedBox(
+                                width: 5,
+                              ),
+                              Text(
+                                model.nbOfLikes.toString(),
+                                style: Theme.of(context).textTheme.caption,
+                              ),
+                            ],
+                          ),
+                          onTap: () {},
                         ),
-                        onTap: () {},
                       ),
-                    ),
                     Expanded(
                       child: Align(
                         alignment: Alignment.bottomRight,
