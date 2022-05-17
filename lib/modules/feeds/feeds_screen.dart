@@ -457,7 +457,7 @@ class FeedsScreen extends StatelessWidget {
                     IconButton(
                         onPressed: () async {},
                         icon: Icon(
-                          Icons.more_vert_rounded,
+                          Icons.more_horiz,
                         )),
                   ],
                 ),
@@ -488,10 +488,22 @@ class FeedsScreen extends StatelessWidget {
                     //NOTE height - heigt /1.5 ==> about 40% from real height
                     height: model.imageHeight,
 
-                    child: InteractiveViewer(
-                        minScale: 0.5,
-                        maxScale: 2.5,
-                        child: Image.network(model.postImage!)),
+                    child: GestureDetector(
+                      onDoubleTap: () {
+                        // final double scale = 2;
+                        // final zoomed = Matrix4.identity()..scale(scale);
+                        // final value = zoomed;
+                        // print("ok");
+                      },
+                      child: InteractiveViewer(
+                          // transformationController: transformationController,
+                          constrained: true,
+                          //minScale: 0.5,
+                          maxScale: 2.5,
+                          child: AspectRatio(
+                              aspectRatio: 1,
+                              child: Image.network(model.postImage!))),
+                    ),
                   ),
                 ),
               //NOTE : Likes And Comments
