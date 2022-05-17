@@ -27,7 +27,6 @@ class ChatDetailsScreen extends StatelessWidget {
         .doc(socialUserModel.uId)
         .collection('messages')
         .orderBy('messageDate', descending: true)
-        .limit(20)
         .withConverter<MessageModel>(
           fromFirestore: (snapshot, _) =>
               MessageModel.fromJson(snapshot.data()!),
@@ -35,7 +34,6 @@ class ChatDetailsScreen extends StatelessWidget {
         );
   }
   var textController = TextEditingController();
-  var scrollController = ScrollController();
 
   @override
   Widget build(BuildContext context) {
@@ -111,24 +109,16 @@ class ChatDetailsScreen extends StatelessWidget {
                           'Something went wrong! ${error} - ${stackTrace}'),
                       itemBuilder: (context, snapshot) {
                         MessageModel model;
-                        if (snapshot.isBlank!)
-                          return Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Container(
-                                  height: 200,
-                                  child: SvgPicture.asset(
-                                      'assets/no_posts_yet.svg')),
-                              Text(
-                                "No Messages Yes",
-                                style:
-                                    TextStyle(color: Colors.grey, fontSize: 30),
-                              ),
-                            ],
-                          );
-                        else {
+
+                        if (snapshot.data().text == null) {
+                          print('snapshot blank');
+
+                          print(snapshot.data().text);
+                          return Text("no messages yet");
+                        } else {
                           model = snapshot.data();
+                          print('snapshot data');
+                          print(snapshot.data().text);
                         }
 
                         if (model.senderId == uId) {
@@ -239,11 +229,11 @@ class ChatDetailsScreen extends StatelessWidget {
                                         text: textController.text);
                                     textController.clear();
                                     chatDetailsController.ontypingmessage("");
-                                    scrollController.animateTo(
-                                        scrollController
-                                            .position.maxScrollExtent,
-                                        duration: Duration(microseconds: 500),
-                                        curve: Curves.fastOutSlowIn);
+                                    // scrollController.animateTo(
+                                    //     scrollController
+                                    //         .position.maxScrollExtent,
+                                    //     duration: Duration(microseconds: 500),
+                                    //     curve: Curves.fastOutSlowIn);
                                   },
                                   minWidth: 1,
                                   child: Icon(

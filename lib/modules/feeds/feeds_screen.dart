@@ -615,24 +615,29 @@ class FeedsScreen extends StatelessWidget {
                         );
                       },
                     ),
-                    Row(
-                      children: [
-                        FaIcon(
-                          FontAwesomeIcons.message,
-                          color: Colors.grey,
-                          size: 18,
-                        ),
-                        SizedBox(
-                          width: 5,
-                        ),
-                        Text(
-                          "Comments",
-                          style: Theme.of(context)
-                              .textTheme
-                              .caption
-                              ?.copyWith(color: Colors.grey),
-                        ),
-                      ],
+                    GestureDetector(
+                      onTap: () {
+                        print("pressed");
+                      },
+                      child: Row(
+                        children: [
+                          FaIcon(
+                            FontAwesomeIcons.message,
+                            color: Colors.grey,
+                            size: 18,
+                          ),
+                          SizedBox(
+                            width: 5,
+                          ),
+                          Text(
+                            "Comments",
+                            style: Theme.of(context)
+                                .textTheme
+                                .caption
+                                ?.copyWith(color: Colors.grey),
+                          ),
+                        ],
+                      ),
                     ),
                     Row(
                       children: [
