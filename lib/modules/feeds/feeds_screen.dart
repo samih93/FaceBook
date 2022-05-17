@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterfire_ui/firestore.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:like_button/like_button.dart';
 import 'package:social_app/layout/layout_controller.dart';
@@ -395,284 +396,293 @@ class FeedsScreen extends StatelessWidget {
     PostModel model,
     UserModel userModel,
     BuildContext context,
-  ) =>
-      Container(
-        margin: EdgeInsets.only(bottom: 10),
-        child: Card(
-            margin: EdgeInsets.zero,
-            elevation: 5,
-            clipBehavior: Clip.antiAliasWithSaveLayer,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                //NOTE : header of post (circle avatar and name and date of post)
+  ) {
+    model.imageHeight = model.imageHeight != 0
+        ? double.parse(model.imageHeight.toString()) - model.imageHeight! / 1.5
+        : 0;
+    return Container(
+      margin: EdgeInsets.only(bottom: 10),
+      child: Card(
+          margin: EdgeInsets.zero,
+          elevation: 5,
+          clipBehavior: Clip.antiAliasWithSaveLayer,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              //NOTE : header of post (circle avatar and name and date of post)
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  children: [
+                    CircleAvatar(
+                      radius: 20,
+                      backgroundImage: model.image == null || model.image == ""
+                          ? AssetImage('assets/default profile.png')
+                              as ImageProvider
+                          : NetworkImage(model.image!),
+                    ),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Expanded(
+                        child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Text(
+                              '${model.name}',
+                              style: TextStyle(height: 1.4),
+                            ),
+                            SizedBox(
+                              width: 5,
+                            ),
+                            if (model.isEmailVerified == true)
+                              Icon(
+                                Icons.check_circle,
+                                color: defaultColor,
+                                size: 16,
+                              )
+                          ],
+                        ),
+                        Text(
+                          "${convertToAgo(DateTime.parse(model.postdate!))}",
+                          style: Theme.of(context)
+                              .textTheme
+                              .caption!
+                              .copyWith(height: 1.4),
+                        ),
+                      ],
+                    )),
+                    IconButton(
+                        onPressed: () async {},
+                        icon: Icon(
+                          Icons.more_vert_rounded,
+                        )),
+                  ],
+                ),
+              ),
+              //NOTE: Divider()
+              // Padding(
+              //   padding: const EdgeInsets.symmetric(vertical: 10.0),
+              //   child: Container(
+              //     width: double.infinity,
+              //     height: 1,
+              //     color: Colors.grey,
+              //   ),
+              // ),
+              //NOTE: post body()
+              if (model.text != "")
                 Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Row(
-                    children: [
-                      CircleAvatar(
-                        radius: 20,
-                        backgroundImage:
-                            model.image == null || model.image == ""
-                                ? AssetImage('assets/default profile.png')
-                                    as ImageProvider
-                                : NetworkImage(model.image!),
-                      ),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      Expanded(
-                          child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              Text(
-                                '${model.name}',
-                                style: TextStyle(height: 1.4),
-                              ),
-                              SizedBox(
-                                width: 5,
-                              ),
-                              if (model.isEmailVerified == true)
-                                Icon(
-                                  Icons.check_circle,
-                                  color: defaultColor,
-                                  size: 16,
-                                )
-                            ],
-                          ),
-                          Text(
-                            "${convertToAgo(DateTime.parse(model.postdate!))}",
-                            style: Theme.of(context)
-                                .textTheme
-                                .caption!
-                                .copyWith(height: 1.4),
-                          ),
-                        ],
-                      )),
-                      IconButton(
-                          onPressed: () async {},
-                          icon: Icon(
-                            Icons.more_horiz,
-                          )),
-                    ],
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 5, horizontal: 8),
+                  child: Text('${model.text}'),
+                ),
+
+              //NOTE : Image Of post
+              if (model.postImage != null)
+                Padding(
+                  padding: const EdgeInsets.only(top: 13.0),
+                  child: Container(
+                    width: double.infinity,
+                    //NOTE height - heigt /1.5 ==> about 40% from real height
+                    height: model.imageHeight,
+
+                    child: InteractiveViewer(
+                        minScale: 0.5,
+                        maxScale: 4,
+                        child: Image.network(model.postImage!)),
                   ),
                 ),
-                //NOTE: Divider()
-                // Padding(
-                //   padding: const EdgeInsets.symmetric(vertical: 10.0),
-                //   child: Container(
-                //     width: double.infinity,
-                //     height: 1,
-                //     color: Colors.grey,
-                //   ),
-                // ),
-                //NOTE: post body()
-                if (model.text != "")
-                  Padding(
-                    padding:
-                        const EdgeInsets.symmetric(vertical: 5, horizontal: 8),
-                    child: Text('${model.text}'),
-                  ),
-
-                //NOTE : Image Of post
-                if (model.postImage != null)
-                  Padding(
-                    padding: const EdgeInsets.only(top: 13.0),
-                    child: Container(
-                        width: double.infinity,
-                        height: 230,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(4),
-                          image: DecorationImage(
-                            image: NetworkImage('${model.postImage}'),
-                            fit: BoxFit.cover,
-                          ),
-                        )),
-                  ),
-                //NOTE : Likes And Comments
-                Padding(
-                  padding: const EdgeInsets.all(8),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: InkWell(
-                          child: Row(
-                            children: [
-                              Icon(Icons.favorite_border, color: Colors.red),
-                              SizedBox(
-                                width: 5,
-                              ),
-                              Text(
-                                model.nbOfLikes.toString(),
-                                style: Theme.of(context).textTheme.caption,
-                              ),
-                            ],
-                          ),
-                          onTap: () {},
-                        ),
-                      ),
-                      Expanded(
-                        child: Align(
-                          alignment: Alignment.bottomRight,
-                          child: InkWell(
-                            child: Text(
-                              "0 comments",
+              //NOTE : Likes And Comments
+              Padding(
+                padding: const EdgeInsets.all(8),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: InkWell(
+                        child: Row(
+                          children: [
+                            CircleAvatar(
+                                radius: 10,
+                                backgroundColor: defaultColor,
+                                child: FaIcon(
+                                  FontAwesomeIcons.solidThumbsUp,
+                                  color: Colors.white,
+                                  size: 12,
+                                )),
+                            SizedBox(
+                              width: 5,
+                            ),
+                            Text(
+                              model.nbOfLikes.toString(),
                               style: Theme.of(context).textTheme.caption,
                             ),
-                            onTap: () {},
-                          ),
+                          ],
                         ),
+                        onTap: () {},
                       ),
-                    ],
-                  ),
-                ),
-                //NOTE: Divider()
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 15),
-                  child: Container(
-                    width: double.infinity,
-                    height: 0.5,
-                    color: Colors.grey,
-                  ),
-                ),
-                // NOTE like share comment
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      LikeButton(
-                        size: 51,
-                        onTap: (isLiked) async {
-                          if (model.likes!.any(
-                            (element) => element == uId,
-                          )) {
-                            controller_NeededInBuildPost.likePost(
-                                model.postId.toString(),
-                                isForremove: true);
-                          } else {
-                            controller_NeededInBuildPost
-                                .likePost(model.postId.toString());
-                          }
-                          return !isLiked;
-                        },
-                        circleColor: CircleColor(
-                            start: Color.fromARGB(255, 209, 7, 7),
-                            end: Color.fromARGB(255, 209, 7, 7)),
-                        bubblesColor: BubblesColor(
-                          dotPrimaryColor: Color.fromARGB(255, 209, 7, 7),
-                          dotSecondaryColor: defaultColor,
-                          // dotThirdColor: Color.fromARGB(220, 12, 199, 43),
-                        ),
-                        isLiked: model.likes!.length > 0 &&
-                                model.likes!.contains(uId.toString())
-                            ? true
-                            : false,
-                        likeBuilder: (bool isLiked) {
-                          return Row(
-                            children: [
-                              Icon(
-                                  isLiked
-                                      ? Icons.favorite
-                                      : Icons.favorite_border,
-                                  color: isLiked ? Colors.red : Colors.grey),
-                              SizedBox(
-                                width: 5,
-                              ),
-                              Text(
-                                "Like",
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .caption
-                                    ?.copyWith(
-                                        color:
-                                            isLiked ? Colors.red : Colors.grey),
-                              ),
-                            ],
-                          );
-                        },
-                      ),
-                      Row(
-                        children: [
-                          Icon(
-                            Icons.comment,
-                            color: Colors.grey,
-                          ),
-                          SizedBox(
-                            width: 5,
-                          ),
-                          Text(
-                            "Comments",
-                            style: Theme.of(context)
-                                .textTheme
-                                .caption
-                                ?.copyWith(color: Colors.grey),
-                          ),
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          Icon(
-                            Icons.share,
-                            color: Colors.grey,
-                          ),
-                          SizedBox(
-                            width: 5,
-                          ),
-                          Text(
-                            "Share",
-                            style: Theme.of(context).textTheme.caption,
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-                //NOTE: Divider()
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 15),
-                  child: Container(
-                    width: double.infinity,
-                    height: 0.5,
-                    color: Colors.grey,
-                  ),
-                ),
-
-                //NOTE : Write a Comment  and like post
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Row(
-                    children: [
-                      Expanded(
+                    ),
+                    Expanded(
+                      child: Align(
+                        alignment: Alignment.bottomRight,
                         child: InkWell(
-                          child: Row(
-                            children: [
-                              CircleAvatar(
-                                radius: 15,
-                                backgroundImage: userModel.image == null ||
-                                        userModel.image == ""
-                                    ? AssetImage('assets/default profile.png')
-                                        as ImageProvider
-                                    : NetworkImage('${userModel.image}'),
-                              ),
-                              SizedBox(
-                                width: 15,
-                              ),
-                              Text("Write a Comment",
-                                  style: Theme.of(context).textTheme.caption),
-                            ],
+                          child: Text(
+                            "0 comments",
+                            style: Theme.of(context).textTheme.caption,
                           ),
                           onTap: () {},
                         ),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
-              ],
-            )),
-      );
+              ),
+              //NOTE: Divider()
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 15),
+                child: Container(
+                  width: double.infinity,
+                  height: 0.5,
+                  color: Colors.grey,
+                ),
+              ),
+              // NOTE like share comment
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    LikeButton(
+                      size: 51,
+                      onTap: (isLiked) async {
+                        if (model.likes!.any(
+                          (element) => element == uId,
+                        )) {
+                          controller_NeededInBuildPost.likePost(
+                              model.postId.toString(),
+                              isForremove: true);
+                        } else {
+                          controller_NeededInBuildPost
+                              .likePost(model.postId.toString());
+                        }
+                        return !isLiked;
+                      },
+                      circleColor:
+                          CircleColor(start: defaultColor, end: defaultColor),
+                      bubblesColor: BubblesColor(
+                        dotPrimaryColor: defaultColor,
+                        dotSecondaryColor: defaultColor,
+                        // dotThirdColor: Color.fromARGB(220, 12, 199, 43),
+                      ),
+                      isLiked: model.likes!.length > 0 &&
+                              model.likes!.contains(uId.toString())
+                          ? true
+                          : false,
+                      likeBuilder: (bool isLiked) {
+                        return Row(
+                          children: [
+                            FaIcon(FontAwesomeIcons.solidThumbsUp,
+                                size: 18,
+                                color: isLiked ? defaultColor : Colors.grey),
+                            SizedBox(
+                              width: 5,
+                            ),
+                            Text(
+                              "Like",
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .caption
+                                  ?.copyWith(
+                                      color:
+                                          isLiked ? defaultColor : Colors.grey),
+                            ),
+                          ],
+                        );
+                      },
+                    ),
+                    Row(
+                      children: [
+                        FaIcon(
+                          FontAwesomeIcons.message,
+                          color: Colors.grey,
+                          size: 18,
+                        ),
+                        SizedBox(
+                          width: 5,
+                        ),
+                        Text(
+                          "Comments",
+                          style: Theme.of(context)
+                              .textTheme
+                              .caption
+                              ?.copyWith(color: Colors.grey),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        FaIcon(
+                          FontAwesomeIcons.share,
+                          color: Colors.grey,
+                          size: 18,
+                        ),
+                        SizedBox(
+                          width: 5,
+                        ),
+                        Text(
+                          "Share",
+                          style: Theme.of(context).textTheme.caption,
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+              //NOTE: Divider()
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 15),
+                child: Container(
+                  width: double.infinity,
+                  height: 0.5,
+                  color: Colors.grey,
+                ),
+              ),
+
+              //NOTE : Write a Comment  and like post
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: InkWell(
+                        child: Row(
+                          children: [
+                            CircleAvatar(
+                              radius: 15,
+                              backgroundImage: userModel.image == null ||
+                                      userModel.image == ""
+                                  ? AssetImage('assets/default profile.png')
+                                      as ImageProvider
+                                  : NetworkImage('${userModel.image}'),
+                            ),
+                            SizedBox(
+                              width: 15,
+                            ),
+                            Text("Write a Comment",
+                                style: Theme.of(context).textTheme.caption),
+                          ],
+                        ),
+                        onTap: () {},
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          )),
+    );
+  }
 
   profileStory(StoryModel story) {
     return [
@@ -774,8 +784,12 @@ class FeedsScreen extends StatelessWidget {
                   width: 10,
                 ),
                 IconButton(
-                  icon: Icon(Icons.image, color: Colors.green),
-                  onPressed: () {},
+                  icon: Icon(FontAwesomeIcons.solidImages, color: Colors.green),
+                  onPressed: () {
+                    Get.to(NewPostScreen(
+                      isImageClicked: true,
+                    ));
+                  },
                 ),
               ],
             ),
@@ -788,8 +802,8 @@ class FeedsScreen extends StatelessWidget {
 
   List<String> _streamItems = ['Reel', 'Room', 'Group', 'Live'];
   List<IconData> _streamIcons = [
-    Icons.video_collection_outlined,
-    Icons.video_call,
+    FontAwesomeIcons.clapperboard,
+    FontAwesomeIcons.video,
     Icons.groups_rounded,
     Icons.live_tv_sharp
   ];
@@ -820,23 +834,34 @@ class FeedsScreen extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(40),
-        border: Border.all(color: Colors.grey),
+        border: Border.all(color: Colors.grey.shade300),
         color: Colors.white,
       ),
       child: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 12),
         child: Row(
           children: [
-            Icon(
-              icon,
-              color: color,
-            ),
+            icon == Icons.groups_rounded
+                ? CircleAvatar(
+                    radius: 8,
+                    backgroundColor: defaultColor,
+                    child: Icon(
+                      icon,
+                      color: Colors.white,
+                      size: 14,
+                    ),
+                  )
+                : Icon(
+                    icon,
+                    color: color,
+                    size: 16,
+                  ),
             SizedBox(
               width: 5,
             ),
             Text(
               text,
-              style: TextStyle(fontWeight: FontWeight.bold),
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 11),
             ),
           ],
         ),

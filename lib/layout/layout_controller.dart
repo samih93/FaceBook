@@ -320,6 +320,8 @@ class SocialLayoutController extends GetxController {
   Future<void> createNewPost({
     required String postdate,
     required String text,
+    double? imagewidth,
+    double? imageheight,
   }) async {
     _isloadingcreatePost = true;
     update();
@@ -334,7 +336,9 @@ class SocialLayoutController extends GetxController {
         uId: _socialUserModel!.uId,
         postdate: postdate,
         text: text,
-        postImage: _imagePostUrl ?? null);
+        postImage: _imagePostUrl ?? null,
+        imageWidth: imagewidth,
+        imageHeight: imageheight);
 
     await FirebaseFirestore.instance
         .collection('posts')

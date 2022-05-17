@@ -6,13 +6,29 @@ import 'package:social_app/shared/styles/colors.dart';
 
 class NewPostScreen extends StatelessWidget {
   var postBodyController = TextEditingController();
+
+  bool? isImageClicked = false;
+  int _imageWidth = 0;
+  int _imageHeight = 0;
+  NewPostScreen({this.isImageClicked});
   @override
   Widget build(BuildContext context) {
     return GetBuilder<SocialLayoutController>(
         init: Get.find<SocialLayoutController>(),
         builder: (socialLayoutController) {
           var socialUserModel = socialLayoutController.socialUserModel!;
-
+          if (isImageClicked == true)
+            socialLayoutController.pickPostImage().then((value) async {
+              isImageClicked = false;
+              var decodedImage = await decodeImageFromList(
+                      socialLayoutController.postimage!.readAsBytesSync())
+                  .then((value) {
+                print("image width : " + value.width.toString());
+                print("image height : " + value.height.toString());
+                _imageWidth = value.width;
+                _imageHeight = value.height;
+              });
+            });
           return Scaffold(
             appBar:
                 defaultAppBar(context: context, title: "Add Post", actions: [
@@ -23,7 +39,11 @@ class NewPostScreen extends StatelessWidget {
                         socialLayoutController
                             .createNewPost(
                                 postdate: DateTime.now().toString(),
-                                text: postBodyController.text)
+                                text: postBodyController.text,
+                                imagewidth:
+                                    double.parse(_imageWidth.toString()),
+                                imageheight:
+                                    double.parse(_imageHeight.toString()))
                             .then((value) {
                           if (!socialLayoutController.isloadingcreatePost!)
                             Navigator.pop(context);
@@ -99,34 +119,39 @@ class NewPostScreen extends StatelessWidget {
                   if (socialLayoutController.postimage != null)
                     Expanded(
                       flex: 2,
-                      child: Stack(
-                        alignment: AlignmentDirectional.topEnd,
+                      child: ListView(
                         children: [
-                          Container(
-                              height: 350,
-                              width: double.infinity,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.only(
-                                  topLeft: Radius.circular(5),
-                                  topRight: Radius.circular(5),
-                                ),
-                                image: DecorationImage(
-                                  image: FileImage(
-                                      socialLayoutController.postimage!),
-                                  fit: BoxFit.cover,
-                                ),
-                              )),
-                          IconButton(
-                              onPressed: () {
-                                //NOTE : Remove post image
-                                socialLayoutController.removePostImage();
-                              },
-                              icon: CircleAvatar(
-                                  radius: 20,
-                                  child: Icon(
-                                    Icons.close,
-                                    size: 17,
-                                  ))),
+                          Stack(
+                            alignment: AlignmentDirectional.topEnd,
+                            children: [
+                              Container(
+                                  height:
+                                      double.parse(_imageHeight.toString()) -
+                                          _imageHeight / 2,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.only(
+                                      topLeft: Radius.circular(5),
+                                      topRight: Radius.circular(5),
+                                    ),
+                                    image: DecorationImage(
+                                      image: FileImage(
+                                          socialLayoutController.postimage!),
+                                      fit: BoxFit.fill,
+                                    ),
+                                  )),
+                              IconButton(
+                                  onPressed: () {
+                                    //NOTE : Remove post image
+                                    socialLayoutController.removePostImage();
+                                  },
+                                  icon: CircleAvatar(
+                                      radius: 20,
+                                      child: Icon(
+                                        Icons.close,
+                                        size: 17,
+                                      ))),
+                            ],
+                          ),
                         ],
                       ),
                     ),
