@@ -245,24 +245,23 @@ class ChatDetailsController extends GetxController {
     });
   }
 
-  Future<void> updatestatusMessage(List<MessageModel> messagesModel) async {
-    var first = FirebaseFirestore.instance
+  Future<void> updatestatusMessage(MessageModel messagesModel) async {
+    var model = FirebaseFirestore.instance
         .collection('users')
-        .doc(messagesModel.first.senderId)
+        .doc(messagesModel.senderId)
         .collection('chats')
-        .doc(messagesModel.first.receiverId)
+        .doc(messagesModel.receiverId)
         .collection('messages')
-        .orderBy('messageDate')
-        .limit(messagesModel.length); // Snapshot
+        .orderBy('messageDate');
 
-    first.get().then((value) {
+    model.get().then((value) {
       value.docs.forEach((element) {
         if (element.data()['isReadByfriend'] == false)
           FirebaseFirestore.instance
               .collection('users')
-              .doc(messagesModel.first.senderId)
+              .doc(messagesModel.senderId)
               .collection('chats')
-              .doc(messagesModel.first.receiverId)
+              .doc(messagesModel.receiverId)
               .collection('messages')
               .doc(element.id)
               .update({'isReadByfriend': true}).then((value) {

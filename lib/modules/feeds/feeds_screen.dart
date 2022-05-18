@@ -5,6 +5,7 @@ import 'package:flutterfire_ui/firestore.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:like_button/like_button.dart';
+import 'package:lottie/lottie.dart';
 import 'package:social_app/layout/layout_controller.dart';
 import 'package:social_app/model/comment_model.dart';
 import 'package:social_app/model/post_model.dart';
@@ -909,28 +910,52 @@ class FeedsScreen extends StatelessWidget {
                     "Be the first to like this",
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
-                  SvgPicture.asset('assets\svg\no_comment.svg'),
+                  FaIcon(FontAwesomeIcons.thumbsUp, color: Colors.grey)
                 ],
               ),
               Expanded(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    FaIcon(FontAwesomeIcons.solidMessage,
-                        color: Colors.grey, size: 40),
+                    Lottie.asset('assets/lottie/comments.json',
+                        width: 150, height: 150),
                     Text("No Comments yet",
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
+                          fontSize: 25,
                           color: Colors.grey,
                         )),
                     Text("Be the first to Comment",
                         style: TextStyle(
+                          fontSize: 16,
                           color: Colors.grey,
                         )),
                   ],
                 ),
               ),
-              TextFormField(),
+              Row(
+                children: [
+                  Expanded(
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
+                        color: Colors.grey.shade100,
+                      ),
+                      padding: EdgeInsetsDirectional.only(start: 17),
+                      child: TextFormField(
+                        onChanged: (value) {},
+                        controller: comment_textcontroller,
+                        style: TextStyle(
+                            fontSize: 15, fontWeight: FontWeight.normal),
+                        decoration: InputDecoration(
+                            border: InputBorder.none,
+                            hintText: "write a comment ... "),
+                      ),
+                    ),
+                  ),
+                  IconButton(onPressed: () {}, icon: Icon(Icons.send)),
+                ],
+              ),
             ],
           ),
         ),
