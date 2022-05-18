@@ -168,7 +168,7 @@ class FeedsScreen extends StatelessWidget {
                             Container(
                                 height: 200,
                                 child: SvgPicture.asset(
-                                    'assets/no_posts_yet.svg')),
+                                    'assets/svg/no_posts_yet.svg')),
                             Text(
                               "No Posts Yes",
                               style:
@@ -909,10 +909,8 @@ class FeedsScreen extends StatelessWidget {
                     "Be the first to like this",
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
-                  FaIcon(
-                    FontAwesomeIcons.solidThumbsUp,
-                    color: Colors.grey,
-                  )
+                  SvgPicture.asset('assets\svg\no_comment.svg')),
+                
                 ],
               ),
               Expanded(
