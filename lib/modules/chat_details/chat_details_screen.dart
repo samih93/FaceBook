@@ -121,6 +121,10 @@ class ChatDetailsScreen extends StatelessWidget {
                           print(snapshot.data().text);
                         }
 
+                        if (model.senderId != uId &&
+                            model.isReadByfriend == false)
+                          chatDetailsController.updatestatusMessage(model);
+
                         if (model.senderId == uId) {
                           return Column(
                             children: [
@@ -325,9 +329,10 @@ class ChatDetailsScreen extends StatelessWidget {
                           width: 3,
                         ),
                         model.isReadByfriend == true
-                            ? Icon(Icons.check, size: 16, color: Colors.blue)
+                            ? Icon(Icons.check,
+                                size: 17, color: Colors.blue.shade700)
                             : Icon(Icons.check,
-                                size: 16, color: Colors.grey.shade700),
+                                size: 17, color: Colors.grey.shade700),
                       ],
                     ),
                   ],
