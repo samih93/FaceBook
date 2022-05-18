@@ -12,6 +12,7 @@ import 'package:social_app/model/post_model.dart';
 import 'package:social_app/model/storymodel.dart';
 import 'package:social_app/model/user_model.dart';
 import 'package:social_app/modules/addstory/add_story.dart';
+import 'package:social_app/modules/comments_screen/comment_screen.dart';
 import 'package:social_app/modules/new_post/new_post_screen.dart';
 import 'package:social_app/modules/stories_view/stories_view.dart';
 import 'package:social_app/shared/components/componets.dart';
@@ -37,7 +38,7 @@ class FeedsScreen extends StatelessWidget {
 
   late SocialLayoutController controller_NeededInBuildPost;
 
-  var comment_textcontroller = TextEditingController();
+  bool test = false;
 
   @override
   Widget build(BuildContext context) {
@@ -622,7 +623,7 @@ class FeedsScreen extends StatelessWidget {
                     GestureDetector(
                       onTap: () {
                         print("pressed");
-                        _showBottomSheet(context);
+                        Get.to(CommentsScreen());
                       },
                       child: Row(
                         children: [
@@ -892,76 +893,7 @@ class FeedsScreen extends StatelessWidget {
       ),
     );
   }
-
-  _showBottomSheet(BuildContext context) {
-    Get.bottomSheet(
-        Container(
-          padding: EdgeInsets.all(10),
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(20), topRight: Radius.circular(20))),
-          height: MediaQuery.of(context).size.height - 15,
-          child: Column(
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    "Be the first to like this",
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                  FaIcon(FontAwesomeIcons.thumbsUp, color: Colors.grey)
-                ],
-              ),
-              Expanded(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Lottie.asset('assets/lottie/comments.json',
-                        width: 150, height: 150),
-                    Text("No Comments yet",
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 25,
-                          color: Colors.grey,
-                        )),
-                    Text("Be the first to Comment",
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: Colors.grey,
-                        )),
-                  ],
-                ),
-              ),
-              Row(
-                children: [
-                  Expanded(
-                    child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20),
-                        color: Colors.grey.shade100,
-                      ),
-                      padding: EdgeInsetsDirectional.only(start: 17),
-                      child: TextFormField(
-                        onChanged: (value) {},
-                        controller: comment_textcontroller,
-                        style: TextStyle(
-                            fontSize: 15, fontWeight: FontWeight.normal),
-                        decoration: InputDecoration(
-                            border: InputBorder.none,
-                            hintText: "write a comment ... "),
-                      ),
-                    ),
-                  ),
-                  IconButton(onPressed: () {}, icon: Icon(Icons.send)),
-                ],
-              ),
-            ],
-          ),
-        ),
-        backgroundColor: Colors.white,
-        isScrollControlled: true);
-  }
+}
 
   // Future _refreshData() async {
   //   Get.delete<SocialLayoutController>();
@@ -970,4 +902,4 @@ class FeedsScreen extends StatelessWidget {
   //   SocialLayoutController.onload();
   // }
 
-}
+
