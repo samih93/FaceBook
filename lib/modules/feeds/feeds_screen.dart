@@ -909,8 +909,7 @@ class FeedsScreen extends StatelessWidget {
                     "Be the first to like this",
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
-                  SvgPicture.asset('assets\svg\no_comment.svg')),
-                
+                  SvgPicture.asset('assets\svg\no_comment.svg'),
                 ],
               ),
               Expanded(
