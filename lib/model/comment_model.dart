@@ -1,12 +1,16 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class CommentModel {
   String? senderId;
   String? senderName;
+  String? senderimage;
   String? text;
-  String? commentDate;
+  Timestamp? commentDate;
 
   CommentModel({
     this.senderId,
     this.senderName,
+    this.senderimage,
     this.text,
     this.commentDate,
   });
@@ -14,6 +18,7 @@ class CommentModel {
   CommentModel.fromJson(Map<String, dynamic> json) {
     senderId = json['senderId'];
     senderName = json['senderName'];
+    senderimage = json['senderimage'];
     text = json['text'];
     commentDate = json['commentDate'];
   }
@@ -22,6 +27,7 @@ class CommentModel {
     return {
       'senderId': senderId,
       'senderName': senderName,
+      'senderimage': senderimage,
       'text': text,
       'commentDate': commentDate,
     };
