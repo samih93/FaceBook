@@ -10,6 +10,7 @@ class PostModel {
   String? postId;
   List<String>? likes = [];
   int nbOfLikes = 0;
+  int nbOfComments = 0;
   bool? isEmailVerified;
 
   PostModel({
@@ -39,6 +40,7 @@ class PostModel {
         : 0.0;
     postId = json['postId'];
     nbOfLikes = json['nbOfLikes'] as int;
+    nbOfComments = json['nbOfComments'] as int;
     if (json['likes'] != null)
       json['likes'].forEach((element) {
         likes!.add(element);
@@ -57,6 +59,7 @@ class PostModel {
       'imageHeight': imageHeight ?? 0,
       'postId': postId,
       'nbOfLikes': nbOfLikes,
+      'nbOfComments': nbOfComments,
       'likes': likes
     };
   }
