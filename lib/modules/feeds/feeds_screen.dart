@@ -546,10 +546,12 @@ class FeedsScreen extends StatelessWidget {
                       child: Align(
                         alignment: Alignment.bottomRight,
                         child: InkWell(
-                          child: Text(
-                            "0 comments",
-                            style: Theme.of(context).textTheme.caption,
-                          ),
+                          child: model.nbOfComments != 0
+                              ? Text(
+                                  "${model.nbOfComments} comments",
+                                  style: Theme.of(context).textTheme.caption,
+                                )
+                              : Container(),
                           onTap: () {},
                         ),
                       ),
@@ -620,46 +622,60 @@ class FeedsScreen extends StatelessWidget {
                         );
                       },
                     ),
-                    GestureDetector(
+                    InkWell(
                       onTap: () {
                         print("pressed");
-                        Get.to(CommentsScreen());
+                        Get.to(CommentsScreen(
+                            model.postId,
+                            controller_NeededInBuildPost.socialUserModel?.name
+                                .toString(),
+                            controller_NeededInBuildPost.socialUserModel?.image,
+                            model.nbOfLikes));
                       },
-                      child: Row(
-                        children: [
-                          FaIcon(
-                            FontAwesomeIcons.message,
-                            color: Colors.grey,
-                            size: 18,
-                          ),
-                          SizedBox(
-                            width: 5,
-                          ),
-                          Text(
-                            "Comments",
-                            style: Theme.of(context)
-                                .textTheme
-                                .caption
-                                ?.copyWith(color: Colors.grey),
-                          ),
-                        ],
+                      child: Padding(
+                        padding: const EdgeInsets.all(15.0),
+                        child: Row(
+                          children: [
+                            FaIcon(
+                              FontAwesomeIcons.message,
+                              color: Colors.grey,
+                              size: 18,
+                            ),
+                            SizedBox(
+                              width: 5,
+                            ),
+                            Text(
+                              "Comments",
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .caption
+                                  ?.copyWith(color: Colors.grey),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
-                    Row(
-                      children: [
-                        FaIcon(
-                          FontAwesomeIcons.share,
-                          color: Colors.grey,
-                          size: 18,
+                    InkWell(
+                      onTap: () {},
+                      child: Padding(
+                        padding: const EdgeInsets.all(15.0),
+                        child: Row(
+                          children: [
+                            FaIcon(
+                              FontAwesomeIcons.share,
+                              color: Colors.grey,
+                              size: 18,
+                            ),
+                            SizedBox(
+                              width: 5,
+                            ),
+                            Text(
+                              "Share",
+                              style: Theme.of(context).textTheme.caption,
+                            ),
+                          ],
                         ),
-                        SizedBox(
-                          width: 5,
-                        ),
-                        Text(
-                          "Share",
-                          style: Theme.of(context).textTheme.caption,
-                        ),
-                      ],
+                      ),
                     ),
                   ],
                 ),
