@@ -10,7 +10,7 @@ import 'package:social_app/shared/network/local/cashhelper.dart';
 
 final String taskTable = "tasks";
 
-void signOut() {
+Future<void> signOut() async {
   FirebaseAuth.instance.signOut().then((value) {
     print("Sign out successfully");
     CashHelper.removeDatabykey(key: "deviceToken");

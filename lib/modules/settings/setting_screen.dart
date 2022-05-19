@@ -2,6 +2,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:social_app/layout/layout_controller.dart';
+import 'package:social_app/modules/addstory/add_story.dart';
 import 'package:social_app/modules/edit_profile/edit_profile.dart';
 import 'package:social_app/modules/notifications/notification_screen.dart';
 import 'package:social_app/shared/components/componets.dart';
@@ -23,7 +24,7 @@ class SettingScreen extends StatelessWidget {
           return Scaffold(
             body: SingleChildScrollView(
               child: Padding(
-                padding: const EdgeInsets.all(8.0),
+                padding: const EdgeInsets.all(12.0),
                 child: Column(
                   children: [
                     //NOTE Cover And Profile ---------------------
@@ -79,7 +80,10 @@ class SettingScreen extends StatelessWidget {
                     //NOTE Name
                     Text(
                       socialUserModel.name.toString(),
-                      style: Theme.of(context).textTheme.bodyText1,
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodyText1
+                          ?.copyWith(fontSize: 25),
                     ),
                     // NOTE bio
                     Text(
@@ -87,133 +91,226 @@ class SettingScreen extends StatelessWidget {
                       style: Theme.of(context).textTheme.caption,
                     ),
                     // NOTE posts and follower ,following
+                    // Padding(
+                    //   padding: const EdgeInsets.symmetric(vertical: 15.0),
+                    //   child: Row(
+                    //     children: [
+                    //       Expanded(
+                    //         child: InkWell(
+                    //           onTap: () {},
+                    //           child: Column(
+                    //             children: [
+                    //               Text(
+                    //                 "100",
+                    //                 style:
+                    //                     Theme.of(context).textTheme.subtitle1,
+                    //               ),
+                    //               SizedBox(
+                    //                 height: 10,
+                    //               ),
+                    //               Text(
+                    //                 "Posts",
+                    //                 style: Theme.of(context).textTheme.caption,
+                    //               ),
+                    //             ],
+                    //           ),
+                    //         ),
+                    //       ),
+                    //       Expanded(
+                    //         child: InkWell(
+                    //           onTap: () {},
+                    //           child: Column(
+                    //             children: [
+                    //               Text(
+                    //                 "390",
+                    //                 style:
+                    //                     Theme.of(context).textTheme.subtitle1,
+                    //               ),
+                    //               SizedBox(
+                    //                 height: 10,
+                    //               ),
+                    //               Text(
+                    //                 "Photos",
+                    //                 style: Theme.of(context).textTheme.caption,
+                    //               ),
+                    //             ],
+                    //           ),
+                    //         ),
+                    //       ),
+                    //       Expanded(
+                    //         child: InkWell(
+                    //           onTap: () {},
+                    //           child: Column(
+                    //             children: [
+                    //               Text(
+                    //                 "2K",
+                    //                 style:
+                    //                     Theme.of(context).textTheme.subtitle1,
+                    //               ),
+                    //               SizedBox(
+                    //                 height: 10,
+                    //               ),
+                    //               Text(
+                    //                 "Followers",
+                    //                 style: Theme.of(context).textTheme.caption,
+                    //               ),
+                    //             ],
+                    //           ),
+                    //         ),
+                    //       ),
+                    //       Expanded(
+                    //         child: InkWell(
+                    //           onTap: () {},
+                    //           child: Column(
+                    //             children: [
+                    //               Text(
+                    //                 "700",
+                    //                 style:
+                    //                     Theme.of(context).textTheme.subtitle1,
+                    //               ),
+                    //               SizedBox(
+                    //                 height: 10,
+                    //               ),
+                    //               Text(
+                    //                 "Following",
+                    //                 style: Theme.of(context).textTheme.caption,
+                    //               ),
+                    //             ],
+                    //           ),
+                    //         ),
+                    //       ),
+                    //     ],
+                    //   ),
+                    // ),
+                    // NOTE : Edit Profile Button
                     Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 15.0),
+                      padding: const EdgeInsets.symmetric(vertical: 12),
                       child: Row(
                         children: [
                           Expanded(
-                            child: InkWell(
-                              onTap: () {},
-                              child: Column(
-                                children: [
-                                  Text(
-                                    "100",
-                                    style:
-                                        Theme.of(context).textTheme.subtitle1,
-                                  ),
-                                  SizedBox(
-                                    height: 10,
-                                  ),
-                                  Text(
-                                    "Posts",
-                                    style: Theme.of(context).textTheme.caption,
-                                  ),
-                                ],
+                            flex: 2,
+                            child: MaterialButton(
+                              height: 40,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8)),
+                              color: defaultColor.shade800,
+                              onPressed: () {
+                                Get.to(AddStoryScreen());
+                              },
+                              child: Container(
+                                // color: defaultColor,
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    CircleAvatar(
+                                        radius: 9,
+                                        backgroundColor: Colors.white,
+                                        child: Icon(
+                                          Icons.add,
+                                          size: 16,
+                                          color: defaultColor.shade800,
+                                        )),
+                                    SizedBox(
+                                      width: 5,
+                                    ),
+                                    Text(
+                                      "Add to story",
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
+                          ),
+                          SizedBox(
+                            width: 10,
                           ),
                           Expanded(
-                            child: InkWell(
-                              onTap: () {},
-                              child: Column(
+                            flex: 2,
+                            child: MaterialButton(
+                              height: 40,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8)),
+                              color: Colors.grey.shade300,
+                              onPressed: () {
+                                Get.to(EditProfile());
+                              },
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  Text(
-                                    "390",
-                                    style:
-                                        Theme.of(context).textTheme.subtitle1,
+                                  Icon(
+                                    Icons.edit,
+                                    size: 16,
                                   ),
                                   SizedBox(
-                                    height: 10,
+                                    width: 5,
                                   ),
-                                  Text(
-                                    "Photos",
-                                    style: Theme.of(context).textTheme.caption,
-                                  ),
+                                  Text("Edit Profile"),
                                 ],
                               ),
                             ),
                           ),
-                          Expanded(
-                            child: InkWell(
-                              onTap: () {},
-                              child: Column(
-                                children: [
-                                  Text(
-                                    "2K",
-                                    style:
-                                        Theme.of(context).textTheme.subtitle1,
-                                  ),
-                                  SizedBox(
-                                    height: 10,
-                                  ),
-                                  Text(
-                                    "Followers",
-                                    style: Theme.of(context).textTheme.caption,
-                                  ),
-                                ],
-                              ),
-                            ),
+                          SizedBox(
+                            width: 10,
                           ),
-                          Expanded(
-                            child: InkWell(
-                              onTap: () {},
-                              child: Column(
-                                children: [
-                                  Text(
-                                    "700",
-                                    style:
-                                        Theme.of(context).textTheme.subtitle1,
-                                  ),
-                                  SizedBox(
-                                    height: 10,
-                                  ),
-                                  Text(
-                                    "Following",
-                                    style: Theme.of(context).textTheme.caption,
-                                  ),
-                                ],
-                              ),
-                            ),
+                          MaterialButton(
+                            minWidth: 10,
+                            height: 40,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8)),
+                            color: Colors.grey.shade300,
+                            onPressed: () {
+                              Get.to(NotificationScreen());
+                            },
+                            child: Text("..."),
                           ),
+                          // OutlinedButton(
+                          //     onPressed: () {}, child: Icon(Icons.edit)),
                         ],
                       ),
                     ),
-                    // NOTE : Edit Profile Button
-                    Row(
-                      children: [
-                        Expanded(
-                          child: OutlinedButton(
-                            onPressed: () {
-                              Get.to(EditProfile());
-                            },
-                            child: Text("Edit Profile"),
-                          ),
-                        ),
-                        // SizedBox(
-                        //   width: 5,
-                        // ),
-                        // OutlinedButton(
-                        //     onPressed: () {}, child: Icon(Icons.edit)),
-                      ],
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 10.0),
+                      child: Divider(
+                        color: Colors.grey.shade600,
+                      ),
                     ),
-
                     Row(
                       children: [
-                        Expanded(
-                          child: OutlinedButton(
-                              onPressed: () {
-                                Get.to(NotificationScreen());
-                              },
-                              child: Text('Notifications Settings')),
+                        Icon(
+                          Icons.favorite,
+                          color: Colors.grey.shade700,
+                        ),
+                        SizedBox(
+                          width: 10,
+                        ),
+                        Text(
+                          "Married",
+                          style: TextStyle(color: Colors.grey.shade700),
                         ),
                       ],
                     ),
-
-                    defaultButton(
-                        text: "Sign Out",
-                        onpress: () {
-                          signOut();
-                        })
+                    SizedBox(
+                      height: 15,
+                    ),
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.more_horiz_outlined,
+                          color: Colors.grey.shade700,
+                        ),
+                        SizedBox(
+                          width: 10,
+                        ),
+                        Text(
+                          "See your About info",
+                          style: TextStyle(color: Colors.grey.shade700),
+                        ),
+                      ],
+                    ),
+                    Divider(
+                      color: Colors.grey.shade600,
+                    ),
                   ],
                 ),
               ),
