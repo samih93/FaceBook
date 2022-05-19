@@ -103,7 +103,7 @@ class ChatDetailsScreen extends StatelessWidget {
                       pageSize: 10,
                       query: messagesQuery,
                       loadingBuilder: (context) => Center(
-                        child: SingleChildScrollView(),
+                        child: CircularProgressIndicator(),
                       ),
                       errorBuilder: (context, error, stackTrace) => Text(
                           'Something went wrong! ${error} - ${stackTrace}'),
