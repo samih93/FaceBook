@@ -24,7 +24,8 @@ class SettingScreen extends StatelessWidget {
           return Scaffold(
             body: SingleChildScrollView(
               child: Padding(
-                padding: const EdgeInsets.all(12.0),
+                padding:
+                    const EdgeInsets.only(bottom: 12.0, left: 12, right: 12),
                 child: Column(
                   children: [
                     //NOTE Cover And Profile ---------------------
@@ -88,100 +89,12 @@ class SettingScreen extends StatelessWidget {
                     // NOTE bio
                     Text(
                       socialUserModel.bio.toString(),
-                      style: Theme.of(context).textTheme.caption,
+                      style: Theme.of(context)
+                          .textTheme
+                          .caption
+                          ?.copyWith(fontSize: 15),
                     ),
-                    // NOTE posts and follower ,following
-                    // Padding(
-                    //   padding: const EdgeInsets.symmetric(vertical: 15.0),
-                    //   child: Row(
-                    //     children: [
-                    //       Expanded(
-                    //         child: InkWell(
-                    //           onTap: () {},
-                    //           child: Column(
-                    //             children: [
-                    //               Text(
-                    //                 "100",
-                    //                 style:
-                    //                     Theme.of(context).textTheme.subtitle1,
-                    //               ),
-                    //               SizedBox(
-                    //                 height: 10,
-                    //               ),
-                    //               Text(
-                    //                 "Posts",
-                    //                 style: Theme.of(context).textTheme.caption,
-                    //               ),
-                    //             ],
-                    //           ),
-                    //         ),
-                    //       ),
-                    //       Expanded(
-                    //         child: InkWell(
-                    //           onTap: () {},
-                    //           child: Column(
-                    //             children: [
-                    //               Text(
-                    //                 "390",
-                    //                 style:
-                    //                     Theme.of(context).textTheme.subtitle1,
-                    //               ),
-                    //               SizedBox(
-                    //                 height: 10,
-                    //               ),
-                    //               Text(
-                    //                 "Photos",
-                    //                 style: Theme.of(context).textTheme.caption,
-                    //               ),
-                    //             ],
-                    //           ),
-                    //         ),
-                    //       ),
-                    //       Expanded(
-                    //         child: InkWell(
-                    //           onTap: () {},
-                    //           child: Column(
-                    //             children: [
-                    //               Text(
-                    //                 "2K",
-                    //                 style:
-                    //                     Theme.of(context).textTheme.subtitle1,
-                    //               ),
-                    //               SizedBox(
-                    //                 height: 10,
-                    //               ),
-                    //               Text(
-                    //                 "Followers",
-                    //                 style: Theme.of(context).textTheme.caption,
-                    //               ),
-                    //             ],
-                    //           ),
-                    //         ),
-                    //       ),
-                    //       Expanded(
-                    //         child: InkWell(
-                    //           onTap: () {},
-                    //           child: Column(
-                    //             children: [
-                    //               Text(
-                    //                 "700",
-                    //                 style:
-                    //                     Theme.of(context).textTheme.subtitle1,
-                    //               ),
-                    //               SizedBox(
-                    //                 height: 10,
-                    //               ),
-                    //               Text(
-                    //                 "Following",
-                    //                 style: Theme.of(context).textTheme.caption,
-                    //               ),
-                    //             ],
-                    //           ),
-                    //         ),
-                    //       ),
-                    //     ],
-                    //   ),
-                    // ),
+
                     // NOTE : Edit Profile Button
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 12),
@@ -311,11 +224,68 @@ class SettingScreen extends StatelessWidget {
                     Divider(
                       color: Colors.grey.shade600,
                     ),
+                    SizedBox(height: 10),
+                    _buildFirendsHedear(),
+                    _buildFriendItem(context),
                   ],
                 ),
               ),
             ),
           );
         });
+  }
+
+  _buildFirendsHedear() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Text(
+            "Friends",
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+          ),
+          SizedBox(
+            height: 5,
+          ),
+          Text(
+            "2233 friends",
+            style: TextStyle(color: Colors.grey, fontSize: 15),
+          ),
+        ]),
+        Text(
+          "Find Friends",
+          style: TextStyle(color: defaultColor),
+        )
+      ],
+    );
+  }
+
+  _buildFriendItem(BuildContext context) {
+    return Container(
+        width: MediaQuery.of(context).size.width * .28,
+        height: 140,
+        child: Column(
+          children: [
+            ClipRRect(
+              borderRadius: BorderRadius.circular(20),
+              child: Container(
+                  height: 90,
+                  width: MediaQuery.of(context).size.width * .28,
+                  child: Image.asset(
+                    "assets/profile_test.jpg",
+                    fit: BoxFit.fitWidth,
+                  )),
+            ),
+            SizedBox(
+              height: 5,
+            ),
+            Text(
+              "Kassem abou Khechfe",
+              style: TextStyle(fontWeight: FontWeight.bold),
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+            )
+          ],
+        ));
   }
 }
