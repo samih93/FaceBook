@@ -20,14 +20,15 @@ class NewPostScreen extends StatelessWidget {
           if (isImageClicked == true)
             socialLayoutController.pickPostImage().then((value) async {
               isImageClicked = false;
-              var decodedImage = await decodeImageFromList(
-                      socialLayoutController.postimage!.readAsBytesSync())
-                  .then((value) {
-                print("image width : " + value.width.toString());
-                print("image height : " + value.height.toString());
-                _imageWidth = value.width;
-                _imageHeight = value.height;
-              });
+              if (socialLayoutController.postimage != null)
+                await decodeImageFromList(
+                        socialLayoutController.postimage!.readAsBytesSync())
+                    .then((value) {
+                  print("image width : " + value.width.toString());
+                  print("image height : " + value.height.toString());
+                  _imageWidth = value.width;
+                  _imageHeight = value.height;
+                });
             });
           return Scaffold(
             appBar:

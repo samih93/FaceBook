@@ -366,54 +366,39 @@ _buildWhatonYourMind(UserModel? socialUserModel) {
       children: [
         Padding(
           padding: const EdgeInsets.all(10.0),
-          child: Row(
-            children: [
-              Expanded(
-                child: Row(
-                  children: [
-                    CircleAvatar(
-                      radius: 20,
-                      backgroundImage: socialUserModel!.image == null ||
-                              socialUserModel.image == ""
-                          ? AssetImage('assets/default profile.png')
-                              as ImageProvider
-                          : NetworkImage(socialUserModel.image!),
-                    ),
-                    SizedBox(
-                      width: 10,
-                    ),
-                    Expanded(
-                      child: GestureDetector(
-                        onTap: () {
-                          Get.to(NewPostScreen());
-                        },
-                        child: Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(40),
-                            border: Border.all(color: Colors.grey),
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.all(10.0),
-                            child: Text("What's on your mind?"),
-                          ),
-                        ),
+          child: GestureDetector(
+            onTap: () {
+              Get.to(NewPostScreen());
+            },
+            child: Row(
+              children: [
+                Expanded(
+                  child: Row(
+                    children: [
+                      CircleAvatar(
+                        radius: 20,
+                        backgroundImage: socialUserModel!.image == null ||
+                                socialUserModel.image == ""
+                            ? AssetImage('assets/default profile.png')
+                                as ImageProvider
+                            : NetworkImage(socialUserModel.image!),
                       ),
-                    ),
-                  ],
+                      SizedBox(
+                        width: 10,
+                      ),
+                      Expanded(
+                          child: Text(
+                        "What's on your mind?",
+                        style: TextStyle(fontSize: 20),
+                      )),
+                    ],
+                  ),
                 ),
-              ),
-              SizedBox(
-                width: 10,
-              ),
-              IconButton(
-                icon: Icon(FontAwesomeIcons.solidImages, color: Colors.green),
-                onPressed: () {
-                  Get.to(NewPostScreen(
-                    isImageClicked: true,
-                  ));
-                },
-              ),
-            ],
+                SizedBox(
+                  width: 10,
+                ),
+              ],
+            ),
           ),
         ),
         Divider(),
