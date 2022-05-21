@@ -17,7 +17,7 @@ import 'package:social_app/modules/notifications_settings/notification_settings.
 import 'package:social_app/shared/constants.dart';
 import 'package:social_app/shared/styles/colors.dart';
 
-class SettingScreen extends StatelessWidget {
+class MyAccountScreen extends StatelessWidget {
   final double coverAndProfileheight = 220;
   final double coverimageheight = 180;
   double profileheight = 60;

@@ -15,9 +15,9 @@ import 'package:social_app/model/user_model.dart';
 import 'package:social_app/modules/addstory/add_story.dart';
 import 'package:social_app/modules/chats/chat_screen.dart';
 import 'package:social_app/modules/feeds/feeds_screen.dart';
+import 'package:social_app/modules/my_account/my_account_screen.dart';
 import 'package:social_app/modules/new_post/new_post_screen.dart';
 import 'package:social_app/modules/notifications_screen/notificationsscreen.dart';
-import 'package:social_app/modules/settings/setting_screen.dart';
 import 'package:social_app/modules/users/users_screen.dart';
 import 'package:social_app/shared/constants.dart';
 import 'package:social_app/shared/network/local/cashhelper.dart';
@@ -82,7 +82,8 @@ class SocialLayoutController extends GetxController {
     //   icon: Icon(Icons.person),
     //   label: "Users",
     // ),
-    BottomNavigationBarItem(icon: Icon(Icons.settings), label: "Settings"),
+    BottomNavigationBarItem(
+        icon: Icon(Icons.account_circle_outlined), label: "Account"),
   ];
 
   //NOTE: ---------------------------Screens and Titles----------------------------
@@ -91,10 +92,10 @@ class SocialLayoutController extends GetxController {
     ChatScreen(),
     NotificationsScreen(),
     // UsersScreen(),
-    SettingScreen()
+    MyAccountScreen()
   ];
 
-  final appbar_title = ['Face Book', 'Chat', 'Notifications', 'Settings'];
+  final appbar_title = ['Face Book', 'Chat', 'Notifications', 'Account'];
 
   //NOTE:  -------------------- Get User Data-------------------------
   UserModel? _socialUserModel;
