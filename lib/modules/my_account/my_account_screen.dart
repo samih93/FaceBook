@@ -122,7 +122,7 @@ class MyAccountScreen extends StatelessWidget {
                             style: Theme.of(context)
                                 .textTheme
                                 .bodyText1
-                                ?.copyWith(fontSize: 25),
+                                ?.copyWith(fontSize: 22),
                           ),
                           // NOTE bio
                           Text(
@@ -569,8 +569,11 @@ Widget buildPostItem(
                       Row(
                         children: [
                           Text(
-                            '${model.name}',
-                            style: TextStyle(height: 1.4),
+                            "${model.name}",
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyText1
+                                ?.copyWith(fontSize: 20),
                           ),
                           SizedBox(
                             width: 5,
@@ -613,7 +616,10 @@ Widget buildPostItem(
             if (model.text != "")
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 8),
-                child: Text('${model.text}'),
+                child: Text(
+                  '${model.text}',
+                  style: TextStyle(fontSize: 16),
+                ),
               ),
 
             //NOTE : Image Of post

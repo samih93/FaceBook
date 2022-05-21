@@ -13,6 +13,7 @@ import 'package:social_app/model/storymodel.dart';
 import 'package:social_app/model/user_model.dart';
 import 'package:social_app/modules/addstory/add_story.dart';
 import 'package:social_app/modules/comments_screen/comment_screen.dart';
+import 'package:social_app/modules/friend_profile/friend_profile_screen.dart';
 import 'package:social_app/modules/new_post/new_post_screen.dart';
 import 'package:social_app/modules/stories_view/stories_view.dart';
 import 'package:social_app/shared/components/componets.dart';
@@ -419,12 +420,18 @@ class FeedsScreen extends StatelessWidget {
                 padding: const EdgeInsets.all(8.0),
                 child: Row(
                   children: [
-                    CircleAvatar(
-                      radius: 20,
-                      backgroundImage: model.image == null || model.image == ""
-                          ? AssetImage('assets/default profile.png')
-                              as ImageProvider
-                          : NetworkImage(model.image!),
+                    GestureDetector(
+                      onTap: () {
+                        Get.to(FriendProfileScreen());
+                      },
+                      child: CircleAvatar(
+                        radius: 20,
+                        backgroundImage:
+                            model.image == null || model.image == ""
+                                ? AssetImage('assets/default profile.png')
+                                    as ImageProvider
+                                : NetworkImage(model.image!),
+                      ),
                     ),
                     SizedBox(
                       width: 10,
@@ -436,8 +443,11 @@ class FeedsScreen extends StatelessWidget {
                         Row(
                           children: [
                             Text(
-                              '${model.name}',
-                              style: TextStyle(height: 1.4),
+                              "${model.name}",
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyText1
+                                  ?.copyWith(fontSize: 20),
                             ),
                             SizedBox(
                               width: 5,
@@ -481,7 +491,10 @@ class FeedsScreen extends StatelessWidget {
                 Padding(
                   padding:
                       const EdgeInsets.symmetric(vertical: 5, horizontal: 8),
-                  child: Text('${model.text}'),
+                  child: Text(
+                    '${model.text}',
+                    style: TextStyle(fontSize: 16),
+                  ),
                 ),
 
               //NOTE : Image Of post
