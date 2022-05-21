@@ -12,6 +12,7 @@ import 'package:social_app/model/message_model.dart';
 import 'package:social_app/model/user_model.dart';
 import 'package:social_app/modules/chat_details/chatdetailsController.dart';
 import 'package:social_app/modules/chats/chat_screen.dart';
+import 'package:social_app/modules/friend_profile/friend_profile_screen.dart';
 import 'package:social_app/shared/constants.dart';
 import 'package:social_app/shared/styles/colors.dart';
 
@@ -63,13 +64,18 @@ class ChatDetailsScreen extends StatelessWidget {
               titleSpacing: 0,
               title: Row(
                 children: [
-                  CircleAvatar(
-                    radius: 20,
-                    backgroundImage: socialUserModel.image == null ||
-                            socialUserModel.image == ""
-                        ? AssetImage('assets/default profile.png')
-                            as ImageProvider
-                        : NetworkImage(socialUserModel.image.toString()),
+                  GestureDetector(
+                    onTap: () {
+                      Get.to(FriendProfileScreen());
+                    },
+                    child: CircleAvatar(
+                      radius: 20,
+                      backgroundImage: socialUserModel.image == null ||
+                              socialUserModel.image == ""
+                          ? AssetImage('assets/default profile.png')
+                              as ImageProvider
+                          : NetworkImage(socialUserModel.image.toString()),
+                    ),
                   ),
                   SizedBox(
                     width: 10,
