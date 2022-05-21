@@ -7,7 +7,7 @@ import 'package:social_app/model/user_model.dart';
 import 'package:social_app/modules/addstory/add_story.dart';
 import 'package:social_app/modules/edit_profile/edit_profile.dart';
 import 'package:social_app/modules/new_post/new_post_screen.dart';
-import 'package:social_app/modules/notifications/notification_screen.dart';
+import 'package:social_app/modules/notifications_settings/notification_settings.dart';
 import 'package:social_app/shared/components/componets.dart';
 import 'package:social_app/shared/constants.dart';
 import 'package:social_app/shared/styles/colors.dart';
@@ -198,7 +198,7 @@ class SettingScreen extends StatelessWidget {
                                       borderRadius: BorderRadius.circular(8)),
                                   color: Colors.grey.shade300,
                                   onPressed: () {
-                                    Get.to(NotificationScreen());
+                                    Get.to(NotificationSettingsScreen());
                                   },
                                   child: Text("..."),
                                 ),
@@ -346,11 +346,7 @@ List<String> _streamItems = [
   'Photo',
   'Life event',
 ];
-List<IconData> _streamIcons = [
-  Icons.live_tv_sharp,
-  FontAwesomeIcons.solidImages,
-  Icons.flag
-];
+List<IconData> _streamIcons = [Icons.live_tv_sharp, Icons.filter, Icons.flag];
 List<Color> _streamIconColors = [
   Colors.pink.shade400,
   Colors.purple.shade400,
@@ -362,11 +358,46 @@ _buildWhatonYourMind(UserModel? socialUserModel) {
     decoration: BoxDecoration(
       color: Colors.white,
     ),
-    child: Column(
-      children: [
-        Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: GestureDetector(
+    child: Padding(
+      padding: const EdgeInsets.all(12.0),
+      child: Column(
+        children: [
+          Row(children: [
+            Text(
+              "Posts",
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+            ),
+            Spacer(),
+            MaterialButton(
+              minWidth: 6,
+              height: 30,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8)),
+              color: Colors.grey.shade300,
+              onPressed: () {
+                Get.to(NotificationSettingsScreen());
+              },
+              child: Icon(Icons.filter_list, size: 16),
+            ),
+            SizedBox(
+              width: 5,
+            ),
+            MaterialButton(
+              minWidth: 6,
+              height: 30,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8)),
+              color: Colors.grey.shade300,
+              onPressed: () {
+                Get.to(NotificationSettingsScreen());
+              },
+              child: Icon(Icons.settings, size: 16),
+            ),
+          ]),
+          SizedBox(
+            height: 10,
+          ),
+          GestureDetector(
             onTap: () {
               Get.to(NewPostScreen());
             },
@@ -400,17 +431,16 @@ _buildWhatonYourMind(UserModel? socialUserModel) {
               ],
             ),
           ),
-        ),
-        Divider(),
-        _buildStreamsRow(),
-      ],
+          Divider(),
+          _buildStreamsRow(),
+        ],
+      ),
     ),
   );
 }
 
 _buildStreamsRow() {
   return Container(
-    padding: EdgeInsets.only(bottom: 10),
     child: Row(
       children: [
         ..._streamItems.map(

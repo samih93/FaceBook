@@ -825,7 +825,7 @@ class FeedsScreen extends StatelessWidget {
                   width: 10,
                 ),
                 IconButton(
-                  icon: Icon(FontAwesomeIcons.solidImages, color: Colors.green),
+                  icon: Icon(Icons.filter, color: Colors.green),
                   onPressed: () {
                     Get.to(NewPostScreen(
                       isImageClicked: true,

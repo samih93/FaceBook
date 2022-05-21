@@ -1,17 +1,17 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:social_app/modules/notifications/notification_settings_controller.dart';
+import 'package:social_app/modules/notifications_settings/notification_settings_controller.dart';
 import 'package:social_app/shared/constants.dart';
 
-class NotificationScreen extends StatelessWidget {
+class NotificationSettingsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetBuilder<NotificationSettingsController>(
       init: NotificationSettingsController(),
       builder: (notificationSettingsController) => Scaffold(
         appBar: AppBar(
-          title: Text("Setting"),
+          title: Text("Settings"),
         ),
         body: Padding(
           padding: const EdgeInsets.all(15.0),
