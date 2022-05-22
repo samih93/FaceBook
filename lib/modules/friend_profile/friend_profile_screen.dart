@@ -1,14 +1,32 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutterfire_ui/firestore.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
+import 'package:social_app/model/user_model.dart';
 import 'package:social_app/modules/chat_details/chat_details_screen.dart';
 import 'package:social_app/modules/notifications_settings/notification_settings.dart';
 import 'package:social_app/shared/styles/colors.dart';
 
 class FriendProfileScreen extends StatelessWidget {
+  String firenduId;
+  UserModel? _frienduserModel;
+  var friendprofile_query;
+  FriendProfileScreen(this.firenduId) {
+    friendprofile_query = FirebaseFirestore.instance
+        .collection('users')
+        .where('uId', isEqualTo: firenduId)
+        .withConverter<UserModel>(
+          fromFirestore: (snapshot, _) => UserModel.fromJson(snapshot.data()!),
+          toFirestore: (usermodel, _) => usermodel.toJson(),
+        );
+  }
+
   final double coverAndProfileheight = 220;
   final double coverimageheight = 180;
   double profileheight = 60;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -24,42 +42,68 @@ class FriendProfileScreen extends StatelessWidget {
                   children: [
                     //NOTE Cover And Profile ---------------------
                     Container(
-                      height: coverAndProfileheight,
-                      child: Stack(
-                        alignment: AlignmentDirectional.bottomCenter,
-                        children: [
-                          //NOTE : Cover Image
-                          Align(
-                              alignment: AlignmentDirectional.topCenter,
-                              child: Container(
-                                height: coverimageheight,
-                                width: double.infinity,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.only(
-                                    topLeft: Radius.circular(5),
-                                    topRight: Radius.circular(5),
-                                  ),
-                                  image: DecorationImage(
-                                    image: AssetImage(
-                                      'assets/default profile.png',
-                                    ),
-                                    fit: BoxFit.cover,
-                                  ),
-                                ),
-                              )),
+                      height: coverAndProfileheight + 20,
+                      child: FirestoreListView<UserModel>(
+                          query: friendprofile_query,
+                          itemBuilder: (context, snapshot) {
+                            _frienduserModel = snapshot.data();
 
-                          //NOTE profileImage
-                          CircleAvatar(
-                            radius: profileheight + 3,
-                            backgroundColor:
-                                Theme.of(context).scaffoldBackgroundColor,
-                            child: CircleAvatar(
-                                radius: profileheight,
-                                backgroundImage:
-                                    AssetImage('assets/profile_test.jpg')),
-                          ),
-                        ],
-                      ),
+                            // ... TODO!
+                            return Container(
+                              height: coverAndProfileheight,
+                              child: Stack(
+                                alignment: AlignmentDirectional.bottomCenter,
+                                children: [
+                                  //NOTE : Cover Image
+                                  Align(
+                                      alignment: AlignmentDirectional.topCenter,
+                                      child: Container(
+                                        height: coverimageheight,
+                                        width: double.infinity,
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.only(
+                                            topLeft: Radius.circular(5),
+                                            topRight: Radius.circular(5),
+                                          ),
+                                          image: DecorationImage(
+                                            image: _frienduserModel!
+                                                            .coverimage ==
+                                                        null ||
+                                                    _frienduserModel!
+                                                            .coverimage ==
+                                                        ""
+                                                ? AssetImage(
+                                                        'assets/default profile.png')
+                                                    as ImageProvider
+                                                : NetworkImage(_frienduserModel!
+                                                    .coverimage!),
+                                            fit: BoxFit.cover,
+                                          ),
+                                        ),
+                                      )),
+
+                                  //NOTE profileImage
+                                  CircleAvatar(
+                                    radius: profileheight + 3,
+                                    backgroundColor: Theme.of(context)
+                                        .scaffoldBackgroundColor,
+                                    child: CircleAvatar(
+                                      radius: profileheight,
+                                      backgroundImage: _frienduserModel!
+                                                      .image ==
+                                                  null ||
+                                              _frienduserModel!.image == ""
+                                          ? AssetImage(
+                                                  'assets/default profile.png')
+                                              as ImageProvider
+                                          : NetworkImage(
+                                              _frienduserModel!.image!),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            );
+                          }),
                     ),
                     SizedBox(
                       height: 10,
@@ -128,7 +172,8 @@ class FriendProfileScreen extends StatelessWidget {
                                   borderRadius: BorderRadius.circular(8)),
                               color: Colors.grey.shade300,
                               onPressed: () {
-                                //  Get.to(ChatDetailsScreen(socialUserModel: socialUserModel))
+                                Get.to(ChatDetailsScreen(
+                                    socialUserModel: _frienduserModel!));
                               },
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
@@ -155,7 +200,7 @@ class FriendProfileScreen extends StatelessWidget {
                                 borderRadius: BorderRadius.circular(8)),
                             color: Colors.grey.shade300,
                             onPressed: () {
-                              Get.to(NotificationSettingsScreen());
+                              // Get.to(NotificationSettingsScreen());
                             },
                             child: Text("..."),
                           ),

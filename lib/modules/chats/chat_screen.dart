@@ -7,6 +7,8 @@ import 'package:social_app/shared/components/componets.dart';
 import 'package:social_app/shared/styles/colors.dart';
 
 class ChatScreen extends StatelessWidget {
+
+  
   @override
   Widget build(BuildContext context) {
     return GetBuilder<SocialLayoutController>(

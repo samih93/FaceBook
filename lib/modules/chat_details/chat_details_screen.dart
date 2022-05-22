@@ -66,7 +66,8 @@ class ChatDetailsScreen extends StatelessWidget {
                 children: [
                   GestureDetector(
                     onTap: () {
-                      Get.to(FriendProfileScreen());
+                      Get.to(
+                          FriendProfileScreen(socialUserModel.uId.toString()));
                     },
                     child: CircleAvatar(
                       radius: 20,

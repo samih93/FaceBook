@@ -422,7 +422,7 @@ class FeedsScreen extends StatelessWidget {
                   children: [
                     GestureDetector(
                       onTap: () {
-                        Get.to(FriendProfileScreen());
+                        Get.to(FriendProfileScreen(model.uId.toString()));
                       },
                       child: CircleAvatar(
                         radius: 20,
