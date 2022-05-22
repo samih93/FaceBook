@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
+import 'package:social_app/modules/chat_details/chat_details_screen.dart';
 import 'package:social_app/modules/notifications_settings/notification_settings.dart';
 import 'package:social_app/shared/styles/colors.dart';
 
@@ -99,14 +100,11 @@ class FriendProfileScreen extends StatelessWidget {
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    CircleAvatar(
-                                        radius: 9,
-                                        backgroundColor: Colors.white,
-                                        child: Icon(
-                                          Icons.person_add_alt_rounded,
-                                          size: 16,
-                                          color: defaultColor.shade800,
-                                        )),
+                                    Icon(
+                                      Icons.person_add_alt_rounded,
+                                      size: 18,
+                                      color: Colors.white,
+                                    ),
                                     SizedBox(
                                       width: 5,
                                     ),
@@ -130,7 +128,7 @@ class FriendProfileScreen extends StatelessWidget {
                                   borderRadius: BorderRadius.circular(8)),
                               color: Colors.grey.shade300,
                               onPressed: () {
-                                // Get.to(EditProfile());
+                                //  Get.to(ChatDetailsScreen(socialUserModel: socialUserModel))
                               },
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
