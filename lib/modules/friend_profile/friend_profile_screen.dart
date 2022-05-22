@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:get/get.dart';
+import 'package:social_app/modules/notifications_settings/notification_settings.dart';
+import 'package:social_app/shared/styles/colors.dart';
 
 class FriendProfileScreen extends StatelessWidget {
   final double coverAndProfileheight = 220;
@@ -74,6 +78,93 @@ class FriendProfileScreen extends StatelessWidget {
                           .textTheme
                           .caption
                           ?.copyWith(fontSize: 15),
+                    ),
+
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            flex: 2,
+                            child: MaterialButton(
+                              height: 40,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8)),
+                              color: defaultColor.shade800,
+                              onPressed: () {
+                                // Get.to(AddStoryScreen());
+                              },
+                              child: Container(
+                                // color: defaultColor,
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    CircleAvatar(
+                                        radius: 9,
+                                        backgroundColor: Colors.white,
+                                        child: Icon(
+                                          Icons.person_add_alt_rounded,
+                                          size: 16,
+                                          color: defaultColor.shade800,
+                                        )),
+                                    SizedBox(
+                                      width: 5,
+                                    ),
+                                    Text(
+                                      "Add Friend",
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            width: 10,
+                          ),
+                          Expanded(
+                            flex: 2,
+                            child: MaterialButton(
+                              height: 40,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8)),
+                              color: Colors.grey.shade300,
+                              onPressed: () {
+                                // Get.to(EditProfile());
+                              },
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  FaIcon(
+                                    FontAwesomeIcons.facebookMessenger,
+                                    size: 16,
+                                  ),
+                                  SizedBox(
+                                    width: 5,
+                                  ),
+                                  Text("Message"),
+                                ],
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            width: 10,
+                          ),
+                          MaterialButton(
+                            minWidth: 10,
+                            height: 40,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8)),
+                            color: Colors.grey.shade300,
+                            onPressed: () {
+                              Get.to(NotificationSettingsScreen());
+                            },
+                            child: Text("..."),
+                          ),
+                          // OutlinedButton(
+                          //     onPressed: () {}, child: Icon(Icons.edit)),
+                        ],
+                      ),
                     ),
                   ],
                 ),
