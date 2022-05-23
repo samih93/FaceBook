@@ -7,6 +7,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:like_button/like_button.dart';
 import 'package:social_app/layout/layout_controller.dart';
+import 'package:social_app/model/friend_request.dart';
 import 'package:social_app/model/post_model.dart';
 import 'package:social_app/model/user_model.dart';
 import 'package:social_app/modules/chat_details/chat_details_screen.dart';
@@ -45,7 +46,7 @@ class FriendProfileScreen extends StatefulWidget {
 }
 
 class _FriendProfileScreenState extends State<FriendProfileScreen> {
-  UserModel? _frienduserModel;
+  UserModel? _currentProfileUser;
 
   List<String> firendsName = [
     "samih damaj",
@@ -63,11 +64,16 @@ class _FriendProfileScreenState extends State<FriendProfileScreen> {
   double profileheight = 60;
 
   var socialLayoutController_needed;
+  UserModel? currentLoggedInUser;
 
-  Future<UserModel> getcurrentprofile() async {
+  Future<UserModel> _getcurrentprofile() async {
     FriendProfileController friendProfileController =
         Get.put(FriendProfileController());
-    await friendProfileController.getUserById(widget.frienduId);
+    await friendProfileController
+        .getUserById(widget.frienduId)
+        .then((value) async {
+      await friendProfileController.getListOfsentRequests();
+    });
 
     //Future.delayed(Duration(seconds: 2)).then((value) {});
     return friendProfileController.profileUser!;
@@ -83,9 +89,9 @@ class _FriendProfileScreenState extends State<FriendProfileScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    getcurrentprofile().then((value) {
+    _getcurrentprofile().then((value) {
       setState(() {
-        _frienduserModel = value;
+        _currentProfileUser = value;
       });
     });
   }
@@ -93,283 +99,269 @@ class _FriendProfileScreenState extends State<FriendProfileScreen> {
   @override
   Widget build(BuildContext context) {
     socialLayoutController_needed = Get.find<SocialLayoutController>();
-    return Scaffold(
-      backgroundColor: Colors.grey.shade400,
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Container(
-              color: Colors.white,
-              child: Padding(
-                padding:
-                    const EdgeInsets.only(bottom: 12.0, left: 12, right: 12),
-                child: Column(
-                  children: [
-                    //NOTE Cover And Profile ---------------------
-                    Container(
-                      height: coverAndProfileheight,
-                      child: Stack(
-                        alignment: AlignmentDirectional.bottomCenter,
+    return GetBuilder<FriendProfileController>(
+        init: Get.find<FriendProfileController>(),
+        builder: (friendProfileController) {
+          currentLoggedInUser = socialLayoutController_needed.socialUserModel;
+          return Scaffold(
+            backgroundColor: Colors.grey.shade400,
+            body: SingleChildScrollView(
+              child: Column(
+                children: [
+                  Container(
+                    color: Colors.white,
+                    child: Padding(
+                      padding: const EdgeInsets.only(
+                          bottom: 12.0, left: 12, right: 12),
+                      child: Column(
                         children: [
-                          //NOTE : Cover Image
-                          if (_frienduserModel != null)
-                            Align(
-                              alignment: AlignmentDirectional.topCenter,
-                              child: Container(
-                                  height: coverimageheight,
-                                  width: double.infinity,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.only(
-                                      topLeft: Radius.circular(5),
-                                      topRight: Radius.circular(5),
-                                    ),
-                                    image: DecorationImage(
-                                      image: _frienduserModel!.coverimage ==
+                          //NOTE Cover And Profile ---------------------
+                          Container(
+                            height: coverAndProfileheight,
+                            child: Stack(
+                              alignment: AlignmentDirectional.bottomCenter,
+                              children: [
+                                //NOTE : Cover Image
+                                if (_currentProfileUser != null)
+                                  Align(
+                                    alignment: AlignmentDirectional.topCenter,
+                                    child: Container(
+                                        height: coverimageheight,
+                                        width: double.infinity,
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.only(
+                                            topLeft: Radius.circular(5),
+                                            topRight: Radius.circular(5),
+                                          ),
+                                          image: DecorationImage(
+                                            image: _currentProfileUser!
+                                                            .coverimage ==
+                                                        null ||
+                                                    _currentProfileUser!
+                                                            .coverimage ==
+                                                        ""
+                                                ? AssetImage(
+                                                        'assets/default profile.png')
+                                                    as ImageProvider
+                                                : NetworkImage(
+                                                    _currentProfileUser!
+                                                        .coverimage!),
+                                            fit: BoxFit.cover,
+                                          ),
+                                        )),
+                                  ),
+
+                                //NOTE profileImage
+                                if (_currentProfileUser != null)
+                                  CircleAvatar(
+                                    radius: profileheight + 3,
+                                    backgroundColor: Theme.of(context)
+                                        .scaffoldBackgroundColor,
+                                    child: CircleAvatar(
+                                      radius: profileheight,
+                                      backgroundImage: _currentProfileUser!
+                                                      .image ==
                                                   null ||
-                                              _frienduserModel!.coverimage == ""
+                                              _currentProfileUser!.image == ""
                                           ? AssetImage(
                                                   'assets/default profile.png')
                                               as ImageProvider
                                           : NetworkImage(
-                                              _frienduserModel!.coverimage!),
-                                      fit: BoxFit.cover,
+                                              _currentProfileUser!.image!),
                                     ),
-                                  )),
+                                  ),
+                              ],
+                            ),
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          //NOTE Name
+                          if (_currentProfileUser != null)
+                            Text(
+                              "${_currentProfileUser!.name.toString()}",
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyText1
+                                  ?.copyWith(fontSize: 22),
+                            ),
+                          // NOTE bio
+                          if (_currentProfileUser != null)
+                            Text(
+                              "${_currentProfileUser!.bio.toString()}",
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .caption
+                                  ?.copyWith(fontSize: 15),
                             ),
 
-                          //NOTE profileImage
-                          if (_frienduserModel != null)
-                            CircleAvatar(
-                              radius: profileheight + 3,
-                              backgroundColor:
-                                  Theme.of(context).scaffoldBackgroundColor,
-                              child: CircleAvatar(
-                                radius: profileheight,
-                                backgroundImage: _frienduserModel!.image ==
-                                            null ||
-                                        _frienduserModel!.image == ""
-                                    ? AssetImage('assets/default profile.png')
-                                        as ImageProvider
-                                    : NetworkImage(_frienduserModel!.image!),
-                              ),
-                            ),
-                        ],
-                      ),
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    //NOTE Name
-                    if (_frienduserModel != null)
-                      Text(
-                        "${_frienduserModel!.name.toString()}",
-                        style: Theme.of(context)
-                            .textTheme
-                            .bodyText1
-                            ?.copyWith(fontSize: 22),
-                      ),
-                    // NOTE bio
-                    if (_frienduserModel != null)
-                      Text(
-                        "${_frienduserModel!.bio.toString()}",
-                        style: Theme.of(context)
-                            .textTheme
-                            .caption
-                            ?.copyWith(fontSize: 15),
-                      ),
+                          // NOTE : Edit Profile Button
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 12),
+                            child: Row(
+                              children: [
+                                _buildaddfriendRequest(friendProfileController),
 
-                    // NOTE : Edit Profile Button
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 12),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            flex: 2,
-                            child: MaterialButton(
-                              height: 40,
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(8)),
-                              color: defaultColor.shade800,
-                              onPressed: () {
-                                // Get.to(AddStoryScreen());
-                              },
-                              child: Container(
-                                // color: defaultColor,
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Icon(
-                                      Icons.person_add_alt_rounded,
-                                      size: 18,
-                                      color: Colors.white,
-                                    ),
-                                    SizedBox(
-                                      width: 5,
-                                    ),
-                                    Text(
-                                      "Add Friend",
-                                      style: TextStyle(color: Colors.white),
-                                    ),
-                                  ],
+                                SizedBox(
+                                  width: 10,
                                 ),
-                              ),
+                                Expanded(
+                                  flex: 2,
+                                  child: MaterialButton(
+                                    height: 40,
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(8)),
+                                    color: Colors.grey.shade300,
+                                    onPressed: () {
+                                      Get.to(ChatDetailsScreen(
+                                          socialUserModel:
+                                              _currentProfileUser!));
+                                    },
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        FaIcon(
+                                          FontAwesomeIcons.facebookMessenger,
+                                          size: 16,
+                                        ),
+                                        SizedBox(
+                                          width: 5,
+                                        ),
+                                        Text("Message"),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: 10,
+                                ),
+                                MaterialButton(
+                                  minWidth: 10,
+                                  height: 40,
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(8)),
+                                  color: Colors.grey.shade300,
+                                  onPressed: () {
+                                    // Get.to(NotificationSettingsScreen());
+                                  },
+                                  child: Text("..."),
+                                ),
+                                // OutlinedButton(
+                                //     onPressed: () {}, child: Icon(Icons.edit)),
+                              ],
                             ),
                           ),
-                          SizedBox(
-                            width: 10,
-                          ),
-                          Expanded(
-                            flex: 2,
-                            child: MaterialButton(
-                              height: 40,
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(8)),
-                              color: Colors.grey.shade300,
-                              onPressed: () {
-                                Get.to(ChatDetailsScreen(
-                                    socialUserModel: _frienduserModel!));
-                              },
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  FaIcon(
-                                    FontAwesomeIcons.facebookMessenger,
-                                    size: 16,
-                                  ),
-                                  SizedBox(
-                                    width: 5,
-                                  ),
-                                  Text("Message"),
-                                ],
-                              ),
+
+                          // Note About
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 10.0),
+                            child: Divider(
+                              color: Colors.grey.shade600,
                             ),
                           ),
+                          Row(
+                            children: [
+                              Icon(
+                                Icons.favorite,
+                                color: Colors.grey.shade700,
+                              ),
+                              SizedBox(
+                                width: 10,
+                              ),
+                              Text(
+                                "Married",
+                                style: TextStyle(color: Colors.grey.shade700),
+                              ),
+                            ],
+                          ),
                           SizedBox(
-                            width: 10,
+                            height: 15,
+                          ),
+                          Row(
+                            children: [
+                              Icon(
+                                Icons.more_horiz_outlined,
+                                color: Colors.grey.shade700,
+                              ),
+                              SizedBox(
+                                width: 10,
+                              ),
+                              Text(
+                                "See your About info",
+                                style: TextStyle(color: Colors.grey.shade700),
+                              ),
+                            ],
+                          ),
+                          Divider(
+                            color: Colors.grey.shade600,
+                          ),
+                          SizedBox(height: 10),
+                          buildFirendsHedear(),
+                          SizedBox(height: 12),
+
+                          Wrap(
+                            spacing: 10,
+                            children: [
+                              ...firendsName
+                                  .map((e) => buildFriendItem(context, e)),
+                            ],
                           ),
                           MaterialButton(
-                            minWidth: 10,
-                            height: 40,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8)),
-                            color: Colors.grey.shade300,
-                            onPressed: () {
-                              // Get.to(NotificationSettingsScreen());
-                            },
-                            child: Text("..."),
-                          ),
-                          // OutlinedButton(
-                          //     onPressed: () {}, child: Icon(Icons.edit)),
+                              onPressed: () {},
+                              minWidth: double.infinity,
+                              color: Colors.grey.shade300,
+                              child: Text("See all friends"),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
+                              )),
                         ],
                       ),
                     ),
+                  ),
 
-                    // Note About
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 10.0),
-                      child: Divider(
-                        color: Colors.grey.shade600,
-                      ),
+                  //NOTE For Posts
+                  FirestoreListView<PostModel>(
+                    physics: NeverScrollableScrollPhysics(),
+                    shrinkWrap: true,
+                    pageSize: 5,
+                    query: widget.friendpostsQuery,
+                    loadingBuilder: (context) => Center(
+                      child: SingleChildScrollView(),
                     ),
-                    Row(
-                      children: [
-                        Icon(
-                          Icons.favorite,
-                          color: Colors.grey.shade700,
-                        ),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        Text(
-                          "Married",
-                          style: TextStyle(color: Colors.grey.shade700),
-                        ),
-                      ],
-                    ),
-                    SizedBox(
-                      height: 15,
-                    ),
-                    Row(
-                      children: [
-                        Icon(
-                          Icons.more_horiz_outlined,
-                          color: Colors.grey.shade700,
-                        ),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        Text(
-                          "See your About info",
-                          style: TextStyle(color: Colors.grey.shade700),
-                        ),
-                      ],
-                    ),
-                    Divider(
-                      color: Colors.grey.shade600,
-                    ),
-                    SizedBox(height: 10),
-                    buildFirendsHedear(),
-                    SizedBox(height: 12),
+                    errorBuilder: (context, error, stackTrace) =>
+                        Text('Something went wrong! ${error} - ${stackTrace}'),
+                    itemBuilder: (context, snapshot) {
+                      PostModel model;
+                      if (snapshot.isBlank!)
+                        return Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Container(
+                                height: 200,
+                                child: SvgPicture.asset(
+                                    'assets/svg/no_posts_yet.svg')),
+                            Text(
+                              "No Posts Yes",
+                              style:
+                                  TextStyle(color: Colors.grey, fontSize: 30),
+                            ),
+                          ],
+                        );
+                      else {
+                        model = snapshot.data();
+                      }
 
-                    Wrap(
-                      spacing: 10,
-                      children: [
-                        ...firendsName.map((e) => buildFriendItem(context, e)),
-                      ],
-                    ),
-                    MaterialButton(
-                        onPressed: () {},
-                        minWidth: double.infinity,
-                        color: Colors.grey.shade300,
-                        child: Text("See all friends"),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
-                        )),
-                  ],
-                ),
+                      return buildPostItem(
+                          model, socialLayoutController_needed, context);
+                    },
+                  ),
+                ],
               ),
             ),
-
-            //NOTE For Posts
-            FirestoreListView<PostModel>(
-              physics: NeverScrollableScrollPhysics(),
-              shrinkWrap: true,
-              pageSize: 5,
-              query: widget.friendpostsQuery,
-              loadingBuilder: (context) => Center(
-                child: SingleChildScrollView(),
-              ),
-              errorBuilder: (context, error, stackTrace) =>
-                  Text('Something went wrong! ${error} - ${stackTrace}'),
-              itemBuilder: (context, snapshot) {
-                PostModel model;
-                if (snapshot.isBlank!)
-                  return Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Container(
-                          height: 200,
-                          child:
-                              SvgPicture.asset('assets/svg/no_posts_yet.svg')),
-                      Text(
-                        "No Posts Yes",
-                        style: TextStyle(color: Colors.grey, fontSize: 30),
-                      ),
-                    ],
-                  );
-                else {
-                  model = snapshot.data();
-                }
-
-                return buildPostItem(
-                    model, socialLayoutController_needed, context);
-              },
-            ),
-          ],
-        ),
-      ),
-    );
+          );
+        });
   }
 
   Widget buildPostItem(
@@ -708,6 +700,105 @@ class _FriendProfileScreenState extends State<FriendProfileScreen> {
               ),
             ],
           )),
+    );
+  }
+
+  _buildaddfriendRequest(
+    FriendProfileController friendProfileController,
+  ) {
+    return Expanded(
+      flex: 2,
+      child: MaterialButton(
+        height: 40,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+        color: defaultColor.shade800,
+        onPressed: () {
+          print(currentLoggedInUser?.friends?.length.toString());
+          if (currentLoggedInUser!.friends?.length != 0) {
+            if (_currentProfileUser != null &&
+                currentLoggedInUser!.friends!
+                    .any((element) => element != _currentProfileUser?.uId))
+              friendProfileController.addFriendRequest(
+                  _currentProfileUser!.uId.toString(),
+                  name: currentLoggedInUser!.name,
+                  image: currentLoggedInUser!.image);
+            else {
+              print("already friend");
+            }
+          } else {
+            print("i dont have friend");
+            friendProfileController.addFriendRequest(
+                _currentProfileUser!.uId.toString(),
+                name: currentLoggedInUser!.name,
+                image: currentLoggedInUser!.image);
+          }
+        },
+        child: Container(
+            // color: defaultColor,
+            child:
+                // check if current user is a friend
+                _currentProfileUser != null &&
+                        currentLoggedInUser!.friends != null &&
+                        currentLoggedInUser!.friends!.any(
+                            (element) => element == _currentProfileUser?.uId)
+                    ? Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            FontAwesomeIcons.userCheck,
+                            size: 18,
+                            color: Colors.white,
+                          ),
+                          SizedBox(
+                            width: 5,
+                          ),
+                          Text(
+                            "Friends",
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ],
+                      )
+                    : friendProfileController.listofsentfriendrequests != [] &&
+                            _currentProfileUser != null &&
+                            friendProfileController.listofsentfriendrequests
+                                .any((element) =>
+                                    element.requestId ==
+                                    _currentProfileUser?.uId)
+                        ? Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                FontAwesomeIcons.userCheck,
+                                size: 18,
+                                color: Colors.white,
+                              ),
+                              SizedBox(
+                                width: 5,
+                              ),
+                              Text(
+                                "Requested",
+                                style: TextStyle(color: Colors.white),
+                              ),
+                            ],
+                          )
+                        : Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.person_add_alt_rounded,
+                                size: 18,
+                                color: Colors.white,
+                              ),
+                              SizedBox(
+                                width: 5,
+                              ),
+                              Text(
+                                "Add Friend",
+                                style: TextStyle(color: Colors.white),
+                              ),
+                            ],
+                          )),
+      ),
     );
   }
 }
