@@ -6,6 +6,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:like_button/like_button.dart';
 import 'package:lottie/lottie.dart';
+import 'package:social_app/layout/layout.dart';
 import 'package:social_app/layout/layout_controller.dart';
 import 'package:social_app/model/comment_model.dart';
 import 'package:social_app/model/post_model.dart';
@@ -14,6 +15,7 @@ import 'package:social_app/model/user_model.dart';
 import 'package:social_app/modules/addstory/add_story.dart';
 import 'package:social_app/modules/comments_screen/comment_screen.dart';
 import 'package:social_app/modules/friend_profile/friend_profile_screen.dart';
+import 'package:social_app/modules/my_account/my_account_screen.dart';
 import 'package:social_app/modules/new_post/new_post_screen.dart';
 import 'package:social_app/modules/stories_view/stories_view.dart';
 import 'package:social_app/shared/components/componets.dart';
@@ -422,7 +424,10 @@ class FeedsScreen extends StatelessWidget {
                   children: [
                     GestureDetector(
                       onTap: () {
-                        Get.to(FriendProfileScreen(model.uId.toString()));
+                        if (model.uId != uId)
+                          Get.to(FriendProfileScreen(model.uId.toString()));
+                        else
+                          controller_NeededInBuildPost.onchangeIndex(3);
                       },
                       child: CircleAvatar(
                         radius: 20,

@@ -29,7 +29,7 @@ Widget defaultButton(
         required String text,
         double radius = 0,
         double height = 40,
-        double textSize =14,
+        double textSize = 14,
         bool? isUppercase}) =>
     Container(
       width: width,
@@ -38,10 +38,7 @@ Widget defaultButton(
         onPressed: onpress,
         child: Text(
           (isUppercase != null && isUppercase) ? text.toUpperCase() : text,
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: textSize
-          ),
+          style: TextStyle(color: Colors.white, fontSize: textSize),
         ),
       ),
       decoration: BoxDecoration(
@@ -216,3 +213,57 @@ Widget buildChatItem(
         ),
       ),
     );
+
+buildFriendItem(BuildContext context, String text) {
+  return Container(
+      width: MediaQuery.of(context).size.width * .28,
+      height: 140,
+      child: Column(
+        children: [
+          ClipRRect(
+            borderRadius: BorderRadius.circular(8),
+            child: Container(
+                height: 100,
+                width: MediaQuery.of(context).size.width * .28,
+                child: Image.asset(
+                  "assets/profile_test.jpg",
+                  fit: BoxFit.fitWidth,
+                )),
+          ),
+          SizedBox(
+            height: 5,
+          ),
+          Text(
+            "$text",
+            style: TextStyle(fontWeight: FontWeight.bold),
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+          )
+        ],
+      ));
+}
+
+buildFirendsHedear() {
+  return Row(
+    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    children: [
+      Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        Text(
+          "Friends",
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+        ),
+        SizedBox(
+          height: 5,
+        ),
+        Text(
+          "2233 friends",
+          style: TextStyle(color: Colors.grey, fontSize: 15),
+        ),
+      ]),
+      Text(
+        "Find Friends",
+        style: TextStyle(color: defaultColor),
+      )
+    ],
+  );
+}
