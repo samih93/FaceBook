@@ -24,20 +24,25 @@ class FriendProfileController extends GetxController {
 
   bool isrequested = false;
 
-  Future<void> addFriendRequest(String userId,
+  Future<void> addFriendRequest(String userRequestId,
       {String? name, String? image}) async {
     FriendRequest model =
-        FriendRequest(name, image, userId, Timestamp.now(), false);
+        FriendRequest(name, image, userRequestId, Timestamp.now(), false);
+
+    // add request in current logged in user
     await FirebaseFirestore.instance
         .collection('users')
         .doc(uId)
         .collection('sentfriendrequests')
-        .doc(userId)
+        .doc(userRequestId)
         .set(model.toJson())
         .then((value) async {
+      // add request in other user
+      FriendRequest model =
+          FriendRequest(name, image, uId, Timestamp.now(), false);
       await FirebaseFirestore.instance
           .collection('users')
-          .doc(userId)
+          .doc(userRequestId)
           .collection("receivedfriendrequest")
           .doc(uId)
           .set(model.toJson())

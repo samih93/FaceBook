@@ -6,44 +6,17 @@ import 'package:social_app/modules/notifications_screen/notification_controller.
 import 'package:social_app/shared/constants.dart';
 import 'package:social_app/shared/styles/colors.dart';
 
-class NotificationsScreen extends StatefulWidget {
-  @override
-  State<NotificationsScreen> createState() => _NotificationsScreenState();
-}
-
-class _NotificationsScreenState extends State<NotificationsScreen> {
-  List<FriendRequest> _listofReceivedFriendRequest = [];
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    _getListOfreceivedFriendRequest().then((value) {
-      setState(() {
-        _listofReceivedFriendRequest = value;
-        print("lenght of request :" +
-            _listofReceivedFriendRequest.length.toString());
-      });
-      Future.delayed(Duration(seconds: 2));
-    });
-  }
-
-  Future<List<FriendRequest>> _getListOfreceivedFriendRequest() async {
-    NotificationController notificationController =
-        Get.put(NotificationController());
-    await notificationController
-        .getListOfReceivedRequests()
-        .then((value) async {});
-    return notificationController.listofreceivedfriendrequests;
-  }
-
+class NotificationsScreen extends StatelessWidget {
+  var controller = Get.put(NotificationController());
   @override
   Widget build(BuildContext context) {
     return GetBuilder<NotificationController>(
         init: Get.find<NotificationController>(),
         builder: (notificationController) {
           return Scaffold(
-            body: _listofReceivedFriendRequest.length == 0
+            body: notificationController
+                        .listofreceivedRequestTodisplay.length ==
+                    0
                 ? Container(
                     width: double.infinity,
                     child: Column(
@@ -84,7 +57,8 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                                     width: 5,
                                   ),
                                   Text(
-                                    _listofReceivedFriendRequest.length
+                                    notificationController
+                                        .listofreceivedRequestTodisplay.length
                                         .toString(),
                                     style: TextStyle(
                                         color: Colors.red,
@@ -101,8 +75,9 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                               SizedBox(
                                 height: 10,
                               ),
-                              ..._listofReceivedFriendRequest
-                                  .map((e) => _buildRequestItem(e)),
+                              ...notificationController
+                                  .listofreceivedRequestTodisplay
+                                  .map((e) => _buildRequestItem(e, context)),
                             ],
                           ),
                         ),
@@ -113,7 +88,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
         });
   }
 
-  _buildRequestItem(FriendRequest model) {
+  _buildRequestItem(FriendRequest model, BuildContext context) {
     return Container(
       height: MediaQuery.of(context).size.height * .15,
       child: Row(
@@ -158,7 +133,10 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8)),
                         color: defaultColor.shade800,
-                        onPressed: () {},
+                        onPressed: () {
+                          controller.confirmRequest(myId: uId.toString(),
+                              user_requestId: model.requestId.toString());
+                        },
                         child: Text(
                           "confirm",
                           style: TextStyle(color: Colors.white),
@@ -174,7 +152,11 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8)),
                         color: Colors.grey.shade300,
-                        onPressed: () {},
+                        onPressed: () {
+                          controller.deleteRequest(
+                              myId: uId.toString(),
+                              user_requestId: model.requestId.toString());
+                        },
                         child: Text("Delete"),
                       ),
                     ),

@@ -8,6 +8,5 @@ class Binding extends Bindings {
     //NOTE:  implement dependencies
 
     Get.lazyPut<SocialLayoutController>(() => SocialLayoutController());
-    Get.lazyPut<NotificationController>(() => NotificationController());
   }
 }
