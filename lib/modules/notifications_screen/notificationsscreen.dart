@@ -24,6 +24,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
         print("lenght of request :" +
             _listofReceivedFriendRequest.length.toString());
       });
+      Future.delayed(Duration(seconds: 2));
     });
   }
 
@@ -39,7 +40,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
   @override
   Widget build(BuildContext context) {
     return GetBuilder<NotificationController>(
-        init: NotificationController(),
+        init: Get.find<NotificationController>(),
         builder: (notificationController) {
           return Scaffold(
             body: _listofReceivedFriendRequest.length == 0
@@ -69,7 +70,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                     child: Column(
                       children: [
                         Container(
-                          height: MediaQuery.of(context).size.height * 0.25,
+                          height: MediaQuery.of(context).size.height * 0.35,
                           child: ListView(
                             children: [
                               Row(
@@ -87,7 +88,8 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                                         .toString(),
                                     style: TextStyle(
                                         color: Colors.red,
-                                        fontWeight: FontWeight.bold),
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 16),
                                   ),
                                   Spacer(),
                                   Text(
@@ -129,51 +131,57 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
           SizedBox(
             width: 10,
           ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    model.name.toString(),
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                  Text(
-                    "${convertToAgo(model.requestDate!.toDate())}",
-                    style: TextStyle(color: Colors.grey, fontSize: 10),
-                  )
-                ],
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  MaterialButton(
-                    height: 40,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8)),
-                    color: defaultColor.shade800,
-                    onPressed: () {},
-                    child: Text(
-                      "confirm",
-                      style: TextStyle(color: Colors.white),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      model.name.toString(),
+                      style: TextStyle(fontWeight: FontWeight.bold),
                     ),
-                  ),
-                  SizedBox(
-                    width: 15,
-                  ),
-                  MaterialButton(
-                    height: 40,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8)),
-                    color: Colors.grey.shade300,
-                    onPressed: () {},
-                    child: Text("Delete"),
-                  ),
-                ],
-              ),
-            ],
+                    Text(
+                      "${convertToAgo(model.requestDate!.toDate())}",
+                      style: TextStyle(color: Colors.grey, fontSize: 12),
+                    )
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Expanded(
+                      child: MaterialButton(
+                        height: 40,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8)),
+                        color: defaultColor.shade800,
+                        onPressed: () {},
+                        child: Text(
+                          "confirm",
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      width: 15,
+                    ),
+                    Expanded(
+                      child: MaterialButton(
+                        height: 40,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8)),
+                        color: Colors.grey.shade300,
+                        onPressed: () {},
+                        child: Text("Delete"),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
         ],
       ),

@@ -5,10 +5,12 @@ import 'package:social_app/model/user_model.dart';
 import 'package:social_app/shared/constants.dart';
 
 class NotificationController extends GetxController {
-  NotificationController() {
+  @override
+  void onInit() async {
     getListOfReceivedRequests().then((value) {
       print("getting requests");
     });
+    super.onInit();
   }
 
   //NOTE get list of receivrd requests
