@@ -7,8 +7,11 @@ import 'package:social_app/shared/constants.dart';
 class FriendProfileController extends GetxController {
   //NOTE get user by id
   UserModel? _profileUser;
+  bool isloadingGetProfile = false;
   UserModel? get profileUser => _profileUser;
   Future<void> getUserById(String userId) async {
+    isloadingGetProfile = true;
+    update();
     await FirebaseFirestore.instance
         .collection('users')
         .doc(userId)
@@ -16,6 +19,7 @@ class FriendProfileController extends GetxController {
         .then((value) {
       print(value.data());
       _profileUser = UserModel.fromJson(value.data()!);
+      isloadingGetProfile = false;
       update();
     });
   }
