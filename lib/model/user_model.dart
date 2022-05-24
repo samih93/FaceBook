@@ -37,7 +37,7 @@ class UserModel {
     uId = json['uId'];
     deviceToken = json['deviceToken'] ?? '';
     isemailverified = json['isemailverified'];
-    nbOffriends = json['nbOffriends'] as int;
+    nbOffriends = json['nbOffriends'] != null ? json['nbOffriends'] : 0;
 
     if (json['friends'] != null)
       json['friends'].forEach((element) {
