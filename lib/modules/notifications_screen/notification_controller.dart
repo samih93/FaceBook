@@ -17,8 +17,7 @@ class NotificationController extends GetxController {
   List<FriendRequest> _listofreceivedfriendrequests = [];
   List<FriendRequest> get listofreceivedfriendrequests =>
       _listofreceivedfriendrequests;
-  List<FriendRequest> get listofreceivedRequestTodisplay =>
-      _listofreceivedfriendrequests.take(2).toList();
+
   Future<void> getListOfReceivedRequests() async {
     _listofreceivedfriendrequests = [];
     //List<String> _listofreceivedRequestIds = [];
@@ -83,10 +82,42 @@ class NotificationController extends GetxController {
       {required String myId, required String user_requestId}) async {
     //TODO:
     // add him as my friend in my collection user
+    FirebaseFirestore.instance
+        .collection('users')
+        .where('uId', isEqualTo: myId)
+        .get()
+        .then((doc_of_user) {
+      if (doc_of_user.docs.length > 0) {
+        FirebaseFirestore.instance.collection('users').doc(myId).update({
+          'nbOffriends': doc_of_user.docs.first.data()['nbOffriends'] == null
+              ? 1
+              : doc_of_user.docs.first.data()['nbOffriends'] + 1,
+          'friends': FieldValue.arrayUnion([user_requestId])
+        }).then((value) {});
 
-    // add me as his friend in his collection user
+        // add me as his friend in his collection user
+        FirebaseFirestore.instance
+            .collection('users')
+            .where('uId', isEqualTo: user_requestId)
+            .get()
+            .then((doc_of_user) {
+          if (doc_of_user.docs.length > 0) {
+            FirebaseFirestore.instance
+                .collection('users')
+                .doc(user_requestId)
+                .update({
+              'nbOffriends':
+                  doc_of_user.docs.first.data()['nbOffriends'] == null
+                      ? 1
+                      : doc_of_user.docs.first.data()['nbOffriends'] + 1,
+              'friends': FieldValue.arrayUnion([myId])
+            }).then((value) {});
 
-    // delete request
-    deleteRequest(myId: myId, user_requestId: user_requestId);
+            // delete request
+            deleteRequest(myId: myId, user_requestId: user_requestId);
+          }
+        });
+      }
+    });
   }
 }

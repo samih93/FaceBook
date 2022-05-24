@@ -105,261 +105,281 @@ class _FriendProfileScreenState extends State<FriendProfileScreen> {
           currentLoggedInUser = socialLayoutController_needed.socialUserModel;
           return Scaffold(
             backgroundColor: Colors.grey.shade400,
-            body: SingleChildScrollView(
-              child: Column(
-                children: [
-                  Container(
+            body: friendProfileController.isloadingGetProfile
+                ? Container(
                     color: Colors.white,
-                    child: Padding(
-                      padding: const EdgeInsets.only(
-                          bottom: 12.0, left: 12, right: 12),
-                      child: Column(
-                        children: [
-                          //NOTE Cover And Profile ---------------------
-                          Container(
-                            height: coverAndProfileheight,
-                            child: Stack(
-                              alignment: AlignmentDirectional.bottomCenter,
+                    height: double.infinity,
+                    child: Center(
+                      child: CircularProgressIndicator(),
+                    ),
+                  )
+                : SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        Container(
+                          color: Colors.white,
+                          child: Padding(
+                            padding: const EdgeInsets.only(
+                                bottom: 12.0, left: 12, right: 12),
+                            child: Column(
                               children: [
-                                //NOTE : Cover Image
-                                if (_currentProfileUser != null)
-                                  Align(
-                                    alignment: AlignmentDirectional.topCenter,
-                                    child: Container(
-                                        height: coverimageheight,
-                                        width: double.infinity,
-                                        decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.only(
-                                            topLeft: Radius.circular(5),
-                                            topRight: Radius.circular(5),
-                                          ),
-                                          image: DecorationImage(
-                                            image: _currentProfileUser!
-                                                            .coverimage ==
+                                //NOTE Cover And Profile ---------------------
+                                Container(
+                                  height: coverAndProfileheight,
+                                  child: Stack(
+                                    alignment:
+                                        AlignmentDirectional.bottomCenter,
+                                    children: [
+                                      //NOTE : Cover Image
+                                      if (_currentProfileUser != null)
+                                        Align(
+                                          alignment:
+                                              AlignmentDirectional.topCenter,
+                                          child: Container(
+                                              height: coverimageheight,
+                                              width: double.infinity,
+                                              decoration: BoxDecoration(
+                                                borderRadius: BorderRadius.only(
+                                                  topLeft: Radius.circular(5),
+                                                  topRight: Radius.circular(5),
+                                                ),
+                                                image: DecorationImage(
+                                                  image: _currentProfileUser!
+                                                                  .coverimage ==
+                                                              null ||
+                                                          _currentProfileUser!
+                                                                  .coverimage ==
+                                                              ""
+                                                      ? AssetImage(
+                                                              'assets/default profile.png')
+                                                          as ImageProvider
+                                                      : NetworkImage(
+                                                          _currentProfileUser!
+                                                              .coverimage!),
+                                                  fit: BoxFit.cover,
+                                                ),
+                                              )),
+                                        ),
+
+                                      //NOTE profileImage
+                                      if (_currentProfileUser != null)
+                                        CircleAvatar(
+                                          radius: profileheight + 3,
+                                          backgroundColor: Theme.of(context)
+                                              .scaffoldBackgroundColor,
+                                          child: CircleAvatar(
+                                            radius: profileheight,
+                                            backgroundImage: _currentProfileUser!
+                                                            .image ==
                                                         null ||
                                                     _currentProfileUser!
-                                                            .coverimage ==
+                                                            .image ==
                                                         ""
                                                 ? AssetImage(
                                                         'assets/default profile.png')
                                                     as ImageProvider
                                                 : NetworkImage(
                                                     _currentProfileUser!
-                                                        .coverimage!),
-                                            fit: BoxFit.cover,
+                                                        .image!),
                                           ),
-                                        )),
+                                        ),
+                                    ],
                                   ),
-
-                                //NOTE profileImage
+                                ),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                //NOTE Name
                                 if (_currentProfileUser != null)
-                                  CircleAvatar(
-                                    radius: profileheight + 3,
-                                    backgroundColor: Theme.of(context)
-                                        .scaffoldBackgroundColor,
-                                    child: CircleAvatar(
-                                      radius: profileheight,
-                                      backgroundImage: _currentProfileUser!
-                                                      .image ==
-                                                  null ||
-                                              _currentProfileUser!.image == ""
-                                          ? AssetImage(
-                                                  'assets/default profile.png')
-                                              as ImageProvider
-                                          : NetworkImage(
-                                              _currentProfileUser!.image!),
-                                    ),
+                                  Text(
+                                    "${_currentProfileUser!.name.toString()}",
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodyText1
+                                        ?.copyWith(fontSize: 22),
                                   ),
-                              ],
-                            ),
-                          ),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          //NOTE Name
-                          if (_currentProfileUser != null)
-                            Text(
-                              "${_currentProfileUser!.name.toString()}",
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodyText1
-                                  ?.copyWith(fontSize: 22),
-                            ),
-                          // NOTE bio
-                          if (_currentProfileUser != null)
-                            Text(
-                              "${_currentProfileUser!.bio.toString()}",
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .caption
-                                  ?.copyWith(fontSize: 15),
-                            ),
+                                // NOTE bio
+                                if (_currentProfileUser != null)
+                                  Text(
+                                    "${_currentProfileUser!.bio.toString()}",
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .caption
+                                        ?.copyWith(fontSize: 15),
+                                  ),
 
-                          // NOTE : Edit Profile Button
-                          Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 12),
-                            child: Row(
-                              children: [
-                                _buildaddfriendRequest(friendProfileController),
+                                // NOTE : Edit Profile Button
+                                Padding(
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 12),
+                                  child: Row(
+                                    children: [
+                                      _buildaddfriendRequest(
+                                          friendProfileController),
 
-                                SizedBox(
-                                  width: 10,
-                                ),
-                                Expanded(
-                                  flex: 2,
-                                  child: MaterialButton(
-                                    height: 40,
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(8)),
-                                    color: Colors.grey.shade300,
-                                    onPressed: () {
-                                      Get.to(ChatDetailsScreen(
-                                          socialUserModel:
-                                              _currentProfileUser!));
-                                    },
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        FaIcon(
-                                          FontAwesomeIcons.facebookMessenger,
-                                          size: 16,
+                                      SizedBox(
+                                        width: 10,
+                                      ),
+                                      Expanded(
+                                        flex: 2,
+                                        child: MaterialButton(
+                                          height: 40,
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(8)),
+                                          color: Colors.grey.shade300,
+                                          onPressed: () {
+                                            Get.to(ChatDetailsScreen(
+                                                socialUserModel:
+                                                    _currentProfileUser!));
+                                          },
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              FaIcon(
+                                                FontAwesomeIcons
+                                                    .facebookMessenger,
+                                                size: 16,
+                                              ),
+                                              SizedBox(
+                                                width: 5,
+                                              ),
+                                              Text("Message"),
+                                            ],
+                                          ),
                                         ),
-                                        SizedBox(
-                                          width: 5,
-                                        ),
-                                        Text("Message"),
-                                      ],
-                                    ),
+                                      ),
+                                      SizedBox(
+                                        width: 10,
+                                      ),
+                                      MaterialButton(
+                                        minWidth: 10,
+                                        height: 40,
+                                        shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(8)),
+                                        color: Colors.grey.shade300,
+                                        onPressed: () {
+                                          // Get.to(NotificationSettingsScreen());
+                                        },
+                                        child: Text("..."),
+                                      ),
+                                      // OutlinedButton(
+                                      //     onPressed: () {}, child: Icon(Icons.edit)),
+                                    ],
                                   ),
                                 ),
+
+                                // Note About
+                                Padding(
+                                  padding: const EdgeInsets.only(bottom: 10.0),
+                                  child: Divider(
+                                    color: Colors.grey.shade600,
+                                  ),
+                                ),
+                                Row(
+                                  children: [
+                                    Icon(
+                                      Icons.favorite,
+                                      color: Colors.grey.shade700,
+                                    ),
+                                    SizedBox(
+                                      width: 10,
+                                    ),
+                                    Text(
+                                      "Married",
+                                      style: TextStyle(
+                                          color: Colors.grey.shade700),
+                                    ),
+                                  ],
+                                ),
                                 SizedBox(
-                                  width: 10,
+                                  height: 15,
+                                ),
+                                Row(
+                                  children: [
+                                    Icon(
+                                      Icons.more_horiz_outlined,
+                                      color: Colors.grey.shade700,
+                                    ),
+                                    SizedBox(
+                                      width: 10,
+                                    ),
+                                    Text(
+                                      "See your About info",
+                                      style: TextStyle(
+                                          color: Colors.grey.shade700),
+                                    ),
+                                  ],
+                                ),
+                                Divider(
+                                  color: Colors.grey.shade600,
+                                ),
+                                SizedBox(height: 10),
+                                buildFirendsHedear(),
+                                SizedBox(height: 12),
+
+                                Wrap(
+                                  spacing: 10,
+                                  children: [
+                                    ...firendsName.map(
+                                        (e) => buildFriendItem(context, e)),
+                                  ],
                                 ),
                                 MaterialButton(
-                                  minWidth: 10,
-                                  height: 40,
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(8)),
-                                  color: Colors.grey.shade300,
-                                  onPressed: () {
-                                    // Get.to(NotificationSettingsScreen());
-                                  },
-                                  child: Text("..."),
-                                ),
-                                // OutlinedButton(
-                                //     onPressed: () {}, child: Icon(Icons.edit)),
+                                    onPressed: () {},
+                                    minWidth: double.infinity,
+                                    color: Colors.grey.shade300,
+                                    child: Text("See all friends"),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(8),
+                                    )),
                               ],
                             ),
                           ),
+                        ),
 
-                          // Note About
-                          Padding(
-                            padding: const EdgeInsets.only(bottom: 10.0),
-                            child: Divider(
-                              color: Colors.grey.shade600,
-                            ),
+                        //NOTE For Posts
+                        FirestoreListView<PostModel>(
+                          physics: NeverScrollableScrollPhysics(),
+                          shrinkWrap: true,
+                          pageSize: 5,
+                          query: widget.friendpostsQuery,
+                          loadingBuilder: (context) => Center(
+                            child: SingleChildScrollView(),
                           ),
-                          Row(
-                            children: [
-                              Icon(
-                                Icons.favorite,
-                                color: Colors.grey.shade700,
-                              ),
-                              SizedBox(
-                                width: 10,
-                              ),
-                              Text(
-                                "Married",
-                                style: TextStyle(color: Colors.grey.shade700),
-                              ),
-                            ],
-                          ),
-                          SizedBox(
-                            height: 15,
-                          ),
-                          Row(
-                            children: [
-                              Icon(
-                                Icons.more_horiz_outlined,
-                                color: Colors.grey.shade700,
-                              ),
-                              SizedBox(
-                                width: 10,
-                              ),
-                              Text(
-                                "See your About info",
-                                style: TextStyle(color: Colors.grey.shade700),
-                              ),
-                            ],
-                          ),
-                          Divider(
-                            color: Colors.grey.shade600,
-                          ),
-                          SizedBox(height: 10),
-                          buildFirendsHedear(),
-                          SizedBox(height: 12),
+                          errorBuilder: (context, error, stackTrace) => Text(
+                              'Something went wrong! ${error} - ${stackTrace}'),
+                          itemBuilder: (context, snapshot) {
+                            PostModel model;
+                            if (snapshot.isBlank!)
+                              return Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Container(
+                                      height: 200,
+                                      child: SvgPicture.asset(
+                                          'assets/svg/no_posts_yet.svg')),
+                                  Text(
+                                    "No Posts Yes",
+                                    style: TextStyle(
+                                        color: Colors.grey, fontSize: 30),
+                                  ),
+                                ],
+                              );
+                            else {
+                              model = snapshot.data();
+                            }
 
-                          Wrap(
-                            spacing: 10,
-                            children: [
-                              ...firendsName
-                                  .map((e) => buildFriendItem(context, e)),
-                            ],
-                          ),
-                          MaterialButton(
-                              onPressed: () {},
-                              minWidth: double.infinity,
-                              color: Colors.grey.shade300,
-                              child: Text("See all friends"),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8),
-                              )),
-                        ],
-                      ),
+                            return buildPostItem(
+                                model, socialLayoutController_needed, context);
+                          },
+                        ),
+                      ],
                     ),
                   ),
-
-                  //NOTE For Posts
-                  FirestoreListView<PostModel>(
-                    physics: NeverScrollableScrollPhysics(),
-                    shrinkWrap: true,
-                    pageSize: 5,
-                    query: widget.friendpostsQuery,
-                    loadingBuilder: (context) => Center(
-                      child: SingleChildScrollView(),
-                    ),
-                    errorBuilder: (context, error, stackTrace) =>
-                        Text('Something went wrong! ${error} - ${stackTrace}'),
-                    itemBuilder: (context, snapshot) {
-                      PostModel model;
-                      if (snapshot.isBlank!)
-                        return Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Container(
-                                height: 200,
-                                child: SvgPicture.asset(
-                                    'assets/svg/no_posts_yet.svg')),
-                            Text(
-                              "No Posts Yes",
-                              style:
-                                  TextStyle(color: Colors.grey, fontSize: 30),
-                            ),
-                          ],
-                        );
-                      else {
-                        model = snapshot.data();
-                      }
-
-                      return buildPostItem(
-                          model, socialLayoutController_needed, context);
-                    },
-                  ),
-                ],
-              ),
-            ),
           );
         });
   }
@@ -714,24 +734,21 @@ class _FriendProfileScreenState extends State<FriendProfileScreen> {
         color: defaultColor.shade800,
         onPressed: () {
           print(currentLoggedInUser?.friends?.length.toString());
-          if (currentLoggedInUser!.friends?.length != 0) {
-            if (_currentProfileUser != null &&
-                currentLoggedInUser!.friends!
-                    .any((element) => element != _currentProfileUser?.uId))
-              friendProfileController.addFriendRequest(
-                  _currentProfileUser!.uId.toString(),
-                  name: currentLoggedInUser!.name,
-                  image: currentLoggedInUser!.image);
-            else {
-              print("already friend");
-            }
-          } else {
-            print("i dont have friend");
-            friendProfileController.addFriendRequest(
-                _currentProfileUser!.uId.toString(),
-                name: currentLoggedInUser!.name,
-                image: currentLoggedInUser!.image);
-          }
+          _currentProfileUser != null &&
+                  currentLoggedInUser!.friends != null &&
+                  currentLoggedInUser!.friends!
+                      .any((element) => element == _currentProfileUser?.uId)
+              ? print("alreay friend")
+              : friendProfileController.listofsentfriendrequests != [] &&
+                      _currentProfileUser != null &&
+                      friendProfileController.listofsentfriendrequests.any(
+                          (element) =>
+                              element.requestId == _currentProfileUser?.uId)
+                  ? print("already requested")
+                  : friendProfileController.addFriendRequest(
+                      _currentProfileUser!.uId.toString(),
+                      name: currentLoggedInUser!.name,
+                      image: currentLoggedInUser!.image);
         },
         child: Container(
             // color: defaultColor,

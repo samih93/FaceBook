@@ -15,6 +15,7 @@ class UserModel {
   Timestamp? latestTimeMessage; // TO order chats descending by time
   MessageModel? messageModel;
   List<String>? friends = [];
+  int nbOffriends = 0;
 
   UserModel(
       {this.name,
@@ -36,6 +37,8 @@ class UserModel {
     uId = json['uId'];
     deviceToken = json['deviceToken'] ?? '';
     isemailverified = json['isemailverified'];
+    nbOffriends = json['nbOffriends'] as int;
+
     if (json['friends'] != null)
       json['friends'].forEach((element) {
         friends!.add(element);
@@ -54,6 +57,7 @@ class UserModel {
       'deviceToken': deviceToken,
       'isemailverified': isemailverified,
       'friends': friends ?? [],
+      'nbOffriends': nbOffriends,
     };
   }
 }
