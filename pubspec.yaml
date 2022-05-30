@@ -39,7 +39,7 @@ dependencies:
   fluttertoast: ^8.0.8
   get: ^4.5.1
   hexcolor: ^2.0.5
-  image_picker: ^0.8.4+4
+  image_picker: ^0.8.5+3
   intl: ^0.17.0
   shared_preferences: ^2.0.11
   flutter_svg: ^1.0.3
@@ -49,7 +49,6 @@ dependencies:
   font_awesome_flutter: ^10.1.0
   #lottie
   lottie: ^1.3.0
-
 
   # Firebase
   firebase_auth: ^3.3.5

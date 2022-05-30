@@ -38,6 +38,14 @@ class ChatDetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // show top status bar
+    // Future.delayed(Duration(microseconds: 2)).then((value) {
+    //   SystemChrome.setEnabledSystemUIMode(
+    //     SystemUiMode.manual,
+    //     overlays: [SystemUiOverlay.top],
+    //   );
+    // });
+
     return GetBuilder<ChatDetailsController>(
         init: ChatDetailsController(),
         builder: (chatDetailsController) {
@@ -96,7 +104,7 @@ class ChatDetailsScreen extends StatelessWidget {
 
                 Expanded(
                   child: Container(
-                    padding: EdgeInsets.all(20),
+                    padding: EdgeInsets.only(top: 20, left: 20, right: 20),
                     decoration: BoxDecoration(
                       image: DecorationImage(
                         image: AssetImage("assets/background_image.png"),

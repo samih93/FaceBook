@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:social_app/layout/layout_controller.dart';
@@ -22,7 +24,8 @@ class NewPostScreen extends StatelessWidget {
               isImageClicked = false;
               if (socialLayoutController.postimage != null)
                 await decodeImageFromList(
-                        socialLayoutController.postimage!.readAsBytesSync())
+                        File(socialLayoutController.postimage!.path)
+                            .readAsBytesSync())
                     .then((value) {
                   print("image width : " + value.width.toString());
                   print("image height : " + value.height.toString());
@@ -161,8 +164,10 @@ class NewPostScreen extends StatelessWidget {
                       children: [
                         Expanded(
                           child: TextButton(
-                              onPressed: () {
-                                socialLayoutController.pickPostImage();
+                              onPressed: () async {
+                                await socialLayoutController
+                                    .pickPostImage()
+                                    .then((value) {});
                               },
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
