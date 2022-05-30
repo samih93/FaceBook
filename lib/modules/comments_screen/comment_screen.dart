@@ -84,6 +84,7 @@ class CommentsScreen extends StatelessWidget {
                     ],
                   ),
                 ),
+                SizedBox(height: 10),
                 Expanded(
                   child: FirestoreListView<CommentModel>(
                       shrinkWrap: true,

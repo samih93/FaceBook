@@ -10,6 +10,7 @@ class FriendProfileController extends GetxController {
   bool isloadingGetProfile = false;
   UserModel? get profileUser => _profileUser;
   Future<void> getUserById(String userId) async {
+    _profileUser = null;
     isloadingGetProfile = true;
     update();
     await FirebaseFirestore.instance

@@ -69,13 +69,16 @@ class _FriendProfileScreenState extends State<FriendProfileScreen> {
   Future<UserModel> _getcurrentprofile() async {
     FriendProfileController friendProfileController =
         Get.put(FriendProfileController());
+    socialLayoutController_needed = Get.find<SocialLayoutController>();
+
     await friendProfileController
         .getUserById(widget.frienduId)
         .then((value) async {
       await friendProfileController.getListOfsentRequests();
+
+      // }
     });
 
-    //Future.delayed(Duration(seconds: 2)).then((value) {});
     return friendProfileController.profileUser!;
   }
 
@@ -98,7 +101,6 @@ class _FriendProfileScreenState extends State<FriendProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    socialLayoutController_needed = Get.find<SocialLayoutController>();
     return GetBuilder<FriendProfileController>(
         init: Get.find<FriendProfileController>(),
         builder: (friendProfileController) {

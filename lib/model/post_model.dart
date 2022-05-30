@@ -40,7 +40,8 @@ class PostModel {
         : 0.0;
     postId = json['postId'];
     nbOfLikes = json['nbOfLikes'] as int;
-    nbOfComments = json['nbOfComments'] as int;
+    nbOfComments =
+        json['nbOfComments'] != null ? json['nbOfComments'] as int : 0;
     if (json['likes'] != null)
       json['likes'].forEach((element) {
         likes!.add(element);

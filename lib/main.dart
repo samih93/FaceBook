@@ -80,6 +80,7 @@ void main() async {
     SystemUiMode.manual,
     overlays: [SystemUiOverlay.top],
   );
+
   runApp(MyApp(widget));
 }
 

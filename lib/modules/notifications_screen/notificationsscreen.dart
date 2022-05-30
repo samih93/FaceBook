@@ -3,12 +3,18 @@ import 'package:flutter/material.dart';
 import 'package:flutterfire_ui/firestore.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
+import 'package:social_app/layout/layout_controller.dart';
 import 'package:social_app/model/friend_request.dart';
 import 'package:social_app/modules/notifications_screen/notification_controller.dart';
 import 'package:social_app/shared/constants.dart';
 import 'package:social_app/shared/styles/colors.dart';
 
-class NotificationsScreen extends StatelessWidget {
+class NotificationsScreen extends StatefulWidget {
+  @override
+  State<NotificationsScreen> createState() => _NotificationsScreenState();
+}
+
+class _NotificationsScreenState extends State<NotificationsScreen> {
   var friendrequestsQuery = FirebaseFirestore.instance
       .collection('users')
       .doc(uId)
@@ -21,7 +27,7 @@ class NotificationsScreen extends StatelessWidget {
       );
 
   var controller = Get.put(NotificationController());
-  @override
+  var socialLayoutController_needed = Get.find<SocialLayoutController>();
   Widget build(BuildContext context) {
     return Scaffold(
       body: SingleChildScrollView(
@@ -43,6 +49,7 @@ class NotificationsScreen extends StatelessWidget {
                       Text('Something went wrong! ${error} - ${stackTrace}'),
                   itemBuilder: (context, snapshot) {
                     FriendRequest model;
+                    int count_ofreceivedRequest = 0;
 
                     if (snapshot.isBlank!) {
                       print('snapshot blank');
@@ -51,6 +58,7 @@ class NotificationsScreen extends StatelessWidget {
                       return Container();
                     } else {
                       model = snapshot.data();
+                      count_ofreceivedRequest++;
                       print('snapshot data');
                     }
 
@@ -68,7 +76,7 @@ class NotificationsScreen extends StatelessWidget {
                                 width: 5,
                               ),
                               Text(
-                                '${controller.listofreceivedfriendrequests.length}',
+                                '${count_ofreceivedRequest}',
                                 style: TextStyle(
                                     color: Colors.red,
                                     fontWeight: FontWeight.bold,
@@ -140,9 +148,17 @@ class NotificationsScreen extends StatelessWidget {
                             borderRadius: BorderRadius.circular(8)),
                         color: defaultColor.shade800,
                         onPressed: () {
-                          controller.confirmRequest(
-                              myId: uId.toString(),
-                              user_requestId: model.requestId.toString());
+                          controller
+                              .confirmRequest(
+                                  myId: uId.toString(),
+                                  user_requestId: model.requestId.toString())
+                              .then((value) {
+                            //after confirmed wait then get logged in user to show my new friends
+                            Future.delayed(Duration(seconds: 2)).then((value) {
+                              socialLayoutController_needed
+                                  .getLoggedInUserData();
+                            });
+                          });
                         },
                         child: Text(
                           "confirm",
