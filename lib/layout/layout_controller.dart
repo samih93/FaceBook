@@ -278,6 +278,7 @@ class SocialLayoutController extends GetxController {
       _postimage = File(pickedFile.path);
       //NOTE :upload post image to firebase storage
       //uploadPostImage();
+      print(_postimage!.path.toString());
       update();
     } else {
       print('no image selected');

@@ -129,9 +129,11 @@ class NewPostScreen extends StatelessWidget {
                             alignment: AlignmentDirectional.topEnd,
                             children: [
                               Container(
-                                  height:
-                                      double.parse(_imageHeight.toString()) -
-                                          _imageHeight / 2,
+                                  //curently fixed like this
+                                  constraints: BoxConstraints(minHeight: 400),
+                                  // height:
+                                  //     double.parse(_imageHeight.toString()) -
+                                  //         _imageHeight / 2,
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.only(
                                       topLeft: Radius.circular(5),
