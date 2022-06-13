@@ -271,6 +271,8 @@ class SocialLayoutController extends GetxController {
 
   File? _postimage;
   File? get postimage => _postimage;
+  int post_imageWidth = 0;
+  int post_imageHeight = 0;
 
   Future<void> pickPostImage() async {
     final pickedFile = await picker.pickImage(source: ImageSource.gallery);
@@ -279,6 +281,15 @@ class SocialLayoutController extends GetxController {
       //NOTE :upload post image to firebase storage
       //uploadPostImage();
       print(_postimage!.path.toString());
+      await decodeImageFromList(File(_postimage!.path).readAsBytesSync())
+          .then((value) {
+        print("image width : " + value.width.toString());
+        print("image height : " + value.height.toString());
+        post_imageWidth = value.width;
+        post_imageHeight = value.height;
+        if (post_imageHeight > 1400) post_imageHeight = 1400;
+        if (post_imageWidth > 600) post_imageWidth = 600;
+      });
       update();
     } else {
       print('no image selected');

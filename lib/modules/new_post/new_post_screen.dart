@@ -10,8 +10,7 @@ class NewPostScreen extends StatelessWidget {
   var postBodyController = TextEditingController();
 
   bool? isImageClicked = false;
-  int _imageWidth = 0;
-  int _imageHeight = 0;
+
   NewPostScreen({this.isImageClicked});
   @override
   Widget build(BuildContext context) {
@@ -29,8 +28,6 @@ class NewPostScreen extends StatelessWidget {
                     .then((value) {
                   print("image width : " + value.width.toString());
                   print("image height : " + value.height.toString());
-                  _imageWidth = value.width;
-                  _imageHeight = value.height;
                 });
             });
           return Scaffold(
@@ -44,10 +41,12 @@ class NewPostScreen extends StatelessWidget {
                             .createNewPost(
                                 postdate: DateTime.now().toString(),
                                 text: postBodyController.text,
-                                imagewidth:
-                                    double.parse(_imageWidth.toString()),
-                                imageheight:
-                                    double.parse(_imageHeight.toString()))
+                                imagewidth: double.parse(socialLayoutController
+                                    .post_imageWidth
+                                    .toString()),
+                                imageheight: double.parse(socialLayoutController
+                                    .post_imageHeight
+                                    .toString()))
                             .then((value) {
                           if (!socialLayoutController.isloadingcreatePost!)
                             Navigator.pop(context);
@@ -130,10 +129,7 @@ class NewPostScreen extends StatelessWidget {
                             children: [
                               Container(
                                   //curently fixed like this
-                                  constraints: BoxConstraints(minHeight: 400),
-                                  // height:
-                                  //     double.parse(_imageHeight.toString()) -
-                                  //         _imageHeight / 2,
+                                  constraints: BoxConstraints(maxHeight: 450),
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.only(
                                       topLeft: Radius.circular(5),
